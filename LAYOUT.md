@@ -130,13 +130,16 @@ Il nome del frame segue una **gerarchia a slash** che descrive lo stato della UI
 
 ### Navbar (`* Navbar *`)
 - **Componente libreria:** `* Navbar *` — pagina "Navbar [CUSTOM]" nella libreria Gravity
+- **Figma DS:** https://www.figma.com/design/uR6CBOh0Y7dUQvH30SyD0P/Ant-Design-System-for-Gravity?node-id=48-1331
 - **Component key (set):** `7d9a0ca68bfd3d9417be55173f174c6e396934b1`
-- **Altezza:** ~73px
+- **Altezza:** 73px
 - **Larghezza:** FILL (si estende a tutta la larghezza del frame)
-- **Sinistra:** Logo Gravity + voci di navigazione principale con tab/dropdown
-- **Destra:** icona campanella (notifiche) + avatar utente
+- **Sinistra:** Logo Gravity (solo logotipo tipografico) + voci di navigazione con dropdown
+- **Destra:** icona campanella (24px) + avatar utente (32px, circolare)
 - **Varianti per ruolo:** Super Admin, Systems Admin, Sales Leader, Planner, Data Analyst, Creative, Advertiser, Commercial, Publisher
 - **Non usare** frame custom al posto di questo componente
+
+> Per misure esatte, pattern HTML completo e istruzioni di trasposizione Figma → **`components/navbar.md`**
 
 ### Main Content Area
 - **Larghezza:** full width (non c'è sidebar — occupa tutto lo spazio sotto la Navbar)

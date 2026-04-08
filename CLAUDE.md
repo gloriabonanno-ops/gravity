@@ -4,6 +4,13 @@
 > Contiene tutto il necessario per costruire in HTML e trasferire su Figma.
 >
 > Leggi anche **LAYOUT.md** per capire i pattern di layout dell'app e la struttura dei file Figma.
+>
+> Per ogni elemento dell'interfaccia consulta la cartella **components/** che contiene le specifiche
+> di implementazione HTML e Figma per ogni componente. I file in quella cartella sono fonte di verità:
+> usali prima di iniziare a costruire un qualsiasi elemento UI e prima di trasferire su Figma.
+>
+> Componenti documentati finora:
+> - **components/navbar.md** — Navbar (altezza, logo, menu, avatar, pattern HTML, componente Figma)
 
 ---
 
@@ -75,42 +82,29 @@ brand/Gravity_mark.svg   → monogramma (solo icona)
 brand/Gravity_type.svg   → logotipo esteso
 ```
 
-Percorso relativo dal prototipo: `../../brand/Gravity_mark.svg`
+Percorso relativo dai prototipi in `prototipi/NN-nome/`: `../../brand/Gravity_type.svg`
+
+> **Regola navbar:** nella navbar usa **solo il logotipo tipografico** (`Gravity_type.svg`).
+> Non usare il mark da solo né entrambi insieme.
+> Vedi `components/navbar.md` per il pattern completo.
 
 ---
 
 ## ConfigProvider — Tema Gravity
 
-Da inserire come root wrapper in ogni prototipo:
+Il tema completo è definito in **`prototipi/tokens.js`** ed esposto come `window.GRAVITY_THEME`.
+**Non ridefinire il tema inline nei prototipi** — usa sempre `window.GRAVITY_THEME` da tokens.js.
 
 ```js
-const GRAVITY_THEME = {
-  token: {
-    colorPrimary: '#3E00FB',
-    colorLink: '#3E00FB',
-    colorLinkHover: '#6B3FFF',
-    colorError: '#FF4A1C',
-    borderRadius: 6,
-    borderRadiusLG: 8,
-    borderRadiusSM: 4,
-    fontFamily: "'Inter', sans-serif",
-    fontSize: 14,
-    fontSizeLG: 16,
-    fontSizeXL: 20,
-    lineHeight: 1.5714,
-    colorBgContainer: '#ffffff',
-    colorBgLayout: '#F5F5F5',
-  },
-  components: {
-    Button: { borderRadiusLG: 8 },
-    Input:  { borderRadius: 6 },
-    Select: { borderRadius: 6 },
-    Card:   { borderRadiusLG: 8 },
-    Modal:  { borderRadiusLG: 8 },
-    Table:  { borderRadiusLG: 8 },
-  },
-};
+// In ogni prototipo: chiama prima applyGravityTokens(), poi usa window.GRAVITY_THEME
+window.applyGravityTokens();
+
+// Nel render:
+React.createElement(ConfigProvider, { theme: window.GRAVITY_THEME }, ...)
 ```
+
+> `tokens.js` è la **fonte di verità unica** per colori, tipografia, spaziatura e border radius.
+> Non sovrascrivere `fontFamily` nei componenti: il tema imposta già SF Pro Text.
 
 ---
 
@@ -118,15 +112,26 @@ const GRAVITY_THEME = {
 
 ```
 prototipi/
-  _template.html            ← punto di partenza per ogni nuovo prototipo
-  01-login-otp/
-    index.html
-  02-nome-modulo/
-    index.html
-  ...
+  _template.html         ← punto di partenza per ogni nuovo prototipo
+  tokens.js              ← tema Gravity (unica fonte di verità)
+  app/                   ← app shell / login / SSO
+  planning/              ← modulo Planning
+  feature-name/          ← un prototipo per modulo/feature
+  feature-name--variant/ ← variante dello stesso modulo (doppio trattino)
 ```
 
-Naming: `NN-nome-modulo` in ordine progressivo.
+### Regole di naming
+
+| Regola | Esempio corretto | Esempio sbagliato |
+|--------|-----------------|-------------------|
+| Kebab-case, tutto minuscolo | `planning` | `Planning`, `PLANNING` |
+| Inglese | `inventory` | `inventario` |
+| Nessun numero progressivo | `planning` | `02-planning` |
+| Parole separate da trattino singolo | `select-systems` | `selectSystems`, `select_systems` |
+| Variante con doppio trattino | `planning--mobile` | `planning-mobile`, `planning_mobile` |
+| Nessuno spazio | `sign-on` | `Single sign-on` |
+
+Un prototipo = una cartella = un `index.html`. Se un modulo ha stati molto diversi (es. empty vs popolato) usa varianti `--` invece di mettere tutto in un unico file.
 
 ---
 

@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gravity — Planning</title>
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/antd@5/dist/reset.css" />
+  <script src="https://unpkg.com/dayjs@1/dayjs.min.js"></script>
+  <script src="https://unpkg.com/antd@5/dist/antd.min.js"></script>
+  <script src="https://unpkg.com/@ant-design/icons@5/dist/index.umd.js"></script>
+  <script src="../tokens.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--gravity-font-body);
+      background: var(--gravity-bg);
+      color: var(--gravity-text);
+      font-size: 14px;
+      line-height: 1.5714;
+    }
+
+    /* ── App shell ─────────────────────────────────────── */
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .app-main {
+      flex: 1;
+      overflow-y: auto;
+      background: #F5F5F5;
+    }
+
+    /* ── Navbar (Ant Design System for Gravity) ────────── */
+    .top-nav {
+      height: 73px;
+      background: #ffffff;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+    .top-nav-logo {
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      height: 100%;
+      flex-shrink: 0;
+    }
+    .top-nav-logo img { display: block; }
+    .top-nav-menu-wrap {
+      flex: 1;
+      align-self: stretch;
+      display: flex;
+      align-items: stretch;
+    }
+    /* override antd Menu horizontal border */
+    .top-nav-menu-wrap .ant-menu-horizontal {
+      border-bottom: none !important;
+      height: 73px;
+      line-height: 73px;
+    }
+    .top-nav-menu-wrap .ant-menu-horizontal > .ant-menu-item,
+    .top-nav-menu-wrap .ant-menu-horizontal > .ant-menu-submenu {
+      height: 73px;
+      line-height: 73px;
+      padding: 0 16px;
+      top: 0;
+    }
+    .top-nav-menu-wrap .ant-menu-horizontal > .ant-menu-item::after,
+    .top-nav-menu-wrap .ant-menu-horizontal > .ant-menu-submenu::after {
+      bottom: 0 !important;
+      border-bottom-width: 2px !important;
+    }
+    .top-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 0 20px;
+      flex-shrink: 0;
+    }
+    .top-nav-bell {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      color: rgba(0,0,0,0.65);
+      padding: 4px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .top-nav-bell:hover { background: rgba(0,0,0,0.04); }
+
+    /* ── (sidebar removed) ─────────────────────────────── */
+    .sidebar-group-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      color: rgba(0,0,0,0.65);
+      border-radius: 6px;
+      margin: 2px 8px;
+      transition: all 0.15s;
+    }
+    .sidebar-group-item:hover { background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.88); }
+    .sidebar-group-item.active { background: #F0EAFF; color: #3E00FB; font-weight: 500; }
+    .sidebar-sub-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px 8px 40px;
+      cursor: pointer;
+      font-size: 13px;
+      color: rgba(0,0,0,0.65);
+      border-radius: 6px;
+      margin: 1px 8px;
+      transition: all 0.15s;
+    }
+    .sidebar-sub-item:hover { background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.88); }
+    .sidebar-sub-item.active { background: #F0EAFF; color: #3E00FB; font-weight: 500; }
+
+    /* ── Shared page layout ────────────────────────────── */
+    .page-content {
+      padding: 24px;
+      min-height: 100%;
+    }
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    /* ── Plannings List table tweaks ───────────────────── */
+    .advertiser-link {
+      color: #3E00FB;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+    }
+    .advertiser-link:hover { text-decoration: underline; }
+    .share-link {
+      color: #3E00FB;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Planning Detail ───────────────────────────────── */
+    .detail-layout {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .detail-sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .detail-main {
+      flex: 1;
+      min-width: 0;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #F0F0F0;
+      overflow: hidden;
+    }
+    .detail-card-section {
+      padding: 16px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .detail-card-section:last-child { border-bottom: none; }
+    .detail-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(0,0,0,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .detail-main-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid #F0F0F0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ── View toggle buttons ───────────────────────────── */
+    .view-toggle { display: flex; gap: 2px; }
+    .view-toggle-btn {
+      background: none;
+      border: 1px solid #D9D9D9;
+      cursor: pointer;
+      padding: 5px 8px;
+      color: rgba(0,0,0,0.45);
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+    .view-toggle-btn:first-child { border-radius: 6px 0 0 6px; }
+    .view-toggle-btn:last-child { border-radius: 0 6px 6px 0; }
+    .view-toggle-btn:not(:first-child) { border-left: none; }
+    .view-toggle-btn.active {
+      background: #F0EAFF;
+      color: #3E00FB;
+      border-color: #3E00FB;
+      z-index: 1;
+    }
+    .view-toggle-btn:hover:not(.active) { background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.65); }
+
+    /* ── SVG Map ───────────────────────────────────────── */
+    .map-container {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      overflow: hidden;
+      background: #E3EBF3;
+    }
+    .map-svg { width: 100%; height: 100%; display: block; }
+    .map-legend {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 12px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 12px;
+    }
+    .map-legend-item { display: flex; align-items: center; gap: 8px; }
+
+    /* ── Systems list view ─────────────────────────────── */
+    .system-card {
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .system-card:last-child { border-bottom: none; }
+    .system-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      cursor: pointer;
+    }
+    .system-card-header:hover { background: rgba(0,0,0,0.02); }
+    .system-card-left { display: flex; align-items: center; gap: 8px; }
+    .system-avail-bar {
+      width: 4px;
+      align-self: stretch;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .system-card-expanded {
+      padding: 0 16px 16px 20px;
+      border-top: 1px solid #F5F5F5;
+      background: #FAFAFA;
+    }
+    .system-face-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .system-face-table th {
+      text-align: left;
+      padding: 6px 8px;
+      color: rgba(0,0,0,0.45);
+      font-weight: 500;
+      border-bottom: 1px solid #F0F0F0;
+      background: #fff;
+    }
+    .system-face-table td {
+      padding: 8px 8px;
+      border-bottom: 1px solid #F5F5F5;
+      color: rgba(0,0,0,0.65);
+    }
+
+    /* ── Select Systems ────────────────────────────────── */
+    .select-systems-layout {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      height: calc(100vh - 200px);
+      min-height: 500px;
+    }
+    .search-history-panel {
+      width: 220px;
+      flex-shrink: 0;
+      background: #fff;
+      border: 1px solid #F0F0F0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .search-systems-panel {
+      flex: 1;
+      min-width: 0;
+      background: #fff;
+      border: 1px solid #F0F0F0;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .filter-panel {
+      width: 320px;
+      flex-shrink: 0;
+      background: #fff;
+      border: 1px solid #F0F0F0;
+      border-radius: 8px;
+      overflow-y: auto;
+    }
+    .panel-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid #F0F0F0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .filter-section {
+      padding: 12px 16px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .filter-section:last-child { border-bottom: none; }
+    .filter-section-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(0,0,0,0.65);
+      margin-bottom: 10px;
+    }
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 16px;
+      border: 1px solid #D9D9D9;
+      font-size: 12px;
+      cursor: pointer;
+      margin: 3px;
+      background: #fff;
+      color: rgba(0,0,0,0.65);
+      transition: all 0.15s;
+    }
+    .filter-chip.selected {
+      background: #F0EAFF;
+      border-color: #3E00FB;
+      color: #3E00FB;
+    }
+    .filter-checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 0;
+      font-size: 13px;
+      color: rgba(0,0,0,0.65);
+      cursor: pointer;
+    }
+    .filter-checkbox {
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid #D9D9D9;
+      border-radius: 3px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .filter-checkbox.checked {
+      background: #3E00FB;
+      border-color: #3E00FB;
+    }
+    .filter-subsection-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(0,0,0,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 0 4px;
+    }
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid #F5F5F5;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .search-result-item:hover { background: #FAFAFA; }
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-bar {
+      width: 4px;
+      height: 36px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-bottom: 1px solid #F5F5F5;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .history-item:hover { background: #FAFAFA; }
+    .active-filter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      background: #F0EAFF;
+      border: 1px solid #D3B8FF;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #3E00FB;
+      margin: 3px 3px 3px 0;
+    }
+
+    /* ── Mini calendar ─────────────────────────────────── */
+    .mini-cal { font-size: 12px; }
+    .mini-cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 12px;
+    }
+    .mini-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+    .mini-cal-day-label {
+      text-align: center;
+      font-size: 10px;
+      color: rgba(0,0,0,0.45);
+      padding: 2px 0;
+    }
+    .mini-cal-day {
+      text-align: center;
+      padding: 3px 0;
+      border-radius: 4px;
+      font-size: 11px;
+      color: rgba(0,0,0,0.65);
+    }
+    .mini-cal-day.in-range {
+      background: rgba(62,0,251,0.12);
+      color: #3E00FB;
+      border-radius: 0;
+    }
+    .mini-cal-day.range-start, .mini-cal-day.range-end {
+      background: #3E00FB;
+      color: #fff;
+      border-radius: 4px;
+    }
+    .mini-cal-day.empty { color: transparent; }
+
+    /* ── Scrollable results ────────────────────────────── */
+    .search-results-scroll { flex: 1; overflow-y: auto; }
+
+    /* ── New Planning Drawer form ──────────────────────── */
+    .brief-section {
+      border: 1px solid #F0F0F0;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 8px;
+    }
+    .brief-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(0,0,0,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+    .advertiser-card {
+      border: 1px solid #F0F0F0;
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #FAFAFA;
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/javascript">
+window.applyGravityTokens();
+
+// ══════════════════════════════════════════════════════
+// Globals
+// ══════════════════════════════════════════════════════
+const { useState, useCallback } = React;
+const {
+  ConfigProvider, App,
+  Menu, Space, Divider,
+  Typography, Button, Input, Select, Form, Checkbox, DatePicker,
+  Table, Card, Tag, Badge, Avatar, Tooltip, Dropdown, Empty,
+  Drawer, Pagination, InputNumber, message: messageApi,
+} = antd;
+
+const {
+  UserOutlined, BellOutlined, PlusOutlined, EditOutlined,
+  ShareAltOutlined, SearchOutlined, FilterOutlined,
+  CheckOutlined, CloseOutlined, ArrowLeftOutlined,
+  AppstoreOutlined, InboxOutlined, SendOutlined, CalendarOutlined,
+  TableOutlined, EnvironmentOutlined, MoreOutlined,
+  EllipsisOutlined, LeftOutlined, RightOutlined, DownOutlined,
+  DeleteOutlined, PlayCircleOutlined, CheckCircleOutlined, LinkOutlined,
+  CaretRightOutlined, CaretDownOutlined,
+  BarChartOutlined, BarsOutlined, MoneyCollectOutlined,
+} = icons;
+
+const { Title, Text, Paragraph } = Typography;
+
+// ══════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════
+
+const CAT_STYLE = {
+  DOOH: { color: '#C41D7F', background: '#FFF0F6', borderColor: '#FFADD2' },
+  OOH:  { color: '#389E0D', background: '#F6FFED', borderColor: '#B7EB8F' },
+  WEB:  { color: '#1677FF', background: '#E6F7FF', borderColor: '#91D5FF' },
+};
+
+const STATE_DOT = {
+  Draft:        '#FAAD14',
+  Completed:    '#52C41A',
+  'In Progress':'#1677FF',
+};
+
+const AVAIL_COLOR = {
+  Available:  '#52C41A',
+  Reserved:   '#3E00FB',
+  'In Option':'#FAAD14',
+};
+
+const PLANNINGS = [
+  { id:'0101', name:'Gohan Sushi Planning Luglio',   category:'DOOH', state:'Draft',    start:'01/06/2025', end:'30/06/2025', advertiser:'Gohan Sushi',       budget:'€ 1.567,00', goal:'1 M',   faces:12, hasSystems:true },
+  { id:'0102', name:'Alessi Estate — Outdoor',       category:'OOH',  state:'Completed',start:'13/03/2024', end:'30/03/2024', advertiser:'Fondazione Alessi', budget:'€ 2.000,00', goal:'1.5 M', faces:13, hasSystems:true },
+  { id:'0103', name:'Moving Retail Autunno 2025',    category:'DOOH', state:'Draft',    start:'01/09/2025', end:'30/09/2025', advertiser:'Moving Retail',     budget:'€ 3.200,00', goal:'2 M',   faces:8,  hasSystems:false },
+  { id:'0104', name:'SushiLab Primavera 2025',       category:'OOH',  state:'Completed',start:'10/04/2025', end:'25/04/2025', advertiser:'SushiLab Palermo',  budget:'€ 1.800,00', goal:'800 K', faces:6,  hasSystems:true },
+  { id:'0105', name:'Campus Digitale Settembre',     category:'WEB',  state:'Draft',    start:'01/09/2025', end:'15/09/2025', advertiser:'Campus Digitale',   budget:'€ 5.000,00', goal:'3 M',   faces:20, hasSystems:false },
+  { id:'0106', name:'Arredo Urbano Palermo Q4',      category:'OOH',  state:'Draft',    start:'01/10/2025', end:'31/12/2025', advertiser:'Comune di Palermo', budget:'€ 4.500,00', goal:'5 M',   faces:35, hasSystems:false },
+  { id:'0107', name:'TechConf Milano 2025',          category:'DOOH', state:'Completed',start:'15/11/2024', end:'20/11/2024', advertiser:'TechConf Italia',   budget:'€ 2.800,00', goal:'1.2 M', faces:9,  hasSystems:true },
+];
+
+const SYSTEMS = [
+  { id:'S01', name:'Nome Impianto', type:'Pensilina',       address:'Via Libertà, 48',      city:'90141 Palermo (PA)', cimasa:'A234E', account:'234E45', faces:2, state:'Available'  },
+  { id:'S02', name:'Nome Impianto', type:'Telo',            address:'Via Roma, 12',          city:'90133 Palermo (PA)', cimasa:'B456F', account:'456F78', faces:1, state:'Available'  },
+  { id:'S03', name:'Nome Impianto', type:'Poster',          address:'Viale Regione Sic., 234',city:'90100 Palermo (PA)',cimasa:'C789G', account:'789G12', faces:1, state:'In Option'  },
+  { id:'S04', name:'Nome Impianto', type:'Poster',          address:'Via Maqueda, 78',       city:'90134 Palermo (PA)', cimasa:'D012H', account:'012H34', faces:2, state:'Available'  },
+  { id:'S05', name:'Nome Impianto', type:'Fioriera',        address:'Piazza Verdi, 3',       city:'90138 Palermo (PA)', cimasa:'E345I', account:'345I56', faces:1, state:'Reserved'   },
+  { id:'S06', name:'Nome Impianto', type:'Palina',          address:'Via Emerico Amari, 5',  city:'90139 Palermo (PA)', cimasa:'F678J', account:'678J90', faces:1, state:'Available'  },
+  { id:'S07', name:'Nome Impianto', type:'Palo Luce',       address:'Via Cavour, 91',        city:'90133 Palermo (PA)', cimasa:'G901K', account:'901K23', faces:2, state:'Available'  },
+  { id:'S08', name:'Nome Impianto', type:'Stendardo',       address:'Corso V. Emanuele, 3',  city:'90133 Palermo (PA)', cimasa:'H234L', account:'234L45', faces:1, state:'In Option'  },
+];
+
+const SEARCH_RESULTS = [
+  { id:'R01', name:'Nome Impianto', type:'Palina Butterfly', address:'Via Libertà, 12 90141 Palermo (PA)', cimasa:'A001', state:'Available' },
+  { id:'R02', name:'Nome Impianto', type:'Totem',            address:'Via Roma, 45 90133 Palermo (PA)',    cimasa:'A002', state:'Available' },
+  { id:'R03', name:'Nome Impianto', type:'Poster DOOH',      address:'Via Maqueda, 23 90134 Palermo (PA)', cimasa:'A003', state:'In Option' },
+  { id:'R04', name:'Nome Impianto', type:'Palina',           address:'Via Libertà, 67 90141 Palermo (PA)', cimasa:'A004', state:'Reserved'  },
+  { id:'R05', name:'Nome Impianto', type:'Poster',           address:'Via Cavour, 15 90133 Palermo (PA)',  cimasa:'A005', state:'Available' },
+  { id:'R06', name:'Nome Impianto', type:'Alus',             address:'Via Roma, 88 90133 Palermo (PA)',    cimasa:'A006', state:'Available' },
+  { id:'R07', name:'Nome Impianto', type:'Poster DOOH',      address:'Piazza Verdi, 1 90138 Palermo (PA)', cimasa:'A007', state:'In Option' },
+];
+
+// ══════════════════════════════════════════════════════
+// SMALL COMPONENTS
+// ══════════════════════════════════════════════════════
+
+function GravityLogo({ height = 28 }) {
+  return React.createElement('img', {
+    src: '../../brand/Gravity_mark.svg',
+    alt: 'Gravity',
+    style: { height, width: 'auto', display: 'block' },
+    onError: (e) => {
+      e.target.style.display = 'none';
+      e.target.parentElement.innerHTML += '<span style="color:#fff;font-weight:700;font-size:18px;letter-spacing:-1px">G</span>';
+    },
+  });
+}
+
+function CategoryTag({ category }) {
+  const s = CAT_STYLE[category] || {};
+  return React.createElement(Tag, {
+    style: { ...s, fontWeight: 500, fontSize: 12, marginRight: 0 },
+  }, category);
+}
+
+function StateBadge({ state }) {
+  return React.createElement('span', {
+    style: { display: 'inline-flex', alignItems: 'center', gap: 6 },
+  },
+    React.createElement('span', {
+      style: {
+        width: 7, height: 7, borderRadius: '50%',
+        background: STATE_DOT[state] || '#D9D9D9',
+        display: 'inline-block', flexShrink: 0,
+      },
+    }),
+    React.createElement(Text, { style: { fontSize: 13 } }, state)
+  );
+}
+
+function AvailDot({ state }) {
+  const color = AVAIL_COLOR[state] || '#D9D9D9';
+  return React.createElement('span', {
+    style: { display: 'inline-flex', alignItems: 'center', gap: 5 },
+  },
+    React.createElement('span', { style: { width: 6, height: 6, borderRadius: '50%', background: color, display: 'inline-block' } }),
+    React.createElement('span', { style: { fontSize: 12 } }, state)
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// TOP NAV
+// ══════════════════════════════════════════════════════
+
+function TopNav({ activeNavKey, onNavSelect }) {
+  const navItems = [
+    {
+      key: 'overview',
+      icon: React.createElement(AppstoreOutlined),
+      label: 'Overview',
+    },
+    {
+      key: 'inventory',
+      icon: React.createElement(InboxOutlined),
+      label: 'Inventory',
+    },
+    {
+      key: 'delivery',
+      icon: React.createElement(SendOutlined),
+      label: 'Delivery',
+      children: [
+        { key: 'campaigns', label: 'Campaigns' },
+        { key: 'plannings', label: 'Plannings' },
+      ],
+    },
+  ];
+
+  return React.createElement('div', { className: 'top-nav' },
+    // Logo
+    React.createElement('div', { className: 'top-nav-logo' },
+      React.createElement('img', {
+        src: '../../brand/Gravity_type.svg',
+        alt: 'Gravity',
+        style: { height: 28, width: 'auto' },
+        onError: e => { e.target.style.display = 'none'; },
+      })
+    ),
+    // Horizontal menu
+    React.createElement('div', { className: 'top-nav-menu-wrap' },
+      React.createElement(Menu, {
+        mode: 'horizontal',
+        selectedKeys: [activeNavKey],
+        items: navItems,
+        onSelect: ({ key }) => onNavSelect(key),
+        style: { flex: 1, border: 'none', height: 73, lineHeight: '73px' },
+        theme: 'light',
+      })
+    ),
+    // Right: Bell + Avatar
+    React.createElement('div', { className: 'top-nav-right' },
+      React.createElement('button', { className: 'top-nav-bell' },
+        React.createElement(BellOutlined, { style: { fontSize: 20, color: 'rgba(0,0,0,0.65)' } })
+      ),
+      React.createElement('div', {
+        style: { width: 32, height: 32, borderRadius: '999px', overflow: 'hidden', flexShrink: 0, cursor: 'pointer' },
+      },
+        React.createElement('img', {
+          src: 'https://www.figma.com/api/mcp/asset/df094a9b-9185-4165-9f4c-fdb584fa6cac',
+          alt: 'Planner',
+          style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' },
+          onError: e => {
+            e.target.parentElement.style.background = '#3E00FB';
+            e.target.style.display = 'none';
+            e.target.parentElement.innerHTML = '<span style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700">P</span>';
+          },
+        })
+      )
+    )
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// PLANNINGS LIST
+// ══════════════════════════════════════════════════════
+
+function PlanningsList({ onSelect, onNew }) {
+  const columns = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      width: 60,
+      render: v => React.createElement(Text, { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)', fontFamily: 'monospace' } }, v),
+    },
+    {
+      title: 'Planning Name',
+      dataIndex: 'name',
+      render: (v, row) => React.createElement('a', {
+        style: { color: 'rgba(0,0,0,0.88)', fontWeight: 500, fontSize: 13, cursor: 'pointer' },
+        onClick: () => onSelect(row),
+      }, v),
+    },
+    {
+      title: 'Category',
+      dataIndex: 'category',
+      width: 80,
+      render: v => React.createElement(CategoryTag, { category: v }),
+    },
+    {
+      title: 'State',
+      dataIndex: 'state',
+      width: 110,
+      render: v => React.createElement(StateBadge, { state: v }),
+    },
+    {
+      title: 'Start Date',
+      dataIndex: 'start',
+      width: 100,
+      render: v => React.createElement(Text, { style: { fontSize: 13 } }, v),
+    },
+    {
+      title: 'End Date',
+      dataIndex: 'end',
+      width: 100,
+      render: v => React.createElement(Text, { style: { fontSize: 13 } }, v),
+    },
+    {
+      title: 'Advertiser',
+      dataIndex: 'advertiser',
+      render: v => React.createElement('span', { className: 'advertiser-link' },
+        React.createElement(LinkOutlined, { style: { fontSize: 11 } }),
+        v
+      ),
+    },
+    {
+      title: 'Budget',
+      dataIndex: 'budget',
+      width: 110,
+      render: v => React.createElement(Text, { style: { fontSize: 13 } }, v),
+    },
+    {
+      title: 'Goal',
+      dataIndex: 'goal',
+      width: 70,
+      render: v => React.createElement(Text, { style: { fontSize: 13 } }, v),
+    },
+    {
+      title: 'Faces',
+      dataIndex: 'faces',
+      width: 70,
+      render: v => React.createElement(Tag, {
+        style: { background: '#F0EAFF', color: '#3E00FB', border: '1px solid #D3B8FF', fontWeight: 600, fontSize: 12 }
+      }, v),
+    },
+    {
+      title: '',
+      key: 'actions',
+      width: 100,
+      render: (_, row) => React.createElement(Space, { size: 4 },
+        React.createElement('span', {
+          className: 'share-link',
+          onClick: (e) => e.stopPropagation(),
+        },
+          React.createElement(ShareAltOutlined, { style: { fontSize: 12 } }),
+          React.createElement('span', { style: { fontSize: 12 } }, 'Share')
+        ),
+        React.createElement(Button, {
+          type: 'text',
+          size: 'small',
+          icon: React.createElement(MoreOutlined),
+          style: { color: 'rgba(0,0,0,0.45)' },
+          onClick: (e) => e.stopPropagation(),
+        })
+      ),
+    },
+  ];
+
+  return React.createElement('div', { className: 'page-content' },
+    React.createElement('div', { className: 'page-header', style: { marginBottom: 4 } },
+      React.createElement(Title, { level: 4, style: { margin: 0 } }, 'Plannings List'),
+      React.createElement(Button, {
+        type: 'primary',
+        icon: React.createElement(PlusOutlined),
+        onClick: onNew,
+      }, 'New Planning')
+    ),
+    React.createElement(Text, {
+      type: 'secondary',
+      style: { display: 'block', marginBottom: 16, fontSize: 13 },
+    }, 'Total: 23 plannings'),
+    React.createElement(Table, {
+      dataSource: PLANNINGS,
+      columns,
+      rowKey: 'id',
+      size: 'middle',
+      pagination: {
+        total: 23,
+        pageSize: 10,
+        showSizeChanger: false,
+        style: { marginTop: 16 },
+      },
+      style: { background: '#fff', borderRadius: 8 },
+      onRow: (row) => ({ onClick: () => onSelect(row), style: { cursor: 'pointer' } }),
+    })
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// NEW PLANNING DRAWER
+// ══════════════════════════════════════════════════════
+
+function NewPlanningDrawer({ open, onClose, onCreate }) {
+  const [linkCampaign, setLinkCampaign] = useState(true);
+
+  const drawerTitle = React.createElement('div', {
+    style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' },
+  },
+    React.createElement(Text, { strong: true, style: { fontSize: 16 } }, 'New Planning'),
+    React.createElement(Button, {
+      type: 'primary',
+      icon: React.createElement(PlusOutlined),
+      onClick: () => { onCreate(); onClose(); },
+    }, 'Create Planning')
+  );
+
+  return React.createElement(Drawer, {
+    open,
+    onClose,
+    width: 520,
+    title: drawerTitle,
+    closable: true,
+    destroyOnClose: true,
+    styles: { header: { borderBottom: '1px solid #F0F0F0' }, body: { padding: 24 } },
+  },
+    React.createElement(Form, { layout: 'vertical', style: { gap: 0 } },
+      // Planning Name
+      React.createElement(Form.Item, {
+        label: React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Planning Name'),
+        required: true,
+        style: { marginBottom: 20 },
+      },
+        React.createElement(Input, { placeholder: 'es. Gohan Sushi', size: 'large', defaultValue: 'Gohan Sushi' })
+      ),
+      // Campaign checkbox
+      React.createElement(Form.Item, { style: { marginBottom: 16 } },
+        React.createElement(Checkbox, {
+          checked: linkCampaign,
+          onChange: e => setLinkCampaign(e.target.checked),
+        }, 'I have a campaign to link')
+      ),
+      // Campaign select (conditional)
+      linkCampaign && React.createElement(Form.Item, {
+        label: React.createElement(Text, { style: { fontSize: 13 } }, 'Campaign'),
+        style: { marginBottom: 24 },
+      },
+        React.createElement(Select, {
+          size: 'large',
+          defaultValue: '04_DOOH_SushiLab',
+          style: { width: '100%' },
+          options: [
+            { value: '04_DOOH_SushiLab', label: '04_DOOH_SushiLab' },
+            { value: '01_OOH_Alessi', label: '01_OOH_Alessi' },
+            { value: '07_WEB_Campus', label: '07_WEB_Campus' },
+          ],
+        })
+      ),
+      // Brief section
+      React.createElement('div', { className: 'brief-section' },
+        React.createElement('div', { className: 'brief-section-title' }, 'Planning Brief'),
+        // Category
+        React.createElement(Form.Item, {
+          label: React.createElement(Text, { style: { fontSize: 13 } }, 'Category'),
+          required: true,
+          style: { marginBottom: 16 },
+        },
+          React.createElement(Select, {
+            size: 'large',
+            defaultValue: 'DOOH',
+            style: { width: '100%' },
+            options: [
+              { value: 'DOOH', label: 'DOOH' },
+              { value: 'OOH', label: 'OOH' },
+              { value: 'WEB', label: 'WEB' },
+            ],
+          })
+        ),
+        // Exposure Period
+        React.createElement(Form.Item, {
+          label: React.createElement(Text, { style: { fontSize: 13 } }, 'Exposure Period'),
+          required: true,
+          style: { marginBottom: 16 },
+        },
+          React.createElement(DatePicker.RangePicker, {
+            size: 'large',
+            style: { width: '100%' },
+            format: 'DD/MM/YYYY',
+          })
+        ),
+        // Advertiser
+        React.createElement(Form.Item, {
+          label: React.createElement(Text, { style: { fontSize: 13 } }, 'Advertiser'),
+          style: { marginBottom: 16 },
+        },
+          React.createElement('div', { className: 'advertiser-card' },
+            React.createElement(Avatar, { size: 40, style: { background: '#F0F0F0', flexShrink: 0 } },
+              React.createElement(UserOutlined, { style: { color: 'rgba(0,0,0,0.35)' } })
+            ),
+            React.createElement('div', { style: { flex: 1 } },
+              React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 } },
+                React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Gohan Sushi'),
+                React.createElement(Tag, { style: { fontSize: 11, padding: '0 6px', color: '#3E00FB', background: '#F0EAFF', border: '1px solid #D3B8FF' } }, '#234')
+              ),
+              React.createElement(Text, { type: 'secondary', style: { fontSize: 12, display: 'block' } }, 'Via Pietro Nenni, 28  90147 Palermo (PA)'),
+              React.createElement(Text, { type: 'secondary', style: { fontSize: 12, display: 'block' } }, 'P.IVA IT9294850220'),
+            )
+          )
+        ),
+        // Budget
+        React.createElement(Form.Item, {
+          label: React.createElement(Text, { style: { fontSize: 13 } }, 'Budget'),
+          style: { marginBottom: 16 },
+        },
+          React.createElement(InputNumber, {
+            prefix: '€',
+            size: 'large',
+            style: { width: '100%' },
+            defaultValue: 1567,
+            formatter: v => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, '.'),
+          })
+        ),
+        // Goals
+        React.createElement(Form.Item, {
+          label: React.createElement(Text, { style: { fontSize: 13 } }, 'Goals'),
+          style: { marginBottom: 0 },
+        },
+          React.createElement(Space.Compact, { style: { width: '100%' } },
+            React.createElement(InputNumber, {
+              size: 'large',
+              style: { width: '60%' },
+              defaultValue: 1000000,
+              formatter: v => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, '.'),
+            }),
+            React.createElement(Select, {
+              size: 'large',
+              defaultValue: 'views',
+              style: { width: '40%' },
+              options: [
+                { value: 'views', label: 'Views' },
+                { value: 'ots', label: 'OTS' },
+                { value: 'reach', label: 'Reach' },
+              ],
+            })
+          )
+        )
+      )
+    )
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// SVG MAP
+// ══════════════════════════════════════════════════════
+
+function SvgMap() {
+  const pins = [
+    { cx:8,  cy:20, type:'available'  },
+    { cx:18, cy:35, type:'available'  },
+    { cx:22, cy:8,  type:'reserved'   },
+    { cx:33, cy:25, type:'available'  },
+    { cx:40, cy:48, type:'available'  },
+    { cx:52, cy:18, type:'in-option'  },
+    { cx:58, cy:38, type:'available'  },
+    { cx:65, cy:55, type:'available'  },
+    { cx:72, cy:22, type:'reserved'   },
+    { cx:80, cy:42, type:'available'  },
+    { cx:87, cy:14, type:'in-option'  },
+    { cx:93, cy:50, type:'available'  },
+  ];
+  const pinColor = { available:'#52C41A', reserved:'#3E00FB', 'in-option':'#FAAD14' };
+
+  return React.createElement('svg', {
+    className: 'map-svg',
+    viewBox: '0 0 100 62',
+    preserveAspectRatio: 'xMidYMid slice',
+    xmlns: 'http://www.w3.org/2000/svg',
+  },
+    // Background (asphalt/non-road)
+    React.createElement('rect', { fill:'#E3EBF3', x:0, y:0, width:100, height:62 }),
+
+    // Building blocks
+    ...[
+      [0,0,14,10], [16,0,15,10], [33,0,13,10], [48,0,11,10], [61,0,15,10], [78,0,20,10],
+      [0,13,14,14], [16,13,15,14], [33,13,13,14], [48,13,11,14], [61,13,15,14], [78,13,20,14],
+      [0,30,14,13], [16,30,15,13], [33,30,13,13], [48,30,11,13], [61,30,15,13], [78,30,20,13],
+      [0,46,14,14], [16,46,15,14], [33,46,13,14], [48,46,11,14], [61,46,15,14], [78,46,20,14],
+    ].map(([x,y,w,h],i) =>
+      React.createElement('rect', { key:`block-${i}`, fill:'#F0EFEB', x, y, width:w, height:h, rx:0.5 })
+    ),
+
+    // Major horizontal roads (white)
+    React.createElement('rect', { fill:'#FFFFFF', x:0, y:10, width:100, height:3, opacity:0.95 }),
+    React.createElement('rect', { fill:'#FFFFFF', x:0, y:27, width:100, height:2.5, opacity:0.95 }),
+    React.createElement('rect', { fill:'#FFFFFF', x:0, y:43, width:100, height:2, opacity:0.9 }),
+
+    // Major vertical roads
+    React.createElement('rect', { fill:'#FFFFFF', x:14, y:0, width:2.5, height:62, opacity:0.95 }),
+    React.createElement('rect', { fill:'#FFFFFF', x:31, y:0, width:2.5, height:62, opacity:0.9 }),
+    React.createElement('rect', { fill:'#FFFFFF', x:46, y:0, width:2, height:62, opacity:0.9 }),
+    React.createElement('rect', { fill:'#FFFFFF', x:59, y:0, width:2, height:62, opacity:0.9 }),
+    React.createElement('rect', { fill:'#FFFFFF', x:76, y:0, width:2.5, height:62, opacity:0.95 }),
+
+    // Road labels
+    React.createElement('text', { x:1, y:9, fontSize:1.8, fill:'rgba(0,0,0,0.35)', fontFamily:'sans-serif' }, 'Viale della Regione Siciliana'),
+    React.createElement('text', { x:1, y:26.5, fontSize:1.5, fill:'rgba(0,0,0,0.30)', fontFamily:'sans-serif' }, 'Via Pietro Nenni'),
+    React.createElement('text', { x:1, y:42.5, fontSize:1.5, fill:'rgba(0,0,0,0.30)', fontFamily:'sans-serif' }, 'Via Gen. A. Scavo'),
+
+    // Pins
+    ...pins.map((p, i) =>
+      React.createElement('g', { key:`pin-${i}` },
+        // Drop shadow
+        React.createElement('circle', { cx:p.cx, cy:p.cy+0.3, r:3.2, fill:'rgba(0,0,0,0.15)' }),
+        // Outer circle
+        React.createElement('circle', { cx:p.cx, cy:p.cy, r:3, fill:pinColor[p.type], stroke:'#fff', strokeWidth:0.7 }),
+        // Inner icon dot
+        React.createElement('circle', { cx:p.cx, cy:p.cy, r:1, fill:'rgba(255,255,255,0.7)' })
+      )
+    ),
+
+    // Total badge
+    React.createElement('rect', { x:1, y:1, width:14, height:4.5, rx:1, fill:'#3E00FB' }),
+    React.createElement('text', { x:8, y:4.2, fontSize:2, fill:'#fff', fontFamily:'sans-serif', textAnchor:'middle', fontWeight:'bold' }, '32 assets')
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// PLANNING DETAIL — EMPTY STATE
+// ══════════════════════════════════════════════════════
+
+function EmptyPlanningState({ onStart }) {
+  // Astronaut illustration using SVG
+  return React.createElement('div', {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: 420,
+      gap: 16,
+      padding: 24,
+    },
+  },
+    // SVG illustration placeholder (simplified astronaut)
+    React.createElement('svg', { width: 120, height: 120, viewBox: '0 0 120 120', xmlns: 'http://www.w3.org/2000/svg' },
+      // Background circle
+      React.createElement('circle', { cx: 60, cy: 60, r: 55, fill: '#F0EAFF', opacity: 0.6 }),
+      // Body
+      React.createElement('ellipse', { cx: 60, cy: 72, rx: 22, ry: 28, fill: '#6B3FFF' }),
+      // Helmet
+      React.createElement('circle', { cx: 60, cy: 44, r: 22, fill: '#7B4FFF' }),
+      React.createElement('circle', { cx: 60, cy: 44, r: 17, fill: '#BEA4FF', opacity: 0.6 }),
+      // Visor reflection
+      React.createElement('ellipse', { cx: 55, cy: 39, rx: 6, ry: 4, fill: 'white', opacity: 0.4 }),
+      // Arms
+      React.createElement('ellipse', { cx: 35, cy: 68, rx: 8, ry: 14, fill: '#6B3FFF', transform: 'rotate(15, 35, 68)' }),
+      React.createElement('ellipse', { cx: 85, cy: 68, rx: 8, ry: 14, fill: '#6B3FFF', transform: 'rotate(-15, 85, 68)' }),
+      // Legs
+      React.createElement('rect', { x: 50, y: 96, width: 10, height: 14, rx: 5, fill: '#5B2FEF' }),
+      React.createElement('rect', { x: 62, y: 96, width: 10, height: 14, rx: 5, fill: '#5B2FEF' }),
+      // Stars
+      React.createElement('circle', { cx: 20, cy: 25, r: 2, fill: '#3E00FB', opacity: 0.5 }),
+      React.createElement('circle', { cx: 95, cy: 20, r: 1.5, fill: '#3E00FB', opacity: 0.4 }),
+      React.createElement('circle', { cx: 15, cy: 85, r: 1, fill: '#3E00FB', opacity: 0.3 }),
+      React.createElement('circle', { cx: 100, cy: 90, r: 2, fill: '#3E00FB', opacity: 0.4 }),
+    ),
+    React.createElement(Title, { level: 4, style: { margin: 0, color: 'rgba(0,0,0,0.65)' } }, "There's nothing here!"),
+    React.createElement(Text, {
+      type: 'secondary',
+      style: { textAlign: 'center', maxWidth: 280, fontSize: 13 },
+    }, 'Add systems to your planning to display them in this space'),
+    React.createElement(Button, {
+      type: 'primary',
+      size: 'large',
+      icon: React.createElement(PlayCircleOutlined),
+      onClick: onStart,
+      style: { marginTop: 8 },
+    }, 'Start Planning')
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// PLANNING DETAIL — LIST VIEW (systems)
+// ══════════════════════════════════════════════════════
+
+function DetailListView() {
+  const [expandedId, setExpandedId] = useState('S01');
+
+  const faceColumns = ['Face Type', 'Coordinates', 'Orient.', 'Visibility', 'Format', 'Illumination', 'Sales Model', 'State'];
+
+  return React.createElement('div', null,
+    ...SYSTEMS.map(s =>
+      React.createElement('div', { key: s.id, className: 'system-card' },
+        // Card header
+        React.createElement('div', {
+          className: 'system-card-header',
+          onClick: () => setExpandedId(expandedId === s.id ? null : s.id),
+          style: { display: 'flex', alignItems: 'center', gap: 10 },
+        },
+          React.createElement('div', {
+            className: 'system-avail-bar',
+            style: {
+              width: 4,
+              height: 32,
+              borderRadius: 2,
+              background: AVAIL_COLOR[s.state] || '#D9D9D9',
+              flexShrink: 0,
+            }
+          }),
+          React.createElement('div', { className: 'system-card-left', style: { flex: 1 } },
+            React.createElement(Text, { strong: true, style: { fontSize: 13 } }, s.name),
+            React.createElement(Tag, { style: { marginLeft: 6, fontSize: 11 } }, s.type),
+            React.createElement(Text, { type: 'secondary', style: { fontSize: 12, display: 'block', marginTop: 1 } },
+              `${s.address}, ${s.city}  ·  Cimasa: ${s.cimasa}  ·  Account N°: ${s.account}`
+            )
+          ),
+          React.createElement('div', { style: { flexShrink: 0, display: 'flex', alignItems: 'center', gap: 8 } },
+            React.createElement(Tag, { style: { background: '#F0EAFF', color: '#3E00FB', border: '1px solid #D3B8FF', fontSize: 12 } },
+              `${s.faces} ${s.faces === 1 ? 'face' : 'faces'} selected`
+            ),
+            React.createElement(CaretDownOutlined, {
+              style: {
+                fontSize: 10, color: 'rgba(0,0,0,0.35)',
+                transform: expandedId === s.id ? 'rotate(0)' : 'rotate(-90deg)',
+                transition: 'transform 0.15s',
+              }
+            })
+          )
+        ),
+        // Expanded detail
+        expandedId === s.id && React.createElement('div', { className: 'system-card-expanded' },
+          React.createElement('table', { className: 'system-face-table' },
+            React.createElement('thead', null,
+              React.createElement('tr', null,
+                ...faceColumns.map(col =>
+                  React.createElement('th', { key: col }, col)
+                )
+              )
+            ),
+            React.createElement('tbody', null,
+              ...Array.from({ length: s.faces }, (_, fi) =>
+                React.createElement('tr', { key: fi },
+                  React.createElement('td', null,
+                    React.createElement(Tag, { style: { background: '#E6F7FF', color: '#1677FF', border: '1px solid #91D5FF', fontSize: 11, marginRight: 0 } }, 'Front Screen')
+                  ),
+                  React.createElement('td', null, `38.1157°N 13.3615°E`),
+                  React.createElement('td', null, '125°'),
+                  React.createElement('td', null, 'r 40m'),
+                  React.createElement('td', null, 'W 6m x H 3m'),
+                  React.createElement('td', null, '2 Spotlights'),
+                  React.createElement('td', null, 'Standard'),
+                  React.createElement('td', null, React.createElement(AvailDot, { state: s.state }))
+                )
+              )
+            )
+          )
+        )
+      )
+    ),
+    // Pagination
+    React.createElement('div', { style: { padding: '12px 16px', display: 'flex', justifyContent: 'flex-end', borderTop: '1px solid #F0F0F0' } },
+      React.createElement(Pagination, { total: 32, pageSize: 8, size: 'small', showSizeChanger: false })
+    )
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// MINI CALENDAR
+// ══════════════════════════════════════════════════════
+
+function MiniCalendar({ month = 'May 2025', rangeStart = 10, rangeEnd = 24 }) {
+  const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  // May 2025 starts on Thursday (index 4)
+  const firstDay = 4;
+  const totalDays = 31;
+  const cells = [...Array(firstDay).fill(null), ...Array.from({ length: totalDays }, (_, i) => i + 1)];
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  return React.createElement('div', { className: 'mini-cal' },
+    React.createElement('div', { className: 'mini-cal-header' },
+      React.createElement('button', {
+        style: { background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(0,0,0,0.45)', padding: 2 },
+      }, React.createElement(LeftOutlined, { style: { fontSize: 10 } })),
+      React.createElement(Text, { style: { fontSize: 12, fontWeight: 500 } }, month),
+      React.createElement('button', {
+        style: { background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(0,0,0,0.45)', padding: 2 },
+      }, React.createElement(RightOutlined, { style: { fontSize: 10 } }))
+    ),
+    React.createElement('div', { className: 'mini-cal-grid' },
+      ...days.map(d => React.createElement('div', { key: d, className: 'mini-cal-day-label' }, d)),
+      ...cells.map((day, i) => {
+        let cls = 'mini-cal-day';
+        if (!day) cls += ' empty';
+        else if (day === rangeStart || day === rangeEnd) cls += ' range-start';
+        else if (day > rangeStart && day < rangeEnd) cls += ' in-range';
+        return React.createElement('div', { key: i, className: cls }, day || '');
+      })
+    ),
+    React.createElement('div', { style: { marginTop: 8, fontSize: 11, color: 'rgba(0,0,0,0.45)', display: 'flex', justifyContent: 'space-between' } },
+      React.createElement('span', null, `Start: ${rangeStart}/05/2025`),
+      React.createElement('span', null, `End: ${rangeEnd}/05/2025`)
+    )
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// PLANNING DETAIL
+// ══════════════════════════════════════════════════════
+
+function PlanningDetail({ planning, onBack, onStartPlanning }) {
+  const [subview, setSubview] = useState(planning.hasSystems ? 'map' : 'empty');
+  const [editMenuOpen, setEditMenuOpen] = useState(false);
+
+  const editItems = [
+    { key: '1', label: 'Edit Campaign or Brief' },
+    { key: '2', label: 'Edit Systems Selection', disabled: !planning.hasSystems },
+  ];
+
+  const viewButtons = [
+    { key: 'map',  icon: React.createElement(EnvironmentOutlined) },
+    { key: 'list', icon: React.createElement(BarsOutlined) },
+    { key: 'grid', icon: React.createElement(AppstoreOutlined) },
+    { key: 'table',icon: React.createElement(TableOutlined) },
+  ];
+
+  return React.createElement('div', { className: 'page-content' },
+    // Breadcrumb
+    React.createElement('div', { style: { marginBottom: 12 } },
+      React.createElement('a', {
+        style: { color: 'rgba(0,0,0,0.45)', cursor: 'pointer', fontSize: 13, display: 'inline-flex', alignItems: 'center', gap: 6 },
+        onClick: onBack,
+      },
+        React.createElement(ArrowLeftOutlined, { style: { fontSize: 12 } }),
+        'Back to list'
+      )
+    ),
+    // Page title row
+    React.createElement('div', { className: 'page-header', style: { alignItems: 'flex-start', marginBottom: 6 } },
+      React.createElement('div', null,
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 } },
+          React.createElement(Title, { level: 4, style: { margin: 0, fontWeight: 600 } },
+            `Planning | ${planning.name}`
+          ),
+          React.createElement(CategoryTag, { category: planning.category })
+        ),
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 12, fontSize: 13, color: 'rgba(0,0,0,0.45)', flexWrap: 'wrap' } },
+          React.createElement('span', null, `#${planning.id}`),
+          React.createElement('span', null, '·'),
+          React.createElement('span', null, `Creation Date: ${planning.start}`),
+          React.createElement('span', null, '·'),
+          React.createElement('span', null, 'Campaign: '),
+          React.createElement('a', { style: { color: '#3E00FB', display: 'inline-flex', alignItems: 'center', gap: 3 } },
+            React.createElement(LinkOutlined, { style: { fontSize: 11 } }),
+            '04_DOOH_SushiLab'
+          ),
+          React.createElement('span', null, '·'),
+          React.createElement(StateBadge, { state: planning.state })
+        )
+      ),
+      React.createElement(Space, null,
+        React.createElement(Dropdown, {
+          menu: { items: editItems, onClick: () => setEditMenuOpen(false) },
+          trigger: ['click'],
+          open: editMenuOpen,
+          onOpenChange: setEditMenuOpen,
+        },
+          React.createElement(Button, { icon: React.createElement(DownOutlined) }, 'Edit Planning')
+        ),
+        planning.hasSystems
+          ? React.createElement(Button, {
+              style: { background: '#52C41A', color: '#fff', border: 'none' },
+              icon: React.createElement(CheckOutlined),
+            }, 'Set to Complete')
+          : React.createElement(Button, {
+              type: 'primary',
+              icon: React.createElement(PlayCircleOutlined),
+              onClick: onStartPlanning,
+            }, 'Start Planning')
+      )
+    ),
+
+    React.createElement(Divider, { style: { margin: '12px 0' } }),
+
+    // Detail layout: left card + right content
+    React.createElement('div', { className: 'detail-layout' },
+
+      // Left summary card
+      React.createElement('div', { className: 'detail-sidebar' },
+        React.createElement(Card, { size: 'small', bodyStyle: { padding: 0 } },
+          // Advertiser
+          React.createElement('div', { className: 'detail-card-section' },
+            React.createElement('div', { className: 'detail-section-label' },
+              React.createElement(UserOutlined, { style: { fontSize: 12 } }),
+              'Advertiser'
+            ),
+            React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+              React.createElement(Avatar, { size: 28, style: { background: '#F0EAFF', flexShrink: 0, fontSize: 12 } }, 'GS'),
+              React.createElement('div', null,
+                React.createElement(Text, { strong: true, style: { fontSize: 13, display: 'block' } }, planning.advertiser),
+                React.createElement('a', { style: { fontSize: 12, color: '#3E00FB', display: 'inline-flex', alignItems: 'center', gap: 3 } },
+                  React.createElement(LinkOutlined, { style: { fontSize: 10 } }),
+                  'Go to profile'
+                )
+              )
+            )
+          ),
+          // Budget
+          React.createElement('div', { className: 'detail-card-section' },
+            React.createElement('div', { className: 'detail-section-label' },
+              React.createElement(MoneyCollectOutlined, { style: { fontSize: 12 } }),
+              'Budget'
+            ),
+            React.createElement(Text, { style: { fontSize: 22, fontWeight: 700, color: 'rgba(0,0,0,0.88)' } }, planning.budget)
+          ),
+          // Goal
+          React.createElement('div', { className: 'detail-card-section' },
+            React.createElement('div', { className: 'detail-section-label' },
+              React.createElement(BarChartOutlined, { style: { fontSize: 12 } }),
+              'Goal'
+            ),
+            React.createElement(Text, { style: { fontSize: 22, fontWeight: 700, color: 'rgba(0,0,0,0.88)' } }, planning.goal),
+            React.createElement(Text, { type: 'secondary', style: { fontSize: 12, marginLeft: 4 } }, 'views')
+          ),
+          // Calendar
+          React.createElement('div', { className: 'detail-card-section' },
+            React.createElement('div', { className: 'detail-section-label' },
+              React.createElement(CalendarOutlined, { style: { fontSize: 12 } }),
+              'Exposure Period'
+            ),
+            React.createElement(MiniCalendar, null)
+          )
+        )
+      ),
+
+      // Right content area
+      React.createElement('div', { className: 'detail-main' },
+        // Sub-header
+        React.createElement('div', { className: 'detail-main-header' },
+          planning.hasSystems
+            ? React.createElement(Text, { style: { fontSize: 13 } },
+                React.createElement('span', { style: { fontWeight: 500 } }, 'Total: '),
+                `32 ${subview === 'list' ? 'systems' : 'assets'}`
+              )
+            : React.createElement(Text, { type: 'secondary', style: { fontSize: 13 } }, 'No systems added yet'),
+          planning.hasSystems && React.createElement('div', { className: 'view-toggle' },
+            ...viewButtons.map(({ key, icon }) =>
+              React.createElement('button', {
+                key,
+                className: 'view-toggle-btn' + (subview === key ? ' active' : ''),
+                onClick: () => setSubview(key),
+              }, icon)
+            )
+          )
+        ),
+        // Content
+        subview === 'empty' && React.createElement(EmptyPlanningState, { onStart: onStartPlanning }),
+        subview === 'map' && React.createElement('div', { className: 'map-container' },
+          React.createElement(SvgMap),
+          // Legend
+          React.createElement('div', { className: 'map-legend' },
+            React.createElement('div', { className: 'map-legend-item' },
+              React.createElement('span', { style: { width: 10, height: 10, borderRadius: '50%', background: '#52C41A', flexShrink: 0 } }),
+              React.createElement(Text, { style: { fontSize: 12 } }, 'Available')
+            ),
+            React.createElement('div', { className: 'map-legend-item' },
+              React.createElement('span', { style: { width: 10, height: 10, borderRadius: '50%', background: '#3E00FB', flexShrink: 0 } }),
+              React.createElement(Text, { style: { fontSize: 12 } }, 'Reserved')
+            ),
+            React.createElement('div', { className: 'map-legend-item' },
+              React.createElement('span', { style: { width: 10, height: 10, borderRadius: '50%', background: '#FAAD14', flexShrink: 0 } }),
+              React.createElement(Text, { style: { fontSize: 12 } }, 'In Option')
+            ),
+          )
+        ),
+        subview === 'list' && React.createElement(DetailListView),
+        (subview === 'grid' || subview === 'table') && React.createElement('div', {
+          style: { padding: 24, color: 'rgba(0,0,0,0.45)', textAlign: 'center', height: 420, display: 'flex', alignItems: 'center', justifyContent: 'center' }
+        },
+          React.createElement(Text, { type: 'secondary' }, `Vista "${subview}" — funzionalità in arrivo`)
+        )
+      )
+    )
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// FILTER PANEL (Select Systems)
+// ══════════════════════════════════════════════════════
+
+function FilterPanel({ onClose }) {
+  const [selectedStates, setSelectedStates] = useState(['Available', 'In Option']);
+  const [selectedTypes, setSelectedTypes] = useState(['Stendardo', 'Pensilina', 'Parapedonale']);
+
+  const toggleState = (s) => setSelectedStates(prev =>
+    prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]
+  );
+  const toggleType = (t) => setSelectedTypes(prev =>
+    prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]
+  );
+
+  const allTypes = {
+    'System': ['Poster', 'Stendardo', 'Palina', 'Palina Butterfly', 'Plancia', 'Rotor', 'Telo'],
+    'Urban Furniture': ['Pensilina', 'Parapedonale', 'Palo Luce', 'Cassonetto', 'Fioriera'],
+    'Other': ['Autobus', 'Custom'],
+  };
+
+  return React.createElement('div', { className: 'filter-panel' },
+    React.createElement('div', { className: 'panel-header' },
+      React.createElement('div', null,
+        React.createElement(Text, { strong: true, style: { fontSize: 14 } }, 'Filters'),
+        React.createElement(Tag, { style: { marginLeft: 6, background: '#3E00FB', color: '#fff', border: 'none', fontSize: 11 } },
+          `${selectedStates.length + selectedTypes.length} selected`
+        )
+      ),
+      React.createElement(Space, { size: 8 },
+        React.createElement(Button, {
+          size: 'small',
+          danger: true,
+          type: 'default',
+          onClick: () => { setSelectedStates([]); setSelectedTypes([]); },
+        }, 'Remove all'),
+        React.createElement(Button, { size: 'small', type: 'primary', onClick: onClose }, 'Apply')
+      )
+    ),
+
+    // Commercial State
+    React.createElement('div', { className: 'filter-section' },
+      React.createElement('div', { className: 'filter-section-label' }, 'Commercial State'),
+      React.createElement('div', null,
+        ['Available', 'In Option', 'Reserved'].map(s =>
+          React.createElement('span', {
+            key: s,
+            className: 'filter-chip' + (selectedStates.includes(s) ? ' selected' : ''),
+            onClick: () => toggleState(s),
+          },
+            React.createElement('span', {
+              style: { width: 6, height: 6, borderRadius: '50%', background: AVAIL_COLOR[s], flexShrink: 0 }
+            }),
+            s
+          )
+        )
+      )
+    ),
+
+    // Faces Quantity
+    React.createElement('div', { className: 'filter-section' },
+      React.createElement('div', { className: 'filter-section-label' }, 'Faces Quantity'),
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+        React.createElement('input', {
+          type: 'radio', defaultChecked: true,
+          style: { accentColor: '#3E00FB' }
+        }),
+        React.createElement(Text, { style: { fontSize: 13 } }, 'Faces quantity ≥ '),
+        React.createElement(InputNumber, {
+          defaultValue: 2,
+          min: 1,
+          size: 'small',
+          style: { width: 60 },
+        })
+      )
+    ),
+
+    // System Type
+    React.createElement('div', { className: 'filter-section' },
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 } },
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+          React.createElement('span', { className: 'filter-section-label', style: { marginBottom: 0 } }, 'System Type'),
+          React.createElement(Tag, { style: { fontSize: 11, background: '#F6FFED', color: '#389E0D', border: '1px solid #B7EB8F' } }, 'OOH'),
+        ),
+        React.createElement('a', { style: { fontSize: 12, color: '#FF4A1C' }, onClick: () => setSelectedTypes([]) }, 'Clear filter')
+      ),
+      ...Object.entries(allTypes).map(([group, types]) =>
+        React.createElement('div', { key: group },
+          React.createElement('div', { className: 'filter-subsection-label' }, group),
+          ...types.map(t =>
+            React.createElement('div', {
+              key: t,
+              className: 'filter-checkbox-item',
+              onClick: () => toggleType(t),
+            },
+              React.createElement('div', {
+                className: 'filter-checkbox' + (selectedTypes.includes(t) ? ' checked' : ''),
+              },
+                selectedTypes.includes(t) && React.createElement(CheckOutlined, { style: { fontSize: 9, color: '#fff' } })
+              ),
+              React.createElement('span', null, t)
+            )
+          )
+        )
+      )
+    ),
+
+    // Sales Model
+    React.createElement('div', { className: 'filter-section' },
+      React.createElement('div', { className: 'filter-section-label' }, 'Sales Model'),
+      ['Standard', 'Long Term', 'Stagionale'].map(m =>
+        React.createElement('div', { key: m, className: 'filter-checkbox-item' },
+          React.createElement('div', { className: 'filter-checkbox' }),
+          React.createElement('span', null, m)
+        )
+      )
+    ),
+
+    // Illumination
+    React.createElement('div', { className: 'filter-section' },
+      React.createElement('div', { className: 'filter-section-label' }, 'Illumination'),
+      ['None', 'Spotlights', 'Backlights'].map((ill, i) =>
+        React.createElement('div', { key: ill, className: 'filter-checkbox-item' },
+          React.createElement('div', {
+            className: 'filter-checkbox' + (i === 1 ? ' checked' : ''),
+          },
+            i === 1 && React.createElement(CheckOutlined, { style: { fontSize: 9, color: '#fff' } })
+          ),
+          React.createElement('span', null, ill)
+        )
+      )
+    )
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// SELECT SYSTEMS
+// ══════════════════════════════════════════════════════
+
+function SelectSystems({ planning, onBack, onApply }) {
+  const [filterOpen, setFilterOpen] = useState(true);
+  const [searchText, setSearchText] = useState('');
+  const [activeFilters] = useState(['System Type: Palina', 'System Type: Poster', 'System Type: Palina Butterfly', 'System Type: Rotor']);
+
+  const filtered = SEARCH_RESULTS.filter(r =>
+    !searchText || r.address.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  return React.createElement('div', { className: 'page-content' },
+    // Breadcrumb + title
+    React.createElement('div', { style: { marginBottom: 12 } },
+      React.createElement('a', {
+        style: { color: 'rgba(0,0,0,0.45)', cursor: 'pointer', fontSize: 13, display: 'inline-flex', alignItems: 'center', gap: 6 },
+        onClick: onBack,
+      },
+        React.createElement(ArrowLeftOutlined, { style: { fontSize: 12 } }),
+        `Planning | ${planning.name}`
+      )
+    ),
+    React.createElement('div', { className: 'page-header', style: { marginBottom: 8 } },
+      React.createElement('div', null,
+        React.createElement(Title, { level: 4, style: { margin: '0 0 4px' } }, 'Select Systems'),
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+          React.createElement(Text, { type: 'secondary', style: { fontSize: 13 } }, 'Gohan Sushi Palermo'),
+          React.createElement(CategoryTag, { category: planning.category }),
+          React.createElement(Text, { type: 'secondary', style: { fontSize: 13 } }, `${planning.start} – ${planning.end}`)
+        )
+      ),
+      React.createElement(Button, {
+        type: 'primary',
+        icon: React.createElement(CheckOutlined),
+        onClick: onApply,
+      }, 'Apply Selection')
+    ),
+
+    // 3-column layout
+    React.createElement('div', { className: 'select-systems-layout' },
+
+      // Search History panel
+      React.createElement('div', { className: 'search-history-panel' },
+        React.createElement('div', { className: 'panel-header' },
+          React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Search History'),
+          React.createElement(Tooltip, { title: 'Le ricerche vengono salvate automaticamente' },
+            React.createElement('span', {
+              style: { width: 16, height: 16, borderRadius: '50%', background: '#F0F0F0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: 'rgba(0,0,0,0.45)', cursor: 'default' }
+            }, 'i')
+          )
+        ),
+        React.createElement('div', null,
+          [
+            { label: 'Palermo Viale delle...', count: 2 },
+            { label: 'Palermo Piazza Verdi', count: 0 },
+          ].map((h, i) =>
+            React.createElement('div', { key: i, className: 'history-item' },
+              React.createElement('span', { style: { fontSize: 13, color: 'rgba(0,0,0,0.65)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
+                h.label
+              ),
+              React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 } },
+                h.count > 0 && React.createElement('span', {
+                  style: { background: '#3E00FB', color: '#fff', borderRadius: '10px', padding: '0 7px', fontSize: 11, fontWeight: 600 }
+                }, h.count),
+                React.createElement('button', {
+                  style: { background: 'none', border: 'none', cursor: 'pointer', color: '#FF4A1C', padding: 2, display: 'flex' },
+                },
+                  React.createElement(DeleteOutlined, { style: { fontSize: 12 } })
+                )
+              )
+            )
+          )
+        )
+      ),
+
+      // Search Systems panel
+      React.createElement('div', { className: 'search-systems-panel' },
+        React.createElement('div', { className: 'panel-header', style: { flexDirection: 'column', alignItems: 'flex-start', gap: 8 } },
+          React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' } },
+            React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Search Systems'),
+            React.createElement(Button, {
+              size: 'small',
+              icon: React.createElement(FilterOutlined),
+              type: filterOpen ? 'primary' : 'default',
+              onClick: () => setFilterOpen(o => !o),
+            }, filterOpen ? 'Hide Filters' : 'Filters')
+          ),
+          // Search bar
+          React.createElement('div', { style: { display: 'flex', gap: 8, width: '100%' } },
+            React.createElement(Select, {
+              defaultValue: 'address',
+              size: 'middle',
+              style: { width: 120 },
+              options: [
+                { value: 'address', label: 'Address' },
+                { value: 'code', label: 'Code' },
+                { value: 'name', label: 'Name' },
+              ],
+            }),
+            React.createElement(Input, {
+              placeholder: 'Search...',
+              value: searchText,
+              onChange: e => setSearchText(e.target.value),
+              prefix: React.createElement(SearchOutlined, { style: { color: 'rgba(0,0,0,0.35)' } }),
+              style: { flex: 1 },
+            })
+          ),
+          // Active filter tags
+          React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 0 } },
+            ...activeFilters.map(f =>
+              React.createElement('span', { key: f, className: 'active-filter-tag' },
+                f,
+                React.createElement(CloseOutlined, { style: { fontSize: 9 } })
+              )
+            ),
+            React.createElement('span', { className: 'active-filter-tag' }, '+ 3 more')
+          )
+        ),
+        React.createElement('div', { style: { padding: '8px 16px', borderBottom: '1px solid #F0F0F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' } },
+          React.createElement(Text, { type: 'secondary', style: { fontSize: 13 } },
+            React.createElement('span', { style: { fontWeight: 500, color: 'rgba(0,0,0,0.65)' } }, `Total: ${filtered.length} systems`)
+          ),
+          React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+            React.createElement('label', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)', cursor: 'pointer' } },
+              React.createElement('input', { type: 'checkbox', style: { marginRight: 5, accentColor: '#3E00FB' } }),
+              'Show selected only'
+            )
+          )
+        ),
+        React.createElement('div', { className: 'search-results-scroll' },
+          ...filtered.map(r =>
+            React.createElement('div', { key: r.id, className: 'search-result-item' },
+              React.createElement('div', {
+                className: 'search-result-bar',
+                style: { background: AVAIL_COLOR[r.state] || '#D9D9D9' }
+              }),
+              React.createElement(Checkbox, { style: { flexShrink: 0 } }),
+              React.createElement('div', { style: { flex: 1, minWidth: 0 } },
+                React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+                  React.createElement(Text, { strong: true, style: { fontSize: 13 } }, r.name),
+                  React.createElement(Tag, { style: { fontSize: 11, marginRight: 0 } }, r.type),
+                ),
+                React.createElement(Text, { type: 'secondary', style: { fontSize: 12, display: 'block' } }, r.address),
+                React.createElement(Text, { type: 'secondary', style: { fontSize: 11 } }, `Cimasa: ${r.cimasa}  ·  `),
+                React.createElement(AvailDot, { state: r.state })
+              )
+            )
+          )
+        )
+      ),
+
+      // Filter panel (conditional)
+      filterOpen && React.createElement(FilterPanel, { onClose: () => setFilterOpen(false) })
+    )
+  );
+}
+
+// ══════════════════════════════════════════════════════
+// APP ROOT
+// ══════════════════════════════════════════════════════
+
+function AppRoot() {
+  const [view, setView] = useState('list');  // 'list' | 'detail' | 'select-systems'
+  const [selectedPlanning, setSelectedPlanning] = useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Compute which nav key is active based on current view
+  const activeNavKey = (view === 'list' || view === 'detail' || view === 'select-systems')
+    ? 'plannings'
+    : 'overview';
+
+  function handleNavSelect(key) {
+    if (key === 'plannings') {
+      setView('list');
+      setSelectedPlanning(null);
+    }
+    // other keys: Overview, Inventory, Campaigns — navigazione futura
+  }
+
+  function handleSelectPlanning(planning) {
+    setSelectedPlanning(planning);
+    setView('detail');
+  }
+
+  function handleBackToList() {
+    setView('list');
+    setSelectedPlanning(null);
+  }
+
+  function handleStartPlanning() {
+    setView('select-systems');
+  }
+
+  function handleApplySelection() {
+    setView('detail');
+    setSelectedPlanning(prev => prev ? { ...prev, hasSystems: true } : prev);
+  }
+
+  return React.createElement(ConfigProvider, { theme: window.GRAVITY_THEME },
+    React.createElement(App, null,
+      React.createElement('div', { className: 'app-shell' },
+        React.createElement(TopNav, { activeNavKey, onNavSelect: handleNavSelect }),
+        React.createElement('main', { className: 'app-main' },
+          view === 'list' && React.createElement(PlanningsList, {
+            onSelect: handleSelectPlanning,
+            onNew: () => setDrawerOpen(true),
+          }),
+          view === 'detail' && selectedPlanning && React.createElement(PlanningDetail, {
+            planning: selectedPlanning,
+            onBack: handleBackToList,
+            onStartPlanning: handleStartPlanning,
+          }),
+          view === 'select-systems' && selectedPlanning && React.createElement(SelectSystems, {
+            planning: selectedPlanning,
+            onBack: () => setView('detail'),
+            onApply: handleApplySelection,
+          })
+        ),
+        React.createElement(NewPlanningDrawer, {
+          open: drawerOpen,
+          onClose: () => setDrawerOpen(false),
+          onCreate: () => setDrawerOpen(false),
+        })
+      )
+    )
+  );
+}
+
+// ── Mount ──────────────────────────────────────────────
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(AppRoot));
+</script>
+</body>
+</html>
