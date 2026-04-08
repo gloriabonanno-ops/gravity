@@ -690,10 +690,10 @@ function SelectSystemsV2() {
 
           // ── Card 2: ricerca ──────────────────────────────
           React.createElement('div', {
-            style: { background: '#fff', borderRadius: 8, border: '1px solid #F0F0F0', padding: '20px 24px', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', flexShrink: 0 }
+            style: { background: '#fff', borderRadius: 8, border: '1px solid #F0F0F0', padding: '28px 24px', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }
           },
             // Row 1: search group + Filters + Search
-            React.createElement('div', { style: { display: 'flex', gap: 8, alignItems: 'center' } },
+            React.createElement('div', { style: { display: 'flex', gap: 8, alignItems: 'center', width: '100%', maxWidth: 760 } },
               React.createElement('div', { className: 'search-group' },
                 React.createElement(Select, {
                   value: searchScope,
@@ -751,7 +751,7 @@ function SelectSystemsV2() {
             ),
 
             // Row 2: quick type filter pills
-            React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, flexWrap: 'wrap' } },
+            React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, flexWrap: 'wrap', width: '100%', maxWidth: 760, justifyContent: 'center' } },
               React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.3)', fontWeight: 500, flexShrink: 0, marginRight: 2 } }, 'Type:'),
               ...SYSTEM_TYPES.map(t => {
                 const active = activeTypes.includes(t);
