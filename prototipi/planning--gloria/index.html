@@ -299,46 +299,100 @@
     }
 
     /* ── Select Systems ────────────────────────────────── */
-    .select-systems-layout {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      height: calc(100vh - 200px);
-      min-height: 500px;
-    }
-    .search-history-panel {
-      width: 220px;
-      flex-shrink: 0;
-      background: #fff;
-      border: 1px solid #F0F0F0;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .search-systems-panel {
-      flex: 1;
-      min-width: 0;
-      background: #fff;
-      border: 1px solid #F0F0F0;
-      border-radius: 8px;
-      overflow: hidden;
+    /* ── Select Systems — full-height layout ───────────── */
+    .ss-root {
       display: flex;
       flex-direction: column;
+      height: calc(100vh - 73px);
+      overflow: hidden;
+      background: #F5F5F5;
     }
-    .filter-panel {
-      width: 320px;
-      flex-shrink: 0;
+    .ss-header {
       background: #fff;
-      border: 1px solid #F0F0F0;
-      border-radius: 8px;
-      overflow-y: auto;
-    }
-    .panel-header {
-      padding: 12px 16px;
       border-bottom: 1px solid #F0F0F0;
+      padding: 14px 24px 0;
+      flex-shrink: 0;
+    }
+    .ss-header-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      margin-bottom: 10px;
     }
+    .ss-breadcrumb {
+      color: rgba(0,0,0,0.45);
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .ss-breadcrumb:hover { color: #3E00FB; }
+    .ss-title-row { margin: 0 0 12px; }
+    .ss-search-bar {
+      padding: 10px 24px;
+      background: #fff;
+      border-bottom: 1px solid #F0F0F0;
+      flex-shrink: 0;
+    }
+    .ss-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .ss-sidebar {
+      width: 320px;
+      flex-shrink: 0;
+      border-right: 1px solid #F0F0F0;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      overflow: hidden;
+    }
+    .ss-count-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: #FAFAFA;
+      flex-shrink: 0;
+    }
+    .ss-results-scroll { flex: 1; overflow-y: auto; }
+    .ss-result-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid #F5F5F5;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .ss-result-item:hover { background: #FAFAFA; }
+    .ss-result-item.selected { background: #F0EAFF; }
+    .ss-result-item.selected:hover { background: #E8DFFF; }
+    .ss-result-bar {
+      width: 4px;
+      height: 40px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .ss-map-area {
+      flex: 1;
+      overflow: hidden;
+      background: #E3EBF3;
+      position: relative;
+    }
+    .ss-map-area .map-container { height: 100%; }
+    .ss-table-wrap {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+    .ss-row-selected td { background: #F0EAFF !important; }
     .filter-section {
       padding: 12px 16px;
       border-bottom: 1px solid #F0F0F0;
@@ -400,45 +454,7 @@
       letter-spacing: 0.5px;
       padding: 8px 0 4px;
     }
-    .search-result-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
-      border-bottom: 1px solid #F5F5F5;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .search-result-item:hover { background: #FAFAFA; }
-    .search-result-item:last-child { border-bottom: none; }
-    .search-result-bar {
-      width: 4px;
-      height: 36px;
-      border-radius: 2px;
-      flex-shrink: 0;
-    }
-    .history-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      border-bottom: 1px solid #F5F5F5;
-      cursor: pointer;
-      font-size: 13px;
-    }
-    .history-item:hover { background: #FAFAFA; }
-    .active-filter-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 8px;
-      background: #F0EAFF;
-      border: 1px solid #D3B8FF;
-      border-radius: 4px;
-      font-size: 12px;
-      color: #3E00FB;
-      margin: 3px 3px 3px 0;
-    }
+    /* (search-result / history / active-filter styles moved to .ss-* above) */
 
     /* ── Mini calendar ─────────────────────────────────── */
     .mini-cal { font-size: 12px; }
@@ -1441,24 +1457,7 @@ function FilterPanel({ onClose }) {
     'Other': ['Autobus', 'Custom'],
   };
 
-  return React.createElement('div', { className: 'filter-panel' },
-    React.createElement('div', { className: 'panel-header' },
-      React.createElement('div', null,
-        React.createElement(Text, { strong: true, style: { fontSize: 14 } }, 'Filters'),
-        React.createElement(Tag, { style: { marginLeft: 6, background: '#3E00FB', color: '#fff', border: 'none', fontSize: 11 } },
-          `${selectedStates.length + selectedTypes.length} selected`
-        )
-      ),
-      React.createElement(Space, { size: 8 },
-        React.createElement(Button, {
-          size: 'small',
-          danger: true,
-          type: 'default',
-          onClick: () => { setSelectedStates([]); setSelectedTypes([]); },
-        }, 'Remove all'),
-        React.createElement(Button, { size: 'small', type: 'primary', onClick: onClose }, 'Apply')
-      )
-    ),
+  return React.createElement(React.Fragment, null,
 
     // Commercial State
     React.createElement('div', { className: 'filter-section' },
@@ -1560,156 +1559,260 @@ function FilterPanel({ onClose }) {
 // ══════════════════════════════════════════════════════
 
 function SelectSystems({ planning, onBack, onApply }) {
-  const [filterOpen, setFilterOpen] = useState(true);
+  const [viewMode, setViewMode] = useState('map');
   const [searchText, setSearchText] = useState('');
-  const [activeFilters] = useState(['System Type: Palina', 'System Type: Poster', 'System Type: Palina Butterfly', 'System Type: Rotor']);
+  const [searchType, setSearchType] = useState('address');
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
+  const [showSelectedOnly, setShowSelectedOnly] = useState(false);
+  const [hoveredId, setHoveredId] = useState(null);
+  const [activeFilters, setActiveFilters] = useState(['System: Palina', 'System: Poster', 'Type: OOH']);
 
-  const filtered = SEARCH_RESULTS.filter(r =>
-    !searchText || r.address.toLowerCase().includes(searchText.toLowerCase())
+  const filtered = SEARCH_RESULTS.filter(r => {
+    if (showSelectedOnly && !selectedIds.includes(r.id)) return false;
+    if (!searchText) return true;
+    if (searchType === 'address') return r.address.toLowerCase().includes(searchText.toLowerCase());
+    if (searchType === 'code') return r.cimasa.toLowerCase().includes(searchText.toLowerCase());
+    return r.name.toLowerCase().includes(searchText.toLowerCase());
+  });
+
+  const toggleSelect = (id) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+  };
+
+  const allSelected = filtered.length > 0 && filtered.every(r => selectedIds.includes(r.id));
+  const someSelected = filtered.some(r => selectedIds.includes(r.id)) && !allSelected;
+
+  const toggleAll = () => {
+    if (allSelected) setSelectedIds([]);
+    else setSelectedIds(prev => [...new Set([...prev, ...filtered.map(r => r.id)])]);
+  };
+
+  const tableColumns = [
+    {
+      title: React.createElement(Checkbox, { checked: allSelected, indeterminate: someSelected, onChange: toggleAll }),
+      width: 48,
+      render: (_, r) => React.createElement(Checkbox, {
+        checked: selectedIds.includes(r.id),
+        onChange: () => toggleSelect(r.id),
+        onClick: e => e.stopPropagation(),
+      }),
+    },
+    {
+      title: 'Code',
+      dataIndex: 'cimasa',
+      width: 90,
+      render: v => React.createElement(Text, { style: { fontFamily: 'monospace', fontSize: 12 } }, v),
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      render: v => React.createElement(Tag, { style: { fontSize: 11, marginRight: 0 } }, v),
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+    },
+    {
+      title: 'State',
+      dataIndex: 'state',
+      width: 140,
+      render: v => React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+        React.createElement('span', { style: { width: 8, height: 8, borderRadius: '50%', background: AVAIL_COLOR[v] || '#D9D9D9', flexShrink: 0 } }),
+        v
+      ),
+    },
+  ];
+
+  const searchBar = React.createElement('div', { className: 'ss-search-bar' },
+    React.createElement('div', { style: { display: 'flex', gap: 8, marginBottom: activeFilters.length > 0 ? 8 : 0 } },
+      React.createElement(Select, {
+        value: searchType,
+        onChange: setSearchType,
+        size: 'middle',
+        style: { width: 110 },
+        options: [
+          { value: 'address', label: 'Address' },
+          { value: 'code', label: 'Code' },
+          { value: 'name', label: 'Name' },
+        ],
+      }),
+      React.createElement(Input, {
+        placeholder: `Search by ${searchType}…`,
+        value: searchText,
+        onChange: e => setSearchText(e.target.value),
+        allowClear: true,
+        prefix: React.createElement(SearchOutlined, { style: { color: 'rgba(0,0,0,0.35)' } }),
+        style: { flex: 1 },
+      })
+    ),
+    activeFilters.length > 0 && React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 4, alignItems: 'center' } },
+      ...activeFilters.map(f =>
+        React.createElement(Tag, {
+          key: f,
+          closable: true,
+          onClose: () => setActiveFilters(prev => prev.filter(x => x !== f)),
+          style: { background: '#F0EAFF', borderColor: '#D3B8FF', color: '#3E00FB', fontSize: 12, margin: 0 },
+        }, f)
+      ),
+      React.createElement('a', {
+        style: { fontSize: 12, color: '#FF4A1C', marginLeft: 4, cursor: 'pointer' },
+        onClick: () => setActiveFilters([]),
+      }, 'Clear all')
+    )
   );
 
-  return React.createElement('div', { className: 'page-content' },
-    // Breadcrumb + title
-    React.createElement('div', { style: { marginBottom: 12 } },
-      React.createElement('a', {
-        style: { color: 'rgba(0,0,0,0.45)', cursor: 'pointer', fontSize: 13, display: 'inline-flex', alignItems: 'center', gap: 6 },
-        onClick: onBack,
-      },
-        React.createElement(ArrowLeftOutlined, { style: { fontSize: 12 } }),
-        `Planning | ${planning.name}`
-      )
+  const countBar = (extraStyle) => React.createElement('div', { className: 'ss-count-bar', style: extraStyle },
+    React.createElement(Text, { style: { fontSize: 13, fontWeight: 500 } },
+      `${filtered.length} ${filtered.length === 1 ? 'system' : 'systems'}`
     ),
-    React.createElement('div', { className: 'page-header', style: { marginBottom: 8 } },
-      React.createElement('div', null,
-        React.createElement(Title, { level: 4, style: { margin: '0 0 4px' } }, 'Select Systems'),
+    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 12 } },
+      viewMode === 'map' && React.createElement(Checkbox, {
+        checked: allSelected,
+        indeterminate: someSelected,
+        onChange: toggleAll,
+        style: { fontSize: 12 },
+      }, 'All'),
+      React.createElement(Checkbox, {
+        checked: showSelectedOnly,
+        onChange: e => setShowSelectedOnly(e.target.checked),
+        style: { fontSize: 12 },
+      }, 'Selected only')
+    )
+  );
+
+  return React.createElement('div', { className: 'ss-root' },
+
+    // ── Header ──────────────────────────────────────────────
+    React.createElement('div', { className: 'ss-header' },
+      React.createElement('div', { className: 'ss-header-top' },
+        React.createElement('a', { className: 'ss-breadcrumb', onClick: onBack },
+          React.createElement(ArrowLeftOutlined, { style: { fontSize: 12 } }),
+          `Planning | ${planning.name}`
+        ),
         React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
-          React.createElement(Text, { type: 'secondary', style: { fontSize: 13 } }, 'Gohan Sushi Palermo'),
+          React.createElement(antd.Segmented, {
+            value: viewMode,
+            onChange: setViewMode,
+            options: [
+              { value: 'map', icon: React.createElement(EnvironmentOutlined), label: 'Map' },
+              { value: 'table', icon: React.createElement(TableOutlined), label: 'Table' },
+            ],
+          }),
+          React.createElement(Button, {
+            icon: React.createElement(FilterOutlined),
+            type: activeFilters.length > 0 ? 'primary' : 'default',
+            onClick: () => setFilterDrawerOpen(true),
+          },
+            'Filters',
+            activeFilters.length > 0 && React.createElement(Badge, {
+              count: activeFilters.length,
+              size: 'small',
+              style: { marginLeft: 4 },
+            })
+          ),
+          React.createElement(Button, {
+            type: 'primary',
+            icon: React.createElement(CheckOutlined),
+            disabled: selectedIds.length === 0,
+            onClick: () => onApply(selectedIds),
+          },
+            selectedIds.length > 0 ? `Apply (${selectedIds.length})` : 'Apply Selection'
+          )
+        )
+      ),
+      React.createElement('div', { className: 'ss-title-row' },
+        React.createElement(Title, { level: 4, style: { margin: '0 0 2px' } }, 'Select Systems'),
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+          React.createElement(Text, { type: 'secondary', style: { fontSize: 13 } }, planning.advertiser || 'Gohan Sushi Palermo'),
           React.createElement(CategoryTag, { category: planning.category }),
           React.createElement(Text, { type: 'secondary', style: { fontSize: 13 } }, `${planning.start} – ${planning.end}`)
         )
-      ),
-      React.createElement(Button, {
-        type: 'primary',
-        icon: React.createElement(CheckOutlined),
-        onClick: onApply,
-      }, 'Apply Selection')
+      )
     ),
 
-    // 3-column layout
-    React.createElement('div', { className: 'select-systems-layout' },
+    // ── Search bar ──────────────────────────────────────────
+    searchBar,
 
-      // Search History panel
-      React.createElement('div', { className: 'search-history-panel' },
-        React.createElement('div', { className: 'panel-header' },
-          React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Search History'),
-          React.createElement(Tooltip, { title: 'Le ricerche vengono salvate automaticamente' },
-            React.createElement('span', {
-              style: { width: 16, height: 16, borderRadius: '50%', background: '#F0F0F0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: 'rgba(0,0,0,0.45)', cursor: 'default' }
-            }, 'i')
-          )
-        ),
-        React.createElement('div', null,
-          [
-            { label: 'Palermo Viale delle...', count: 2 },
-            { label: 'Palermo Piazza Verdi', count: 0 },
-          ].map((h, i) =>
-            React.createElement('div', { key: i, className: 'history-item' },
-              React.createElement('span', { style: { fontSize: 13, color: 'rgba(0,0,0,0.65)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
-                h.label
-              ),
-              React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 } },
-                h.count > 0 && React.createElement('span', {
-                  style: { background: '#3E00FB', color: '#fff', borderRadius: '10px', padding: '0 7px', fontSize: 11, fontWeight: 600 }
-                }, h.count),
-                React.createElement('button', {
-                  style: { background: 'none', border: 'none', cursor: 'pointer', color: '#FF4A1C', padding: 2, display: 'flex' },
+    // ── Body: Map view ──────────────────────────────────────
+    viewMode === 'map' && React.createElement('div', { className: 'ss-body' },
+      React.createElement('div', { className: 'ss-sidebar' },
+        countBar(),
+        React.createElement('div', { className: 'ss-results-scroll' },
+          filtered.length === 0
+            ? React.createElement('div', { style: { padding: 32, textAlign: 'center' } },
+                React.createElement(Empty, { description: 'No systems found', image: Empty.PRESENTED_IMAGE_SIMPLE })
+              )
+            : filtered.map(r =>
+                React.createElement('div', {
+                  key: r.id,
+                  className: 'ss-result-item' + (selectedIds.includes(r.id) ? ' selected' : ''),
+                  onClick: () => toggleSelect(r.id),
+                  onMouseEnter: () => setHoveredId(r.id),
+                  onMouseLeave: () => setHoveredId(null),
                 },
-                  React.createElement(DeleteOutlined, { style: { fontSize: 12 } })
+                  React.createElement('div', {
+                    className: 'ss-result-bar',
+                    style: { background: AVAIL_COLOR[r.state] || '#D9D9D9' },
+                  }),
+                  React.createElement(Checkbox, {
+                    checked: selectedIds.includes(r.id),
+                    onClick: e => e.stopPropagation(),
+                    onChange: () => toggleSelect(r.id),
+                    style: { flexShrink: 0 },
+                  }),
+                  React.createElement('div', { style: { flex: 1, minWidth: 0 } },
+                    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 } },
+                      React.createElement(Text, { strong: true, style: { fontSize: 13 } }, r.cimasa),
+                      React.createElement(Tag, { style: { fontSize: 11, marginRight: 0 } }, r.type),
+                    ),
+                    React.createElement(Text, { type: 'secondary', style: { fontSize: 12, display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } },
+                      r.address
+                    ),
+                    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 4, marginTop: 2 } },
+                      React.createElement('span', { style: { width: 7, height: 7, borderRadius: '50%', background: AVAIL_COLOR[r.state] || '#D9D9D9', flexShrink: 0 } }),
+                      React.createElement(Text, { style: { fontSize: 12, color: AVAIL_COLOR[r.state] } }, r.state)
+                    )
+                  )
                 )
               )
-            )
-          )
         )
       ),
+      React.createElement('div', { className: 'ss-map-area' },
+        React.createElement(SvgMap)
+      )
+    ),
 
-      // Search Systems panel
-      React.createElement('div', { className: 'search-systems-panel' },
-        React.createElement('div', { className: 'panel-header', style: { flexDirection: 'column', alignItems: 'flex-start', gap: 8 } },
-          React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' } },
-            React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Search Systems'),
-            React.createElement(Button, {
-              size: 'small',
-              icon: React.createElement(FilterOutlined),
-              type: filterOpen ? 'primary' : 'default',
-              onClick: () => setFilterOpen(o => !o),
-            }, filterOpen ? 'Hide Filters' : 'Filters')
-          ),
-          // Search bar
-          React.createElement('div', { style: { display: 'flex', gap: 8, width: '100%' } },
-            React.createElement(Select, {
-              defaultValue: 'address',
-              size: 'middle',
-              style: { width: 120 },
-              options: [
-                { value: 'address', label: 'Address' },
-                { value: 'code', label: 'Code' },
-                { value: 'name', label: 'Name' },
-              ],
-            }),
-            React.createElement(Input, {
-              placeholder: 'Search...',
-              value: searchText,
-              onChange: e => setSearchText(e.target.value),
-              prefix: React.createElement(SearchOutlined, { style: { color: 'rgba(0,0,0,0.35)' } }),
-              style: { flex: 1 },
-            })
-          ),
-          // Active filter tags
-          React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 0 } },
-            ...activeFilters.map(f =>
-              React.createElement('span', { key: f, className: 'active-filter-tag' },
-                f,
-                React.createElement(CloseOutlined, { style: { fontSize: 9 } })
-              )
-            ),
-            React.createElement('span', { className: 'active-filter-tag' }, '+ 3 more')
-          )
-        ),
-        React.createElement('div', { style: { padding: '8px 16px', borderBottom: '1px solid #F0F0F0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' } },
-          React.createElement(Text, { type: 'secondary', style: { fontSize: 13 } },
-            React.createElement('span', { style: { fontWeight: 500, color: 'rgba(0,0,0,0.65)' } }, `Total: ${filtered.length} systems`)
-          ),
-          React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
-            React.createElement('label', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)', cursor: 'pointer' } },
-              React.createElement('input', { type: 'checkbox', style: { marginRight: 5, accentColor: '#3E00FB' } }),
-              'Show selected only'
-            )
-          )
-        ),
-        React.createElement('div', { className: 'search-results-scroll' },
-          ...filtered.map(r =>
-            React.createElement('div', { key: r.id, className: 'search-result-item' },
-              React.createElement('div', {
-                className: 'search-result-bar',
-                style: { background: AVAIL_COLOR[r.state] || '#D9D9D9' }
-              }),
-              React.createElement(Checkbox, { style: { flexShrink: 0 } }),
-              React.createElement('div', { style: { flex: 1, minWidth: 0 } },
-                React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
-                  React.createElement(Text, { strong: true, style: { fontSize: 13 } }, r.name),
-                  React.createElement(Tag, { style: { fontSize: 11, marginRight: 0 } }, r.type),
-                ),
-                React.createElement(Text, { type: 'secondary', style: { fontSize: 12, display: 'block' } }, r.address),
-                React.createElement(Text, { type: 'secondary', style: { fontSize: 11 } }, `Cimasa: ${r.cimasa}  ·  `),
-                React.createElement(AvailDot, { state: r.state })
-              )
-            )
-          )
-        )
+    // ── Body: Table view ────────────────────────────────────
+    viewMode === 'table' && React.createElement('div', { className: 'ss-table-wrap' },
+      countBar({ borderBottom: '1px solid #F0F0F0' }),
+      React.createElement(Table, {
+        dataSource: filtered,
+        columns: tableColumns,
+        rowKey: 'id',
+        size: 'middle',
+        pagination: { pageSize: 20, size: 'small', showTotal: total => `${total} systems` },
+        rowClassName: r => selectedIds.includes(r.id) ? 'ss-row-selected' : '',
+        onRow: r => ({
+          onClick: () => toggleSelect(r.id),
+          style: { cursor: 'pointer' },
+        }),
+      })
+    ),
+
+    // ── Filter Drawer ────────────────────────────────────────
+    React.createElement(Drawer, {
+      title: 'Filters',
+      placement: 'right',
+      width: 360,
+      open: filterDrawerOpen,
+      onClose: () => setFilterDrawerOpen(false),
+      footer: React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between' } },
+        React.createElement(Button, { danger: true, type: 'text', onClick: () => {} }, 'Clear all'),
+        React.createElement(Button, { type: 'primary', onClick: () => setFilterDrawerOpen(false) }, 'Apply')
       ),
-
-      // Filter panel (conditional)
-      filterOpen && React.createElement(FilterPanel, { onClose: () => setFilterOpen(false) })
+    },
+      React.createElement(FilterPanel, { onClose: () => setFilterDrawerOpen(false) })
     )
   );
 }
@@ -1750,9 +1853,9 @@ function AppRoot() {
     setView('select-systems');
   }
 
-  function handleApplySelection() {
+  function handleApplySelection(selectedIds) {
     setView('detail');
-    setSelectedPlanning(prev => prev ? { ...prev, hasSystems: true } : prev);
+    setSelectedPlanning(prev => prev ? { ...prev, hasSystems: true, faces: selectedIds ? selectedIds.length : prev.faces } : prev);
   }
 
   return React.createElement(ConfigProvider, { theme: window.GRAVITY_THEME },
