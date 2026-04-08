@@ -1,0 +1,7 @@
+.vercel
+.DS_Store
+.playwright-mcp/
+.claude/settings.local.json
+.claude/deploy-count.json
+.claude/launch.json
+brand/SF-Pro.dmg

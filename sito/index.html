@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gravity Platform — La piattaforma per l'advertising</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root { --t: 0.35s ease; }
+
+    [data-theme="dark"] {
+      --bg:      #141009;
+      --bg2:     #1C1610;
+      --bg3:     #261E12;
+      --text:    #FFFFFA;
+      --muted:   rgba(255,255,250,0.62);
+      --blue:    #3E00FB;
+      --blue-hi: #8C78FF;
+      --blue-lt: rgba(62,0,251,0.20);
+      --orange:  #FF4A1C;
+      --violet:  #45185C;
+      --border:  rgba(255,255,250,0.10);
+      --card:    rgba(255,255,250,0.045);
+      --card-hv: rgba(255,255,250,0.085);
+      --glow:    rgba(62,0,251,0.28);
+      --logo-c:  #FFFFFA;
+    }
+    [data-theme="light"] {
+      --bg:      #FFFFFA;
+      --bg2:     #F2F1EB;
+      --bg3:     #E8E6DF;
+      --text:    #231C07;
+      --muted:   rgba(35,28,7,0.58);
+      --blue:    #3E00FB;
+      --blue-hi: #3E00FB;
+      --blue-lt: rgba(62,0,251,0.10);
+      --orange:  #FF4A1C;
+      --violet:  #45185C;
+      --border:  rgba(35,28,7,0.10);
+      --card:    rgba(35,28,7,0.035);
+      --card-hv: rgba(35,28,7,0.07);
+      --glow:    rgba(62,0,251,0.12);
+      --logo-c:  #3E00FB;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background var(--t), color var(--t);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    h1,h2,h3,h4,h5 {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: 64px; padding: 0 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(20,16,9,0.80);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      transition: all var(--t);
+    }
+    [data-theme="light"] nav { background: rgba(255,255,250,0.80); }
+    .nav-logo { cursor: pointer; display: flex; align-items: center; text-decoration: none; }
+    .nav-logo svg .lf { fill: var(--logo-c); transition: fill var(--t); }
+    .nav-logo svg { height: 26px; width: auto; }
+
+    .nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+    .nav-links > li { position: relative; }
+    .nav-links a, .ndrop-btn {
+      font-family: 'Oswald', sans-serif; font-weight: 400;
+      font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      padding: 8px 16px; border-radius: 4px;
+      cursor: pointer; border: none; background: none;
+      transition: color var(--t); white-space: nowrap;
+    }
+    .nav-links a:hover, .ndrop-btn:hover,
+    .nav-links a.active, .ndrop-btn.active { color: var(--text); }
+
+    .ndrop-menu {
+      position: absolute; top: calc(100% + 8px); left: 0;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px;
+      min-width: 200px; display: none; flex-direction: column; gap: 2px;
+      transition: background var(--t);
+    }
+    .nav-links li:hover .ndrop-menu { display: flex; }
+    .ndrop-menu a {
+      padding: 10px 16px; border-radius: 4px;
+      display: block; color: var(--muted); text-decoration: none;
+      font-family: 'Oswald', sans-serif; font-size: 12px;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: background var(--t), color var(--t);
+    }
+    .ndrop-menu a:hover { background: var(--card); color: var(--text); }
+
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .theme-btn {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 1px solid var(--border); background: none;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: var(--muted); transition: all var(--t);
+    }
+    .theme-btn:hover { border-color: var(--blue); color: var(--text); }
+    .theme-btn svg { width: 16px; height: 16px; }
+
+    .btn-cta {
+      font-family: 'Oswald', sans-serif; font-size: 12px;
+      letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500;
+      padding: 9px 22px; background: var(--blue); color: #FFFFFA;
+      border: none; border-radius: 4px; cursor: pointer; text-decoration: none;
+      transition: opacity var(--t);
+    }
+    .btn-cta:hover { opacity: 0.82; }
+
+    /* ── PAGES ── */
+    .page { display: none; padding-top: 64px; }
+    .page.active { display: block; animation: fadeUp 0.5s ease both; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: calc(100vh - 64px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 100px 48px;
+      overflow: hidden;
+    }
+    #bcanvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      opacity: 0.4; pointer-events: none;
+    }
+    .hero-inner { position: relative; z-index: 2; max-width: 960px; }
+    .eyebrow {
+      font-family: 'Oswald', sans-serif; font-size: 11px;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 28px;
+    }
+    .hero-title {
+      font-size: clamp(52px, 7.5vw, 108px);
+      font-weight: 600; letter-spacing: -0.04em; line-height: 0.93;
+      margin-bottom: 36px;
+    }
+    .hero-title .ac { color: var(--blue-hi); }
+    .hero-manifesto {
+      font-size: 18px; line-height: 1.75; color: var(--muted);
+      max-width: 680px; margin: 0 auto 52px;
+    }
+    .hero-manifesto strong { color: var(--text); font-weight: 600; }
+    .hero-ctas { display: flex; gap: 14px; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .btn-p {
+      font-family: 'Oswald', sans-serif; font-size: 13px;
+      letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500;
+      padding: 13px 32px; background: var(--blue); color: #FFFFFA;
+      border: none; border-radius: 4px; cursor: pointer; text-decoration: none;
+      transition: all var(--t);
+    }
+    .btn-p:hover { opacity: 0.85; transform: translateY(-2px); box-shadow: 0 12px 40px var(--glow); }
+    .btn-s {
+      font-family: 'Oswald', sans-serif; font-size: 13px;
+      letter-spacing: 0.1em; text-transform: uppercase; font-weight: 400;
+      padding: 12px 32px; background: transparent; color: var(--text);
+      border: 1px solid var(--border); border-radius: 4px;
+      cursor: pointer; text-decoration: none; transition: all var(--t);
+    }
+    .btn-s:hover { border-color: var(--text); transform: translateY(-2px); }
+
+    /* ── SECTION WRAPPER ── */
+    .sw  { max-width: 1200px; margin: 0 auto; padding: 120px 48px; }
+    .sw-sm { max-width: 1200px; margin: 0 auto; padding: 80px 48px; }
+    .sec-label {
+      font-family: 'Oswald', sans-serif; font-size: 11px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 16px;
+    }
+    .sec-title {
+      font-size: clamp(36px, 4vw, 56px); font-weight: 500;
+      letter-spacing: -0.03em; margin-bottom: 20px;
+    }
+    .sec-sub {
+      font-size: 17px; line-height: 1.75; color: var(--muted);
+      max-width: 560px; margin-bottom: 64px;
+    }
+    .divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent 0%, var(--border) 15%, var(--border) 85%, transparent 100%); }
+
+    /* ── WORKFLOW (single 6-step row) ── */
+    .wf-label {
+      font-family: 'Oswald', sans-serif; font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); text-align: center; margin-bottom: 40px;
+    }
+    .wf-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .wf-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 28px;
+      display: flex; flex-direction: column; gap: 14px;
+      transition: background var(--t), border-color var(--t), transform var(--t);
+      cursor: default;
+    }
+    .wf-card:hover {
+      background: var(--card-hv);
+      border-color: var(--blue-lt);
+      transform: translateY(-2px);
+    }
+    .wf-n {
+      font-family: 'Oswald', sans-serif; font-size: 10px;
+      letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase;
+    }
+    .wf-icon { color: var(--blue); }
+    .wf-icon svg { width: 24px; height: 24px; }
+    .wf-t { font-size: 16px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
+    .wf-d { font-size: 13px; color: var(--muted); line-height: 1.55; }
+    .wf-d strong { color: var(--text); font-weight: 600; }
+
+    /* ── REASONS ── */
+    .reasons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .reason {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 44px 36px;
+      transition: all var(--t); position: relative; overflow: hidden;
+    }
+    .reason::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--blue-lt), transparent);
+      opacity: 0; transition: opacity var(--t);
+    }
+    .reason:hover::after { opacity: 1; }
+    .reason:hover { transform: translateY(-5px); box-shadow: 0 24px 60px var(--glow); border-color: rgba(62,0,251,0.3); }
+    .reason-n {
+      font-family: 'Oswald', sans-serif; font-size: 80px; font-weight: 700;
+      line-height: 1; color: rgba(140,120,255,0.12); margin-bottom: 28px;
+      transition: color var(--t);
+    }
+    .reason:hover .reason-n { color: rgba(140,120,255,0.30); }
+    .reason-t { font-size: 24px; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 14px; position: relative; z-index: 1; }
+    .reason-d { font-size: 15px; line-height: 1.75; color: var(--muted); position: relative; z-index: 1; }
+
+
+    /* ── ORBIT DECO ── */
+    .orbit-ring {
+      position: absolute; border-radius: 50%;
+      border: 1px solid var(--blue); opacity: 0.06;
+      pointer-events: none;
+    }
+
+    /* ── PER CHI ── */
+    .pc-hero { padding: 100px 48px 56px; max-width: 1200px; margin: 0 auto; }
+    .pc-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 100px; padding: 5px 16px; margin-bottom: 32px;
+      font-family: 'Oswald', sans-serif; font-size: 11px;
+      letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted);
+    }
+    .pc-title {
+      font-size: clamp(44px, 5.5vw, 80px); font-weight: 600;
+      letter-spacing: -0.04em; margin-bottom: 24px; max-width: 820px;
+    }
+    .pc-sub { font-size: 19px; line-height: 1.65; color: var(--muted); max-width: 580px; }
+
+    .benefits {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 2px; background: var(--border);
+      max-width: 1200px; margin: 0 48px;
+    }
+    .benefit {
+      background: var(--bg); padding: 56px 48px;
+      transition: background var(--t); position: relative;
+    }
+    .benefit:hover { background: var(--card); }
+    .benefit-ico {
+      width: 48px; height: 48px; border-radius: 10px;
+      background: var(--card); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 28px; color: var(--blue);
+    }
+    .benefit-ico svg { width: 22px; height: 22px; }
+    .benefit-t { font-size: 22px; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 14px; }
+    .benefit-d { font-size: 15px; line-height: 1.75; color: var(--muted); margin-bottom: 28px; }
+    .benefit-link {
+      font-family: 'Oswald', sans-serif; font-size: 12px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--blue-hi); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      cursor: pointer; border: none; background: none;
+      transition: gap var(--t);
+    }
+    .benefit-link:hover { gap: 14px; }
+    .benefit-link svg { width: 14px; height: 14px; }
+
+    /* ── COME FUNZIONA ── */
+    .cf-tabs {
+      display: flex; gap: 0;
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px; overflow-x: auto;
+    }
+    .cf-tab {
+      font-family: 'Oswald', sans-serif; font-size: 13px;
+      letter-spacing: 0.08em; text-transform: uppercase; font-weight: 400;
+      padding: 20px 24px; color: var(--muted);
+      cursor: pointer; border: none; background: none;
+      border-bottom: 2px solid transparent;
+      transition: all var(--t); white-space: nowrap; margin-bottom: -1px;
+    }
+    .cf-tab:hover { color: var(--text); }
+    .cf-tab.active { color: var(--text); border-bottom-color: var(--blue); }
+
+    .cf-body { max-width: 1200px; margin: 0 auto; padding: 80px 48px; }
+    .cf-sec { display: none; }
+    .cf-sec.active { display: block; animation: fadeUp 0.45s ease both; }
+
+    .srv-header {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 80px; margin-bottom: 72px; align-items: start;
+    }
+    .srv-title {
+      font-size: clamp(40px, 4.5vw, 64px); font-weight: 600;
+      letter-spacing: -0.04em; line-height: 0.93;
+    }
+    .srv-desc { font-size: 16px; line-height: 1.8; color: var(--muted); padding-top: 6px; }
+    .srv-tag {
+      font-family: 'Oswald', sans-serif; font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 16px;
+    }
+
+    .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .feat {
+      padding: 32px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; transition: all var(--t);
+    }
+    .feat:hover { background: var(--card-hv); border-color: rgba(62,0,251,0.35); transform: translateY(-3px); }
+    .feat-ico { width: 32px; height: 32px; color: var(--blue); margin-bottom: 18px; }
+    .feat-ico svg { width: 32px; height: 32px; }
+    .feat-t { font-size: 16px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 10px; }
+    .feat-d { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    .cf-cta-box {
+      margin-top: 72px; padding: 56px 48px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; text-align: center;
+    }
+    .cf-cta-box h3 { font-size: 36px; margin-bottom: 16px; }
+    .cf-cta-box p { font-size: 16px; color: var(--muted); margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .hero { padding: 60px 24px; }
+      .sw, .sw-sm { padding: 80px 24px; }
+      .wf-cards { grid-template-columns: repeat(2, 1fr); }
+      .reasons { grid-template-columns: 1fr; }
+      .mkp-stats-inner { flex-direction: column; }
+      .mkp-stat-div { width: 100%; height: 1px; margin: 0; }
+      .pc-hero { padding: 80px 24px 40px; }
+      .benefits { grid-template-columns: 1fr; margin: 0 24px; }
+      .benefit { padding: 40px 28px; }
+      .cf-tabs { padding: 0 24px; }
+      .cf-body { padding: 56px 24px; }
+      .srv-header { grid-template-columns: 1fr; gap: 28px; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .manifesto-inner { padding: 80px 24px; }
+      .manifesto-belief { grid-template-columns: 28px 1fr; gap: 14px; }
+    }
+    @media (max-width: 600px) {
+      .hero-title { font-size: 44px; }
+      .reasons { gap: 16px; }
+      .wf-cards { grid-template-columns: 1fr; }
+    }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  
+    /* ── SEC-ORBIT-BG ── */
+    .sec-orbit-bg { position: relative; overflow: hidden; }
+    .sec-orbit-bg::before {
+      content: ''; position: absolute;
+      border: 1px solid rgba(62,0,251,0.07); border-radius: 50%;
+      width: 900px; height: 320px; top: 50%; left: 50%;
+      transform: translate(-50%,-50%) rotate(-12deg); pointer-events: none;
+    }
+
+    /* ── ENTROPIA ── */
+    .entropy-grid { display: grid; grid-template-columns: 1fr 80px 1fr; gap: 0; align-items: start; }
+    .entropy-col { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 40px 36px; }
+    .entropy-col.after { border-color: rgba(62,0,251,0.3); background: var(--blue-lt); }
+    .entropy-col-label { font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+    .entropy-col-label.before { color: var(--muted); }
+    .entropy-col-label.after  { color: var(--blue); }
+    .entropy-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; line-height: 1.5; color: var(--muted); }
+    .entropy-item:last-child { border-bottom: none; }
+    .entropy-item.after { color: var(--text); }
+    .entropy-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .entropy-dot.x  { background: rgba(255,255,250,0.2); }
+    .entropy-dot.ok { background: var(--blue); }
+    .entropy-arrow { display: flex; align-items: center; justify-content: center; height: 100%; padding-top: 100px; color: var(--blue); font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 300; }
+
+    /* ── ORBITA ── */
+    .orbita-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .orbita-card { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: 16px; padding: 56px 48px 48px; cursor: pointer; transition: all var(--t); background: var(--card); }
+    .orbita-card::before { content: ''; position: absolute; top: -80px; right: -80px; width: 280px; height: 280px; border-radius: 50%; pointer-events: none; opacity: 0; transition: opacity var(--t); }
+    .orbita-card.cc::before { background: radial-gradient(circle, rgba(255,74,28,0.15), transparent 70%); }
+    .orbita-card.mo::before { background: radial-gradient(circle, rgba(62,0,251,0.15), transparent 70%); }
+    .orbita-card:hover::before { opacity: 1; }
+    .orbita-card:hover { transform: translateY(-4px); }
+    .orbita-card.cc:hover { border-color: rgba(255,74,28,0.35); box-shadow: 0 24px 60px rgba(255,74,28,0.08); }
+    .orbita-card.mo:hover { border-color: rgba(62,0,251,0.35); box-shadow: 0 24px 60px var(--glow); }
+    .orbita-card-ring { position: absolute; border-radius: 50%; width: 340px; height: 120px; bottom: -40px; right: -60px; transform: rotate(-15deg); pointer-events: none; opacity: 0.06; }
+    .cc .orbita-card-ring { border: 1px solid var(--orange); }
+    .mo .orbita-card-ring { border: 1px solid var(--blue); }
+    .orbita-body { width: 14px; height: 14px; border-radius: 50%; margin-bottom: 32px; position: relative; }
+    .cc .orbita-body { background: var(--orange); box-shadow: 0 0 16px rgba(255,74,28,0.5); }
+    .mo .orbita-body { background: var(--blue);   box-shadow: 0 0 16px rgba(62,0,251,0.5); }
+    .orbita-body::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 1px solid currentColor; opacity: 0.3; }
+    .cc .orbita-body::after { color: var(--orange); }
+    .mo .orbita-body::after { color: var(--blue); }
+    .orbita-title { font-size: 28px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 14px; }
+    .orbita-desc  { font-size: 15px; line-height: 1.7; color: var(--muted); margin-bottom: 28px; }
+    .orbita-link { font-family: 'Oswald', sans-serif; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; cursor: pointer; border: none; background: none; transition: gap var(--t); }
+    .cc .orbita-link { color: var(--orange); }
+    .mo .orbita-link { color: var(--blue-hi); }
+    .orbita-link:hover { gap: 14px; }
+    .orbita-link svg { width: 14px; height: 14px; }
+
+    /* ── WHITE LABEL ── */
+    .wl-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 72px 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; position: relative; overflow: hidden; }
+    .wl-block::before { content: ''; position: absolute; border: 1px solid rgba(62,0,251,0.08); border-radius: 50%; width: 600px; height: 220px; bottom: -80px; right: -100px; transform: rotate(-15deg); pointer-events: none; }
+    .wl-block::after  { content: ''; position: absolute; border: 1px solid rgba(255,74,28,0.06); border-radius: 50%; width: 400px; height: 150px; bottom: -40px; right: 0; transform: rotate(-15deg); pointer-events: none; }
+    .wl-items { display: flex; flex-direction: column; gap: 20px; }
+    .wl-item { display: flex; align-items: flex-start; gap: 16px; padding: 20px 24px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; transition: all var(--t); }
+    .wl-item:hover { border-color: rgba(62,0,251,0.3); background: var(--card-hv); }
+    .wl-item-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue-hi); flex-shrink: 0; margin-top: 5px; }
+    .wl-item-t { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+    .wl-item-d { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── MANIFESTO ── */
+    .manifesto-wrap {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--t);
+    }
+    .manifesto-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 120px 48px;
+      text-align: center;
+    }
+
+    /* Orbital deco */
+    .manifesto-orbit-wrap {
+      position: relative;
+      width: 100px; height: 100px;
+      margin: 0 auto 48px;
+    }
+    .manifesto-orbit {
+      position: absolute; border-radius: 50%;
+      border: 1px solid var(--border);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .manifesto-orbit-1 {
+      width: 100px; height: 44px;
+      animation: mf-rot1 12s linear infinite;
+      transform-origin: center center;
+    }
+    .manifesto-orbit-2 {
+      width: 100px; height: 44px;
+      animation: mf-rot2 18s linear infinite;
+      transform-origin: center center;
+    }
+    @keyframes mf-rot1 {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    @keyframes mf-rot2 {
+      from { transform: translate(-50%, -50%) rotate(60deg); }
+      to   { transform: translate(-50%, -50%) rotate(420deg); }
+    }
+    .manifesto-star {
+      position: absolute; border-radius: 50%;
+      top: 50%; left: 50%;
+    }
+    .manifesto-star-a {
+      width: 8px; height: 8px;
+      background: var(--blue);
+      margin: -4px 0 0 -4px;
+      box-shadow: 0 0 12px rgba(62,0,251,0.5);
+      animation: mf-star-a 12s linear infinite;
+    }
+    .manifesto-star-b {
+      width: 5px; height: 5px;
+      background: var(--orange);
+      margin: -2.5px 0 0 -2.5px;
+      box-shadow: 0 0 8px rgba(255,74,28,0.4);
+      animation: mf-star-b 18s linear infinite;
+    }
+    @keyframes mf-star-a {
+      from { transform: rotate(0deg) translateX(38px) rotate(0deg); }
+      to   { transform: rotate(360deg) translateX(38px) rotate(-360deg); }
+    }
+    @keyframes mf-star-b {
+      from { transform: rotate(60deg) translateX(38px) rotate(-60deg); }
+      to   { transform: rotate(420deg) translateX(38px) rotate(-420deg); }
+    }
+    .manifesto-bary {
+      position: absolute; top: 50%; left: 50%;
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--border);
+      margin: -2px 0 0 -2px;
+    }
+
+    /* Concept quote */
+    .manifesto-concept {
+      font-size: 17px;
+      line-height: 1.85;
+      color: var(--muted);
+      font-style: italic;
+      margin: 0 0 48px;
+      letter-spacing: 0.01em;
+    }
+    .manifesto-concept em { font-style: normal; color: var(--text); font-weight: 500; }
+
+    .manifesto-divline {
+      width: 48px; height: 1px;
+      background: var(--blue);
+      margin: 0 auto 56px;
+      opacity: 0.5;
+    }
+
+    /* Beliefs */
+    .manifesto-beliefs {
+      display: flex; flex-direction: column; gap: 40px;
+      text-align: left;
+    }
+    .manifesto-belief {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .manifesto-n {
+      font-family: 'Oswald', sans-serif;
+      font-size: 10px; letter-spacing: 0.18em;
+      color: var(--blue); text-transform: uppercase;
+      padding-top: 4px;
+      opacity: 0.7;
+    }
+    .manifesto-belief p {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--muted);
+      margin: 0;
+    }
+    .manifesto-belief p strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .manifesto-sign {
+      margin-top: 64px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px; letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); padding: 72px 48px 40px; position: relative; overflow: hidden; }
+    footer::before { content: ''; position: absolute; border-radius: 50%; border: 1px solid rgba(62,0,251,0.05); width: 700px; height: 250px; bottom: -80px; left: 50%; transform: translateX(-50%) rotate(-8deg); pointer-events: none; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 64px; margin-bottom: 64px; }
+    .footer-brand-col svg .lf { fill: var(--logo-c); transition: fill var(--t); }
+    .footer-brand-col svg { height: 22px; width: auto; margin-bottom: 20px; display: block; }
+    .footer-tagline { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 260px; }
+    .footer-col-title { font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+    .footer-col a { display: block; font-size: 13px; color: var(--muted); text-decoration: none; margin-bottom: 12px; transition: color var(--t); letter-spacing: 0.01em; cursor: pointer; }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 32px; border-top: 1px solid var(--border); }
+    .footer-copy { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a { font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 0.05em; transition: color var(--t); }
+    .footer-legal a:hover { color: var(--text); }
+
+    /* ── METRICS STRIP (fusa con mockup) ── */
+    .mkp-stats-strip {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+      transition: background var(--t);
+    }
+    .mkp-stats-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      align-items: stretch;
+    }
+    .mkp-stat {
+      flex: 1;
+      padding: 48px 40px;
+      text-align: center;
+      transition: background var(--t);
+    }
+    .mkp-stat:hover { background: var(--card); }
+    .mkp-stat-div {
+      width: 1px;
+      background: var(--border);
+      flex-shrink: 0;
+      margin: 24px 0;
+    }
+    .mkp-stat-v {
+      font-family: 'Oswald', sans-serif;
+      font-size: 56px; font-weight: 600;
+      letter-spacing: -0.04em;
+      color: var(--blue-hi);
+      line-height: 1; margin-bottom: 12px;
+    }
+    .mkp-stat-l {
+      font-size: 13px; color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* ── MOCKUP SHOWCASE ── */
+    .mkp-showcase {
+      position: relative;
+      padding: 0 48px 140px;
+      overflow: visible;
+    }
+    .mkp-scene {
+      position: relative;
+      max-width: 1100px;
+      margin: 0 auto;
+      height: 620px;
+    }
+    .mkp-scene::before {
+      content: '';
+      position: absolute; top: 30%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px; height: 400px;
+      background: radial-gradient(ellipse, rgba(62,0,251,0.15) 0%, rgba(255,74,28,0.05) 45%, transparent 70%);
+      filter: blur(50px);
+      pointer-events: none; z-index: 0;
+    }
+    /* Main screen — proporzioni 16:9 desktop reali */
+    .mkp-main {
+      position: absolute;
+      left: 50%; top: 0;
+      transform: translateX(-50%) perspective(1600px) rotateX(8deg) rotateY(-1.5deg);
+      width: 860px;
+      z-index: 5;
+      animation: mkp-float 7s ease-in-out infinite;
+      transform-origin: top center;
+      border-radius: 10px; overflow: hidden;
+      box-shadow: 0 56px 140px rgba(0,0,0,0.60), 0 0 0 1px rgba(255,255,250,0.08);
+    }
+    /* Barra inferiore stile dock — simula il profilo di un laptop */
+    .mkp-main::after {
+      content: '';
+      display: block;
+      height: 12px;
+      background: linear-gradient(180deg, #1A1510 0%, #111 100%);
+      border-top: 1px solid rgba(255,255,250,0.05);
+    }
+    @keyframes mkp-float {
+      0%,100% { transform: translateX(-50%) perspective(1600px) rotateX(8deg) rotateY(-1.5deg) translateY(0); }
+      50%      { transform: translateX(-50%) perspective(1600px) rotateX(8deg) rotateY(-1.5deg) translateY(-14px); }
+    }
+    /* Satellite left */
+    .mkp-sat-l {
+      position: absolute;
+      left: -20px; top: 55px;
+      width: 340px;
+      z-index: 8;
+      border-radius: 10px; overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,250,0.08);
+      animation: mkp-float-l 8.5s ease-in-out infinite;
+    }
+    @keyframes mkp-float-l {
+      0%,100% { transform: perspective(900px) rotateX(6deg) rotateY(14deg) rotate(-1deg) translateY(0); }
+      50%      { transform: perspective(900px) rotateX(6deg) rotateY(14deg) rotate(-1deg) translateY(-10px); }
+    }
+    /* Satellite right */
+    .mkp-sat-r {
+      position: absolute;
+      right: -10px; top: 90px;
+      width: 300px;
+      z-index: 8;
+      border-radius: 10px; overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,250,0.08);
+      animation: mkp-float-r 9s ease-in-out infinite;
+    }
+    @keyframes mkp-float-r {
+      0%,100% { transform: perspective(900px) rotateX(6deg) rotateY(-14deg) rotate(1deg) translateY(0); }
+      50%      { transform: perspective(900px) rotateX(6deg) rotateY(-14deg) rotate(1deg) translateY(-10px); }
+    }
+    .mkp-refline {
+      position: absolute; bottom: -10px; left: 50%;
+      transform: translateX(-50%);
+      width: 560px; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(62,0,251,0.35), rgba(255,74,28,0.2), transparent);
+      filter: blur(1px); z-index: 4;
+    }
+
+    /* Shared chrome */
+    .mkp-chrome { background: #1A1510; }
+    .mkp-bar { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,250,0.06); }
+    .mkp-dots { display: flex; gap: 5px; }
+    .mkp-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mkp-url { flex: 1; background: rgba(255,255,250,0.06); border-radius: 4px; padding: 3px 10px; font-size: 10px; color: rgba(255,255,250,0.28); font-family: 'Inter', monospace; text-align: center; letter-spacing: 0.02em; }
+
+    /* App (light mode) */
+    .mkp-app { background: #F8F7F2; font-family: 'Inter', sans-serif; }
+    .mkp-hdr { display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 44px; background: #FFFFFA; border-bottom: 1px solid rgba(35,28,7,0.08); }
+    .mkp-lrow { display: flex; align-items: center; gap: 7px; }
+    .mkp-ltxt { font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 500; color: #3E00FB; letter-spacing: 0.12em; }
+    .mkp-nav { display: flex; gap: 1px; }
+    .mkp-nl { font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(35,28,7,0.38); padding: 5px 9px; border-radius: 3px; }
+    .mkp-nl-on { color: #3E00FB; border-bottom: 2px solid #3E00FB; border-radius: 0; }
+    .mkp-rrow { display: flex; align-items: center; gap: 8px; }
+    .mkp-bell { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: rgba(35,28,7,0.38); position:relative; }
+    .mkp-bdot { position:absolute;top:2px;right:2px;width:6px;height:6px;border-radius:50%;background:#FF4A1C;border:1px solid #FFFFFA; }
+    .mkp-av { width: 24px; height: 24px; border-radius: 50%; background: #3E00FB; color: #fff; font-size: 9px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+    .mkp-body { padding: 12px 16px 10px; }
+    .mkp-ph { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 9px; }
+    .mkp-bc { font-size: 9px; color: rgba(35,28,7,0.38); font-family: 'Oswald', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px; }
+    .mkp-pt { font-family: 'Oswald', sans-serif; font-size: 15px; font-weight: 500; color: #111827; letter-spacing: -0.02em; }
+    .mkp-bp { font-family: 'Oswald', sans-serif; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; padding: 5px 11px; background: #3E00FB; color: #fff; border: none; border-radius: 3px; cursor: pointer; }
+    .mkp-bs { font-family: 'Oswald', sans-serif; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 9px; background: transparent; color: rgba(35,28,7,0.45); border: 1px solid rgba(35,28,7,0.15); border-radius: 3px; cursor: pointer; }
+    .mkp-frow { display: flex; align-items: center; gap: 5px; margin-bottom: 9px; }
+    .mkp-srch { display: flex; align-items: center; gap: 5px; background: #fff; border: 1px solid rgba(35,28,7,0.1); border-radius: 4px; padding: 4px 8px; flex: 1; max-width: 170px; }
+    .mkp-srch span { font-size: 10px; color: rgba(35,28,7,0.32); }
+    .mkp-fbt { font-family: 'Oswald', sans-serif; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(35,28,7,0.5); padding: 4px 8px; border: 1px solid rgba(35,28,7,0.1); border-radius: 4px; background: #fff; cursor: pointer; }
+    .mkp-tw { border: 1px solid rgba(35,28,7,0.07); border-radius: 6px; overflow: hidden; background: #fff; }
+    .mkp-tbl { width: 100%; border-collapse: collapse; font-size: 10px; }
+    .mkp-tbl thead tr { background: #F2F1EB; }
+    .mkp-tbl th { padding: 6px 9px; text-align: left; font-family: 'Oswald', sans-serif; font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(35,28,7,0.38); font-weight: 400; }
+    .mkp-tbl td { padding: 7px 9px; color: rgba(35,28,7,0.68); border-bottom: 1px solid rgba(35,28,7,0.05); }
+    .mkp-tbl tbody tr:last-child td { border-bottom: none; }
+    .mkp-tbl tbody tr:hover { background: rgba(62,0,251,0.03); }
+    .mkp-tr-s { background: rgba(62,0,251,0.05) !important; }
+    .mkp-code { font-family: 'Oswald', sans-serif; font-size: 9px; letter-spacing: 0.08em; color: rgba(35,28,7,0.85); }
+    .mkp-tag { font-family: 'Oswald', sans-serif; font-size: 8px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 5px; border-radius: 100px; }
+    .tag-ooh  { background: #EEF2FF; color: #4F46E5; }
+    .tag-dooh { background: #FFF7ED; color: #EA580C; }
+    .mkp-st { font-size: 9px; padding: 2px 6px; border-radius: 100px; font-weight: 500; }
+    .st-ok   { background: #D1FAE5; color: #065F46; }
+    .st-busy { background: #FEE2E2; color: #991B1B; }
+    .st-warn { background: #FEF3C7; color: #92400E; }
+    .mkp-act { color: rgba(35,28,7,0.28); font-size: 12px; text-align: center; }
+    .mkp-pgn { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+    .mkp-pi { font-size: 9px; color: rgba(35,28,7,0.38); }
+    .mkp-pbs { display: flex; gap: 3px; }
+    .mkp-pb { font-family: 'Oswald', sans-serif; font-size: 9px; width: 20px; height: 20px; border-radius: 3px; border: 1px solid rgba(35,28,7,0.1); background: #fff; color: rgba(35,28,7,0.45); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .mkp-pb-a { background: #3E00FB !important; color: #fff !important; border-color: #3E00FB !important; }
+
+    /* Kanban satellite */
+    .mkp-kb { padding: 10px 12px; background: #F2F1EB; }
+    .mkp-kc { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+    .mkp-kct { font-family: 'Oswald', sans-serif; font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(35,28,7,0.42); margin-bottom: 6px; }
+    .mkp-kct-on { color: #3E00FB; }
+    .mkp-kcard { background: #FFFFFA; border: 1px solid rgba(35,28,7,0.08); border-radius: 5px; padding: 7px 8px; margin-bottom: 5px; }
+    .mkp-kcard-a { border-color: rgba(62,0,251,0.25); background: rgba(62,0,251,0.04); }
+    .mkp-kco { font-size: 9px; font-weight: 500; color: #111827; margin-bottom: 2px; }
+    .mkp-kval { font-family: 'Oswald', sans-serif; font-size: 10px; color: #3E00FB; }
+    .mkp-kdt { font-size: 8px; color: rgba(35,28,7,0.38); margin-top: 3px; }
+
+    /* Reporting satellite */
+    .mkp-rp { padding: 10px 12px; background: #F8F7F2; }
+    .mkp-kg { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 10px; }
+    .mkp-kpi { background: #FFFFFA; border: 1px solid rgba(35,28,7,0.08); border-radius: 5px; padding: 7px 9px; }
+    .mkp-kl { font-family: 'Oswald', sans-serif; font-size: 7px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(35,28,7,0.38); margin-bottom: 3px; }
+    .mkp-kv { font-family: 'Oswald', sans-serif; font-size: 17px; font-weight: 600; letter-spacing: -0.03em; color: #3E00FB; line-height: 1; }
+    .mkp-kd { font-size: 8px; color: #059669; margin-top: 2px; }
+    .mkp-kd-dn { color: #DC2626; }
+    .mkp-cl { font-family: 'Oswald', sans-serif; font-size: 7px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(35,28,7,0.38); margin-bottom: 5px; }
+    .mkp-bars { display: flex; align-items: flex-end; gap: 3px; height: 48px; }
+    .mkp-bc2 { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+    .mkp-b { width: 100%; border-radius: 2px 2px 0 0; background: #3E00FB; }
+    .mkp-bl { font-size: 6px; color: rgba(35,28,7,0.35); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .mkp-scene { height: auto; }
+      .mkp-sat-l, .mkp-sat-r { display: none; }
+      .mkp-main { position: relative; left: auto; top: auto; transform: none; width: 100%; animation: none; box-shadow: 0 24px 60px rgba(0,0,0,0.4); }
+      .mkp-showcase { padding: 0 24px 80px; }
+      .entropy-grid { grid-template-columns: 1fr; }
+      .entropy-arrow { padding-top: 0; height: auto; transform: rotate(90deg); }
+      .orbita-grid { grid-template-columns: 1fr; }
+      .wl-block { grid-template-columns: 1fr; gap: 40px; padding: 48px 32px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .footer-top { grid-template-columns: 1fr; }
+    }
+
+    /* ── PRODUCT MOCKUP STRIP ── */
+    .pm-strip { max-width: 1200px; margin: 0 auto; padding: 0 48px 96px; }
+    .pm-label { font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--orange); margin-bottom: 10px; text-align: center; }
+    .pm-head { font-family: 'Oswald', sans-serif; font-size: clamp(20px,2.5vw,30px); font-weight: 500; letter-spacing: -0.02em; margin-bottom: 32px; text-align: center; color: var(--text); }
+    .pm-window { border-radius: 12px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,250,0.08); }
+    .pm-glow { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(60px); }
+    .pm-outer { position: relative; }
+
+    /* ── SECTION GLOW ── */
+    .sw.sec-glow, .sw-sm.sec-glow { position: relative; overflow: hidden; }
+    .sw.sec-glow::before, .sw-sm.sec-glow::before {
+      content: ''; position: absolute;
+      width: 800px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(62,0,251,0.07) 0%, transparent 65%);
+      right: -200px; top: 50%; transform: translateY(-50%);
+      pointer-events: none; filter: blur(70px); z-index: 0;
+    }
+    .sw.sec-glow > *, .sw-sm.sec-glow > * { position: relative; z-index: 1; }
+
+    .sw.sec-glow-l::before { left: -200px; right: auto; }
+
+    /* ── WF MOCKUP ── */
+    .wf-mockup-wrap { margin-top: 64px; max-width: 760px; margin-left: auto; margin-right: auto; }
+    .wf-mkp-caption { text-align: center; font-family: 'Oswald', sans-serif; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+
+    /* ── CF OVERVIEW MOCKUP ── */
+    .cf-preview { max-width: 1200px; margin: 0 auto; padding: 0 48px 48px; }
+    .cf-preview-inner { border-radius: 12px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,250,0.08); }
+
+    @media (max-width: 900px) {
+      .pm-strip { padding: 0 24px 64px; }
+      .cf-preview { padding: 0 24px 40px; }
+      .wf-mockup-wrap { padding: 0 24px; }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" onclick="go('home')" href="#home" aria-label="Home">
+    <svg viewBox="0 0 383.57 226.77" xmlns="http://www.w3.org/2000/svg">
+      <path class="lf" d="M195.79,127.74c.88-1.1,1.52-2.44,1.92-4.01,.41-1.57,.62-3.32,.62-5.23,0-3.18-.54-5.74-1.63-7.68-1.08-1.93-2.71-3.33-4.89-4.19-2.18-.86-4.92-1.28-8.23-1.28h-10.34v49.56h7.34v-23.13h5.14l6.37,23.13h7.16l-7.03-24.78c1.51-.49,2.7-1.29,3.58-2.38Zm-5.32-4.31c-.55,1.16-1.42,1.99-2.61,2.48-1.18,.49-2.73,.73-4.65,.73h-2.63v-16.09h3.06c3.06,0,5.1,.65,6.12,1.93,1.02,1.29,1.52,3.33,1.52,6.15,0,2.04-.28,3.64-.82,4.81Z"/>
+      <path class="lf" d="M221.55,105.34l-10.4,49.56h6.92l2.32-12.3h9.79l2.21,12.3h6.91l-10.46-49.56h-7.28Zm-.25,32.18l3.92-22.02,4.04,22.02h-7.96Z"/>
+      <polygon class="lf" points="264.86 141.57 257.26 105.34 250.48 105.34 261.31 154.9 267.97 154.9 278.68 105.34 272.01 105.34 264.86 141.57"/>
+      <rect class="lf" x="294.89" y="105.34" width="7.22" height="49.56"/>
+      <polygon class="lf" points="318.33 110.59 326.59 110.59 326.59 154.7 333.94 154.7 333.94 110.59 342.01 110.59 342.01 105.15 318.33 105.15 318.33 110.59"/>
+      <polygon class="lf" points="376.72 105.34 369.56 128.41 362.28 105.34 355.49 105.34 366.01 137.09 366.01 154.9 373.05 154.9 373.05 137.09 383.57 105.34 376.72 105.34"/>
+      <path class="lf" d="M41.29,143.21c0,6.46,5.1,11.69,11.38,11.69s11.38-5.24,11.38-11.69-5.1-11.69-11.38-11.69-11.38,5.24-11.38,11.69Z"/>
+      <path class="lf" d="M90.87,90.3c0,6.46,5.1,11.69,11.38,11.69s11.38-5.24,11.38-11.69-5.1-11.69-11.38-11.69-11.38,5.24-11.69Z"/>
+      <path class="lf" d="M89.14,106.58c-1.16-1.13-2.19-2.19-3.26-3.72-2.83,50.18-45.79,97.8-85.88,123.91,53.27-14.06,104.94-66.73,118.07-121.91-7.06,8.48-21.11,9.2-28.93,1.72Z"/>
+      <path class="lf" d="M66.13,126.43C61.09,74.96,104.15,29.61,143.2,0c-29.62,10.82-61.61,37.79-79.82,61.24-16.09,21.71-33.68,46.19-31.17,74.4,5.17-14.03,23.39-17.67,33.92-9.21Z"/>
+      <path class="lf" d="M145,135.11h5.97v3.59c0,2.27-.18,4.19-.53,5.77-.36,1.57-1,2.76-1.91,3.55-.92,.8-2.21,1.2-3.89,1.2s-2.97-.37-3.89-1.11c-.92-.74-1.55-1.84-1.88-3.32-.34-1.47-.51-3.3-.51-5.5v-18.41c0-1.87,.11-3.57,.33-5.08,.22-1.52,.76-2.72,1.62-3.59,.86-.88,2.24-1.32,4.16-1.32,1.75,0,3.04,.32,3.85,.96,.82,.64,1.35,1.61,1.62,2.9,.26,1.3,.39,2.94,.39,4.93v1.74h6.75v-1.91c0-3.15-.42-5.77-1.26-7.86-.84-2.09-2.19-3.66-4.06-4.69s-4.35-1.55-7.41-1.55c-3.43,0-6.1,.66-8.01,1.97-1.91,1.32-3.25,3.22-4,5.71-.76,2.49-1.13,5.51-1.13,9.06v16.2c0,3.42,.4,6.39,1.22,8.88,.82,2.49,2.14,4.38,3.98,5.67,1.83,1.3,4.28,1.94,7.35,1.94,2.35,0,4.19-.55,5.52-1.67,1.33-1.11,2.32-2.55,2.96-4.3l.66,5.38h4.55v-24.09h-12.43v4.96Z"/>
+    </svg>
+  </a>
+  <ul class="nav-links">
+    <li><a id="nl-home" href="#home" onclick="go('home')">Home</a></li>
+    <li>
+      <button class="ndrop-btn" id="nl-perchi">Per chi &#9662;</button>
+      <div class="ndrop-menu">
+        <a href="#concessionarie" onclick="go('concessionarie')">Concessionarie</a>
+        <a href="#media-owner" onclick="go('media-owner')">Media Owner</a>
+      </div>
+    </li>
+    <li><a id="nl-cf" href="#come-funziona" onclick="go('come-funziona')">Come funziona</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Cambia tema">
+      <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="display:none">
+        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+      <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+      </svg>
+    </button>
+    <a class="btn-cta" href="#come-funziona" onclick="go('come-funziona')">Fai un tour</a>
+  </div>
+</nav>
+
+<!-- ══ HOME ══ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <canvas id="bcanvas"></canvas>
+    <div class="orbit-ring" style="width:420px;height:180px;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-18deg);"></div>
+    <div class="orbit-ring" style="width:600px;height:260px;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-18deg);opacity:0.03;"></div>
+    <div class="hero-inner">
+      <!-- <p class="eyebrow">Software per concessionarie e media owner OOH · DOOH</p> -->
+      <h1 class="hero-title">Tutta la forza del tuo advertising<br><span class="ac">in un'unica piattaforma.</span></h1>
+      <p class="hero-manifesto">
+        Spazi, trattative e campagne multicanale convergono in un unico <strong>software verticale</strong>, costruito per chi vende e gestisce media.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn-p" href="#come-funziona" onclick="go('come-funziona')">Fai un tour</a>
+        <a class="btn-s" href="mailto:hello@codesour.com">Contattaci</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── MOCKUP SHOWCASE ── -->
+  <div class="mkp-showcase">
+    <div class="mkp-scene">
+
+      <!-- ══ MAIN: Inventory ══ -->
+      <div class="mkp-main">
+        <div class="mkp-chrome">
+          <div class="mkp-bar">
+            <div class="mkp-dots"><span class="mkp-dot" style="background:#FF5F57"></span><span class="mkp-dot" style="background:#FEBC2E"></span><span class="mkp-dot" style="background:#28C840"></span></div>
+            <div class="mkp-url">gravity.app / inventory / parco-impianti</div>
+            <div style="width:44px"></div>
+          </div>
+        </div>
+        <div class="mkp-app">
+          <div class="mkp-hdr">
+            <div class="mkp-lrow">
+              <svg viewBox="0 0 56 40" style="height:15px;width:auto"><circle cx="10" cy="26" r="7" fill="#3E00FB" opacity=".75"/><circle cx="24" cy="14" r="7" fill="#FF4A1C" opacity=".75"/><path d="M10,26 Q17,20 24,14" stroke="#3E00FB" stroke-width="1.5" fill="none" opacity=".5"/></svg>
+              <span class="mkp-ltxt">GRAVITY</span>
+            </div>
+            <nav class="mkp-nav">
+              <span class="mkp-nl">Overview</span>
+              <span class="mkp-nl mkp-nl-on">Inventory</span>
+              <span class="mkp-nl">Commercial</span>
+              <span class="mkp-nl">Delivery</span>
+              <span class="mkp-nl">Settings</span>
+            </nav>
+            <div class="mkp-rrow">
+              <div class="mkp-bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:13px;height:13px"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="mkp-bdot"></span></div>
+              <div class="mkp-av">GB</div>
+            </div>
+          </div>
+          <div class="mkp-body">
+            <div class="mkp-ph">
+              <div><div class="mkp-bc">Inventory</div><div class="mkp-pt">Parco Impianti</div></div>
+              <div style="display:flex;gap:5px"><button class="mkp-bs">Importa CSV</button><button class="mkp-bp">+ Nuovo Impianto</button></div>
+            </div>
+            <div class="mkp-frow">
+              <div class="mkp-srch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:10px;height:10px;color:#9CA3AF;flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span>Cerca impianto...</span></div>
+              <button class="mkp-fbt">Tipo ▾</button><button class="mkp-fbt">Comune ▾</button><button class="mkp-fbt">Status ▾</button>
+            </div>
+            <div class="mkp-tw">
+              <table class="mkp-tbl">
+                <thead><tr>
+                  <th style="width:22px"><input type="checkbox" style="accent-color:#3E00FB;width:10px;height:10px"></th>
+                  <th>Codice</th><th>Descrizione</th><th>Comune</th><th>Formato</th><th>Tipo</th><th>Status</th><th style="width:24px"></th>
+                </tr></thead>
+                <tbody>
+                  <tr class="mkp-tr-s"><td><input type="checkbox" checked style="accent-color:#3E00FB;width:10px;height:10px"></td><td class="mkp-code">IMP-0042</td><td>Viale Monza ang. Via Padova</td><td>Milano</td><td>6×3m</td><td><span class="mkp-tag tag-ooh">OOH</span></td><td><span class="mkp-st st-ok">Disponibile</span></td><td class="mkp-act">⋯</td></tr>
+                  <tr><td><input type="checkbox" style="accent-color:#3E00FB;width:10px;height:10px"></td><td class="mkp-code">IMP-0043</td><td>Corso Buenos Aires 12</td><td>Milano</td><td>Totem LED</td><td><span class="mkp-tag tag-dooh">DOOH</span></td><td><span class="mkp-st st-busy">Occupato</span></td><td class="mkp-act">⋯</td></tr>
+                  <tr><td><input type="checkbox" style="accent-color:#3E00FB;width:10px;height:10px"></td><td class="mkp-code">IMP-0044</td><td>Piazza Venezia — Colonna A</td><td>Roma</td><td>4×3m</td><td><span class="mkp-tag tag-ooh">OOH</span></td><td><span class="mkp-st st-ok">Disponibile</span></td><td class="mkp-act">⋯</td></tr>
+                  <tr><td><input type="checkbox" style="accent-color:#3E00FB;width:10px;height:10px"></td><td class="mkp-code">IMP-0045</td><td>Via Roma 88 — Pensilina</td><td>Torino</td><td>Maxi 12×4m</td><td><span class="mkp-tag tag-ooh">OOH</span></td><td><span class="mkp-st st-warn">In scadenza</span></td><td class="mkp-act">⋯</td></tr>
+                  <tr><td><input type="checkbox" style="accent-color:#3E00FB;width:10px;height:10px"></td><td class="mkp-code">IMP-0046</td><td>Via Caracciolo — Schermo LED</td><td>Napoli</td><td>3×2m LED</td><td><span class="mkp-tag tag-dooh">DOOH</span></td><td><span class="mkp-st st-ok">Disponibile</span></td><td class="mkp-act">⋯</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="mkp-pgn"><span class="mkp-pi">247 spazi totali</span><div class="mkp-pbs"><div class="mkp-pb mkp-pb-a">1</div><div class="mkp-pb">2</div><div class="mkp-pb">3</div><span style="font-size:8px;color:rgba(35,28,7,0.3);padding:0 2px">…</span><div class="mkp-pb">25</div></div></div>
+          </div>
+        </div>
+        <div class="mkp-refline"></div>
+      </div>
+
+      <!-- ══ SATELLITE LEFT: CRM Pipeline ══ -->
+      <div class="mkp-sat-l">
+        <div class="mkp-chrome"><div class="mkp-bar"><div class="mkp-dots"><span class="mkp-dot" style="background:#FF5F57"></span><span class="mkp-dot" style="background:#FEBC2E"></span><span class="mkp-dot" style="background:#28C840"></span></div><div class="mkp-url">gravity.app / commercial / pipeline</div><div style="width:36px"></div></div></div>
+        <div class="mkp-app">
+          <div class="mkp-hdr">
+            <div class="mkp-lrow"><svg viewBox="0 0 56 40" style="height:13px;width:auto"><circle cx="10" cy="26" r="7" fill="#3E00FB" opacity=".75"/><circle cx="24" cy="14" r="7" fill="#FF4A1C" opacity=".75"/></svg><span class="mkp-ltxt">GRAVITY</span></div>
+            <nav class="mkp-nav"><span class="mkp-nl">Inventory</span><span class="mkp-nl mkp-nl-on">Commercial</span><span class="mkp-nl">Delivery</span></nav>
+            <div class="mkp-rrow"><div class="mkp-av">GB</div></div>
+          </div>
+          <div class="mkp-kb">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="mkp-pt" style="font-size:12px">Pipeline Trattative</div><button class="mkp-bp" style="font-size:8px;padding:4px 9px">+ Nuova</button></div>
+            <div class="mkp-kc">
+              <div>
+                <div class="mkp-kct">Nuovo lead</div>
+                <div class="mkp-kcard"><div class="mkp-kco">Mediagroup Srl</div><div class="mkp-kval">€ 8.400</div><div class="mkp-kdt">Aperto 3gg fa</div></div>
+                <div class="mkp-kcard"><div class="mkp-kco">Brand Nova</div><div class="mkp-kval">€ 2.200</div><div class="mkp-kdt">Aperto oggi</div></div>
+              </div>
+              <div>
+                <div class="mkp-kct mkp-kct-on">Proposta inviata</div>
+                <div class="mkp-kcard mkp-kcard-a"><div class="mkp-kco">Luxe Fashion</div><div class="mkp-kval">€ 24.000</div><div class="mkp-kdt">Follow-up: domani</div></div>
+                <div class="mkp-kcard"><div class="mkp-kco">TechCorp Italia</div><div class="mkp-kval">€ 11.500</div><div class="mkp-kdt">In revisione</div></div>
+              </div>
+              <div>
+                <div class="mkp-kct">Chiuso vinto</div>
+                <div class="mkp-kcard"><div class="mkp-kco">Retailmax</div><div class="mkp-kval">€ 38.000</div><div class="mkp-kdt" style="color:#059669">&#10003; Firmato</div></div>
+                <div class="mkp-kcard"><div class="mkp-kco">AutoGroup</div><div class="mkp-kval">€ 15.600</div><div class="mkp-kdt" style="color:#059669">&#10003; Firmato</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ SATELLITE RIGHT: Reporting ══ -->
+      <div class="mkp-sat-r">
+        <div class="mkp-chrome"><div class="mkp-bar"><div class="mkp-dots"><span class="mkp-dot" style="background:#FF5F57"></span><span class="mkp-dot" style="background:#FEBC2E"></span><span class="mkp-dot" style="background:#28C840"></span></div><div class="mkp-url">gravity.app / reporting</div><div style="width:28px"></div></div></div>
+        <div class="mkp-app">
+          <div class="mkp-hdr">
+            <div class="mkp-lrow"><svg viewBox="0 0 56 40" style="height:13px;width:auto"><circle cx="10" cy="26" r="7" fill="#3E00FB" opacity=".75"/><circle cx="24" cy="14" r="7" fill="#FF4A1C" opacity=".75"/></svg><span class="mkp-ltxt">GRAVITY</span></div>
+            <nav class="mkp-nav"><span class="mkp-nl mkp-nl-on">Reporting</span><span class="mkp-nl">Delivery</span></nav>
+            <div class="mkp-rrow"><div class="mkp-av">GB</div></div>
+          </div>
+          <div class="mkp-rp">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px"><div class="mkp-pt" style="font-size:12px">Dashboard Executive</div><button class="mkp-bs" style="font-size:8px;padding:3px 7px">Esporta ▾</button></div>
+            <div class="mkp-kg">
+              <div class="mkp-kpi"><div class="mkp-kl">Ricavi YTD</div><div class="mkp-kv">€ 1,24M</div><div class="mkp-kd">↑ +18%</div></div>
+              <div class="mkp-kpi"><div class="mkp-kl">Margine medio</div><div class="mkp-kv">34%</div><div class="mkp-kd">↑ +4pp</div></div>
+              <div class="mkp-kpi"><div class="mkp-kl">Campagne attive</div><div class="mkp-kv">47</div><div class="mkp-kd">↑ +12 vs Q3</div></div>
+              <div class="mkp-kpi"><div class="mkp-kl">Occupancy rate</div><div class="mkp-kv">82%</div><div class="mkp-kd mkp-kd-dn">↓ −3pp</div></div>
+            </div>
+            <div class="mkp-cl">Ricavi mensili — 2026</div>
+            <div class="mkp-bars">
+              <div class="mkp-bc2"><div class="mkp-b" style="height:24px;opacity:.5"></div><div class="mkp-bl">G</div></div>
+              <div class="mkp-bc2"><div class="mkp-b" style="height:32px;opacity:.55"></div><div class="mkp-bl">F</div></div>
+              <div class="mkp-bc2"><div class="mkp-b" style="height:28px;opacity:.6"></div><div class="mkp-bl">M</div></div>
+              <div class="mkp-bc2"><div class="mkp-b" style="height:38px;opacity:.65"></div><div class="mkp-bl">A</div></div>
+              <div class="mkp-bc2"><div class="mkp-b" style="height:34px;opacity:.7"></div><div class="mkp-bl">M</div></div>
+              <div class="mkp-bc2"><div class="mkp-b" style="height:44px;opacity:.8"></div><div class="mkp-bl">G</div></div>
+              <div class="mkp-bc2"><div class="mkp-b" style="height:40px;opacity:.75"></div><div class="mkp-bl">L</div></div>
+              <div class="mkp-bc2"><div class="mkp-b" style="height:44px;opacity:.8"></div><div class="mkp-bl">A</div></div>
+              <div class="mkp-bc2"><div class="mkp-b" style="height:38px;opacity:.75"></div><div class="mkp-bl">S</div></div>
+              <div class="mkp-bc2"><div class="mkp-b" style="height:42px"></div><div class="mkp-bl">O</div></div>
+              <div class="mkp-bc2"><div class="mkp-b" style="height:36px;opacity:.9;background:#FF4A1C"></div><div class="mkp-bl">N</div></div>
+              <div class="mkp-bc2"><div class="mkp-b" style="height:16px;opacity:.35;border:1px dashed rgba(62,0,251,.4);background:transparent"></div><div class="mkp-bl">D</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- METRICHE — fuse con il mockup showcase -->
+  <div class="mkp-stats-strip">
+    <div class="mkp-stats-inner">
+      <div class="mkp-stat">
+        <div class="mkp-stat-v">−30%</div>
+        <div class="mkp-stat-l">Tempi di espletamento<br>della campagna</div>
+      </div>
+      <div class="mkp-stat-div"></div>
+      <div class="mkp-stat">
+        <div class="mkp-stat-v">&lt;15'</div>
+        <div class="mkp-stat-l">Per pianificare una<br>strategia di campagna</div>
+      </div>
+      <div class="mkp-stat-div"></div>
+      <div class="mkp-stat">
+        <div class="mkp-stat-v">0</div>
+        <div class="mkp-stat-l">Conflitti di<br>prenotazione spazi</div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- WORKFLOW single row -->
+  <div class="sw sec-glow">
+    <div class="sec-label">Il sistema operativo dell'advertising</div>
+    <h2 class="sec-title">Uno strumento unico e integrato,<br>tanti servizi ad hoc per il settore pubblicitario.</h2>
+    <p class="sec-sub">Ti accompagniamo in ogni fase del processo lavorativo con soluzioni pensate per le esigenze di concessionarie e media owner.</p>
+    <div class="wf-cards">
+      <div class="wf-card">
+        <div class="wf-n">01</div>
+        <div class="wf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+        <div class="wf-t">Anagrafica degli spazi</div>
+        <div class="wf-d"><strong>Catalogo completo</strong> di spazi pubblicitari multicanale con tutte le informazioni tecniche, geografiche e commerciali in un <strong>unico registro</strong>.</div>
+      </div>
+      <div class="wf-card">
+        <div class="wf-n">02</div>
+        <div class="wf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="wf-t">Gestione fornitori e permessi</div>
+        <div class="wf-d">Rubrica fornitori con <strong>scadenze autorizzative</strong> e documentazione associata: <strong>tutto tracciato</strong>, niente si perde.</div>
+      </div>
+      <div class="wf-card">
+        <div class="wf-n">03</div>
+        <div class="wf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="wf-t">Strategia di campagna e trattative</div>
+        <div class="wf-d">Gestione delle <strong>trattative commerciali</strong> e del <strong>portafoglio clienti</strong>. Preventivazione integrata con generazione <strong>PDF brandizzato</strong> e invio proposta direttamente dalla piattaforma.</div>
+      </div>
+      <div class="wf-card">
+        <div class="wf-n">04</div>
+        <div class="wf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <div class="wf-t">Pianificazione degli spazi</div>
+        <div class="wf-d"><strong>Calendario disponibilità</strong> per spazio con stati in <strong>tempo reale</strong>: prenotazioni, sovrapposizioni e <strong>conflitti rilevati</strong> prima che diventino un problema.</div>
+      </div>
+      <div class="wf-card">
+        <div class="wf-n">05</div>
+        <div class="wf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <div class="wf-t">Erogazione delle campagne</div>
+        <div class="wf-d"><strong>Dashboard operativa</strong> per il delivery: materiali creativi, task di installazione, alerting e <strong>controllo avanzamento campagna</strong> in un colpo d'occhio.</div>
+      </div>
+      <div class="wf-card">
+        <div class="wf-n">06</div>
+        <div class="wf-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <div class="wf-t">Reportistica</div>
+        <div class="wf-d"><strong>Analisi finanziaria</strong> e di <strong>performance</strong> per campagna e per cliente. Esportabile in <strong>PDF ed Excel</strong>, pronto da condividere.</div>
+      </div>
+    </div>
+
+  <div class="wf-mockup-wrap" style="max-width:760px;margin:64px auto 0;padding:0 48px;">
+    <p class="wf-mkp-caption">Dalla piattaforma — Gestione Preventivi</p>
+    <div class="pm-window">
+      <!-- Browser chrome -->
+      <div style="background:#1A1510;padding:9px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,250,0.06);">
+        <div style="display:flex;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#FF5F57;display:inline-block"></span><span style="width:10px;height:10px;border-radius:50%;background:#FEBC2E;display:inline-block"></span><span style="width:10px;height:10px;border-radius:50%;background:#28C840;display:inline-block"></span></div>
+        <div style="flex:1;background:rgba(255,255,250,0.06);border-radius:4px;padding:3px 10px;font-size:10px;color:rgba(255,255,250,0.28);font-family:'Inter',monospace;text-align:center;">gravity.app / commercial / preventivi / nuovo</div>
+      </div>
+      <!-- Light app -->
+      <div style="background:#F8F7F2;font-family:'Inter',sans-serif;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;background:#FFFFFA;border-bottom:1px solid rgba(35,28,7,0.08);">
+          <div style="display:flex;align-items:center;gap:7px;"><svg viewBox="0 0 56 40" style="height:14px;width:auto"><circle cx="10" cy="26" r="7" fill="#3E00FB" opacity=".75"/><circle cx="24" cy="14" r="7" fill="#FF4A1C" opacity=".75"/><path d="M10,26 Q17,20 24,14" stroke="#3E00FB" stroke-width="1.5" fill="none" opacity=".5"/></svg><span style="font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;color:#3E00FB;letter-spacing:0.12em;">GRAVITY</span></div>
+          <div style="display:flex;gap:1px;"><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:5px 9px;">Inventory</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#3E00FB;padding:5px 9px;border-bottom:2px solid #3E00FB;">Commercial</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:5px 9px;">Delivery</span></div>
+          <div style="width:24px;height:24px;border-radius:50%;background:#3E00FB;color:#fff;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;">GB</div>
+        </div>
+        <div style="padding:14px 18px 16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div><div style="font-size:9px;color:rgba(35,28,7,0.38);font-family:'Oswald',sans-serif;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px;">Commercial / Preventivi</div><div style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:500;color:#111827;letter-spacing:-0.02em;">Nuova Proposta — <span style="color:#3E00FB">Luxe Fashion SpA</span></div></div>
+            <div style="display:flex;gap:6px;"><button style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 10px;background:transparent;color:rgba(35,28,7,0.45);border:1px solid rgba(35,28,7,0.15);border-radius:3px;">Salva Bozza</button><button style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;padding:5px 12px;background:#3E00FB;color:#fff;border:none;border-radius:3px;box-shadow:0 2px 12px rgba(62,0,251,0.3);">↓ Genera PDF</button></div>
+          </div>
+          <div style="border:1px solid rgba(35,28,7,0.08);border-radius:6px;overflow:hidden;background:#fff;margin-bottom:10px;">
+            <table style="width:100%;border-collapse:collapse;font-size:10px;">
+              <thead><tr style="background:#F2F1EB;"><th style="padding:6px 10px;text-align:left;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Spazio</th><th style="padding:6px 10px;text-align:left;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Comune</th><th style="padding:6px 10px;text-align:left;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Periodo</th><th style="padding:6px 10px;text-align:left;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Gg</th><th style="padding:6px 10px;text-align:right;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">€/gg</th><th style="padding:6px 10px;text-align:right;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Sc.</th><th style="padding:6px 10px;text-align:right;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Totale</th></tr></thead>
+              <tbody>
+                <tr style="background:rgba(62,0,251,0.03);"><td style="padding:7px 10px;color:#111827;font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">Viale Monza ang. Via Padova</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">Milano</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">01/03–28/03</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">28</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;">€ 140</td><td style="padding:7px 10px;font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;color:#059669;">−10%</td><td style="padding:7px 10px;font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;color:#111827;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;">€ 3.528</td></tr>
+                <tr><td style="padding:7px 10px;color:#111827;font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">Corso Buenos Aires 12 — Totem LED</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">Milano</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">01/03–31/03</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">31</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;">€ 310</td><td style="padding:7px 10px;font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;color:#059669;">−10%</td><td style="padding:7px 10px;font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;color:#111827;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;">€ 8.649</td></tr>
+                <tr><td style="padding:7px 10px;color:#111827;font-size:10px;">Piazza Venezia — Colonna A</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;">Roma</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;">15/03–15/04</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;">32</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;text-align:right;">€ 380</td><td style="padding:7px 10px;font-size:10px;text-align:right;color:#059669;">−5%</td><td style="padding:7px 10px;font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;color:#111827;text-align:right;">€ 11.552</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:flex-end;gap:24px;padding:8px 12px;background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:6px;">
+            <div style="font-size:10px;color:rgba(35,28,7,0.5);">Imponibile: <span style="color:#111827;font-weight:500;">€ 23.729</span></div>
+            <div style="font-size:10px;color:rgba(35,28,7,0.5);">IVA 22%: <span style="color:#111827;font-weight:500;">€ 5.220</span></div>
+            <div style="display:flex;align-items:center;gap:10px;padding-left:16px;border-left:1px solid rgba(35,28,7,0.1);"><span style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(35,28,7,0.4);">Totale</span><span style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;color:#3E00FB;letter-spacing:-0.02em;">€ 28.949</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- ── SCEGLI LA TUA ORBITA ── -->
+  <div class="sw">
+    <div class="sec-label">Scegli la tua orbita</div>
+    <h2 class="sec-title">Due corpi.<br>Due traiettorie.</h2>
+    <p class="sec-sub">Gravity è costruito per due attori complementari del settore advertising. Entrambi trovano il loro punto di equilibrio nella stessa piattaforma.</p>
+
+    <div class="orbita-grid">
+      <div class="orbita-card cc" onclick="go('concessionarie')">
+        <div class="orbita-card-ring"></div>
+        <div class="orbita-body"></div>
+        <h3 class="orbita-title">Concessionarie</h3>
+        <p class="orbita-desc">Gestisci ogni trattativa, genera preventivi in minuti, pianifica senza conflitti e monitora le performance di ogni campagna che vendi.</p>
+        <a class="orbita-link">
+          Scopri la tua orbita
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="orbita-card mo" onclick="go('media-owner')">
+        <div class="orbita-card-ring"></div>
+        <div class="orbita-body"></div>
+        <h3 class="orbita-title">Media Owner</h3>
+        <p class="orbita-desc">Governa il tuo patrimonio di spazi multicanale, mantieni i permessi in regola e traccia il delivery di ogni campagna che ospiti.</p>
+        <a class="orbita-link">
+          Scopri la tua orbita
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- ── L'ENTROPIA ── -->
+  <div class="sw sec-orbit-bg">
+    <div class="sec-label">Il problema di gravità</div>
+    <h2 class="sec-title">L'advertising opera<br>nell'entropia.</h2>
+    <p class="sec-sub">Fogli Excel, CRM generici, email come sistema di delivery. Ogni strumento tira in una direzione diversa. Gravity crea il punto di attrazione.</p>
+
+    <div class="entropy-grid">
+      <div class="entropy-col">
+        <div class="entropy-col-label before">
+          <svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+          Prima di Gravity
+        </div>
+        <div class="entropy-item">
+          <span class="entropy-dot x"></span>
+          <span>Inventory su fogli Excel, aggiornato manualmente e spesso disallineato</span>
+        </div>
+        <div class="entropy-item">
+          <span class="entropy-dot x"></span>
+          <span>Preventivi costruiti a mano, soggetti ad errori di prezzo e disponibilità</span>
+        </div>
+        <div class="entropy-item">
+          <span class="entropy-dot x"></span>
+          <span>CRM generico non pensato per la gestione di spazi pubblicitari</span>
+        </div>
+        <div class="entropy-item">
+          <span class="entropy-dot x"></span>
+          <span>Doppia prenotazione degli spazi: conflitti scoperti all'ultimo momento</span>
+        </div>
+        <div class="entropy-item">
+          <span class="entropy-dot x"></span>
+          <span>Scadenze di permessi e concessioni non monitorate — rischio normativo costante</span>
+        </div>
+        <div class="entropy-item">
+          <span class="entropy-dot x"></span>
+          <span>Report finanziari aggregati a mano da fonti diverse, spesso inattendibili</span>
+        </div>
+      </div>
+
+      <div class="entropy-arrow">→</div>
+
+      <div class="entropy-col after">
+        <div class="entropy-col-label after">
+          <svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="currentColor"/></svg>
+          Con Gravity
+        </div>
+        <div class="entropy-item after">
+          <span class="entropy-dot ok"></span>
+          <span>Anagrafica spazi unica, aggiornata in tempo reale, con disponibilità live</span>
+        </div>
+        <div class="entropy-item after">
+          <span class="entropy-dot ok"></span>
+          <span>Preventivi generati dall'inventory in pochi minuti, con PDF brandizzato automatico</span>
+        </div>
+        <div class="entropy-item after">
+          <span class="entropy-dot ok"></span>
+          <span>CRM integrato con pipeline Kanban, portafoglio clienti e storico campagne</span>
+        </div>
+        <div class="entropy-item after">
+          <span class="entropy-dot ok"></span>
+          <span>Calendario condiviso con alert sui conflitti: zero sovrapposizioni</span>
+        </div>
+        <div class="entropy-item after">
+          <span class="entropy-dot ok"></span>
+          <span>Alert automatici a 90/30/7 giorni dalla scadenza di ogni permesso</span>
+        </div>
+        <div class="entropy-item after">
+          <span class="entropy-dot ok"></span>
+          <span>Dashboard executive con KPI finanziari live, esportabili in Excel e PDF</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- 3 REASONS -->
+  <div class="sw">
+    <div class="sec-label">Perché scegliere Gravity</div>
+    <h2 class="sec-title">3 motivi per fare<br>il salto.</h2>
+    <p class="sec-sub">Smetti di operare con strumenti del passato. Gravity è costruito per il modo in cui lavora davvero il settore.</p>
+    <div class="reasons">
+      <div class="reason">
+        <div class="reason-n">01</div>
+        <h3 class="reason-t">Centralità assoluta</h3>
+        <p class="reason-d">Fine ai silos, fine a Excel. Inventory, trattative, campagne e report in un unico sistema integrato. Un solo login, zero strumenti esterni, zero dati persi.</p>
+      </div>
+      <div class="reason">
+        <div class="reason-n">02</div>
+        <h3 class="reason-t">Visibilità in tempo reale</h3>
+        <p class="reason-d">Disponibilità spazi, stato delle trattative, delivery delle campagne e KPI finanziari — aggiornati al momento. Sai cosa sta succedendo prima che diventi un problema.</p>
+      </div>
+      <div class="reason">
+        <div class="reason-n">03</div>
+        <h3 class="reason-t">La tua piattaforma, a modo tuo</h3>
+        <p class="reason-d">Modello white-label completo: il tuo logo, il tuo dominio, la tua identità. Gravity diventa la tua soluzione proprietaria senza i costi di sviluppo.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- ── WHITE LABEL ── -->
+  <div class="sw">
+    <div class="wl-block">
+      <div>
+        <div class="sec-label">Campo gravitazionale esteso</div>
+        <h2 class="sec-title" style="margin-bottom:20px;">Gravity orbita<br>sotto il tuo brand.</h2>
+        <p style="font-size:16px; line-height:1.8; color:var(--muted); margin-bottom:36px;">Rivendila come tua. Gravity è progettato per sparire dietro la tua identità: ogni elemento della piattaforma porta il tuo marchio, non il nostro.</p>
+        <a class="btn-p" onclick="go('come-funziona','infrastruttura')" style="cursor:pointer;">Scopri il modello white-label</a>
+      </div>
+      <div class="wl-items">
+        <div class="wl-item">
+          <div class="wl-item-dot"></div>
+          <div>
+            <div class="wl-item-t">Logo, colori e favicon personalizzati</div>
+            <div class="wl-item-d">L'interfaccia porta il brand del tuo cliente, non di Gravity.</div>
+          </div>
+        </div>
+        <div class="wl-item">
+          <div class="wl-item-dot"></div>
+          <div>
+            <div class="wl-item-t">Dominio custom</div>
+            <div class="wl-item-d">Subdomain o dominio completo dedicato per ogni tenant.</div>
+          </div>
+        </div>
+        <div class="wl-item">
+          <div class="wl-item-dot"></div>
+          <div>
+            <div class="wl-item-t">Documenti brandizzati</div>
+            <div class="wl-item-d">Preventivi, contratti e report generati con il brand del cliente.</div>
+          </div>
+        </div>
+        <div class="wl-item">
+          <div class="wl-item-dot"></div>
+          <div>
+            <div class="wl-item-t">Email transazionali personalizzate</div>
+            <div class="wl-item-d">Ogni notifica inviata porta il mittente e il brand configurati.</div>
+          </div>
+        </div>
+        <div class="wl-item">
+          <div class="wl-item-dot"></div>
+          <div>
+            <div class="wl-item-t">Onboarding in &lt;5 giorni lavorativi</div>
+            <div class="wl-item-d">Provisioning automatizzato: dalla firma al go-live in una settimana.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ── MANIFESTO ── -->
+  <div class="manifesto-wrap">
+    <div class="manifesto-inner">
+
+      <!-- Deco: sistema binario -->
+      <div class="manifesto-orbit-wrap" aria-hidden="true">
+        <div class="manifesto-orbit manifesto-orbit-1"></div>
+        <div class="manifesto-orbit manifesto-orbit-2"></div>
+        <div class="manifesto-star manifesto-star-a"></div>
+        <div class="manifesto-star manifesto-star-b"></div>
+        <div class="manifesto-bary"></div>
+      </div>
+
+      <div class="sec-label" style="text-align:center;margin-bottom:32px;">Manifesto</div>
+
+      <p class="manifesto-concept">
+        In astronomia, un <em>sistema binario</em> è composto da due stelle
+        che non orbitano l'una attorno all'altra — orbitano entrambe
+        attorno a un punto condiviso: il baricentro.<br>
+        Un centro di massa invisibile, generato dalla loro relazione.
+        Rimuovi una stella, e l'altra non ha più orbita.
+        Il sistema esiste solo perché esistono entrambi.
+      </p>
+
+      <div class="manifesto-divline"></div>
+
+      <div class="manifesto-beliefs">
+
+        <div class="manifesto-belief">
+          <span class="manifesto-n">01</span>
+          <p>Il settore advertising funziona come un sistema binario. <strong>Concessionaria e media owner</strong> sono due corpi distinti — masse diverse, traiettorie diverse — ma legati da un'unica forza: la campagna che costruiscono insieme. Il baricentro non appartiene a nessuno dei due. Appartiene alla loro relazione.</p>
+        </div>
+
+        <div class="manifesto-belief">
+          <span class="manifesto-n">02</span>
+          <p>Un software costruito solo per chi vende non è abbastanza. Uno costruito solo per chi possiede gli spazi nemmeno. <strong>Gravity vuole essere il baricentro</strong>: il punto condiviso attorno a cui entrambi trovano il loro equilibrio operativo, senza che nessuno perda la propria identità.</p>
+        </div>
+
+        <div class="manifesto-belief">
+          <span class="manifesto-n">03</span>
+          <p>Crediamo che <strong>l'attrito sia lo spreco più silenzioso</strong> del settore. Email che sostituiscono sistemi. Excel che sostituiscono dati. PDF che sostituiscono processi. Ogni workaround è energia sottratta al lavoro reale. Il nostro compito è eliminarlo.</p>
+        </div>
+
+        <div class="manifesto-belief">
+          <span class="manifesto-n">04</span>
+          <p>Non costruiamo uno strumento generico calato su un settore verticale. <strong>Costruiamo per chi vive dentro questo settore ogni giorno</strong> — per chi sa cosa vuol dire un impianto in scadenza a 48 ore dalla campagna, un preventivo rivisto tre volte, un report che non torna. Quella conoscenza è il progetto.</p>
+        </div>
+
+      </div>
+
+      <p class="manifesto-sign">— Il team di Gravity · CodeSour Tech</p>
+
+    </div>
+  </div>
+
+</div><!-- /page-home -->
+
+<!-- ══ CONCESSIONARIE ══ -->
+<div id="page-concessionarie" class="page">
+  <div class="pc-hero">
+    <div class="pc-tag"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#FF4A1C"/></svg> Per le Concessionarie</div>
+    <h1 class="pc-title">Gestisci ogni trattativa.<br>Chiudi più campagne.</h1>
+    <p class="pc-sub">Gravity è il centro operativo per le concessionarie pubblicitarie che vogliono crescere senza aggiungere complessità.</p>
+  </div>
+
+  <!-- ── PIPELINE MOCKUP ── -->
+  <div class="pm-strip">
+    <p class="pm-label">La piattaforma in azione</p>
+    <p class="pm-head">Pipeline commerciale,<br>sempre aggiornata in tempo reale</p>
+    <div class="pm-outer">
+      <div style="position:absolute;width:700px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,74,28,0.07) 0%,transparent 65%);right:-100px;top:50%;transform:translateY(-50%);pointer-events:none;filter:blur(60px);z-index:0;"></div>
+      <div class="pm-window" style="position:relative;z-index:1;">
+        <div style="background:#1A1510;padding:9px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,250,0.06);">
+          <div style="display:flex;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#FF5F57;display:inline-block"></span><span style="width:10px;height:10px;border-radius:50%;background:#FEBC2E;display:inline-block"></span><span style="width:10px;height:10px;border-radius:50%;background:#28C840;display:inline-block"></span></div>
+          <div style="flex:1;background:rgba(255,255,250,0.06);border-radius:4px;padding:3px 10px;font-size:10px;color:rgba(255,255,250,0.28);font-family:'Inter',monospace;text-align:center;">gravity.app / commercial / pipeline</div>
+        </div>
+        <div style="background:#F8F7F2;font-family:'Inter',sans-serif;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;background:#FFFFFA;border-bottom:1px solid rgba(35,28,7,0.08);">
+            <div style="display:flex;align-items:center;gap:7px;"><svg viewBox="0 0 56 40" style="height:14px;width:auto"><circle cx="10" cy="26" r="7" fill="#3E00FB" opacity=".75"/><circle cx="24" cy="14" r="7" fill="#FF4A1C" opacity=".75"/></svg><span style="font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;color:#3E00FB;letter-spacing:0.12em;">GRAVITY</span></div>
+            <div style="display:flex;gap:1px;"><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:5px 9px;">Overview</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:5px 9px;">Inventory</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#3E00FB;padding:5px 9px;border-bottom:2px solid #3E00FB;">Commercial</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:5px 9px;">Delivery</span></div>
+            <div style="display:flex;gap:8px;align-items:center;"><button style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;padding:5px 12px;background:#3E00FB;color:#fff;border:none;border-radius:3px;">+ Nuova Trattativa</button><div style="width:24px;height:24px;border-radius:50%;background:#FF4A1C;color:#fff;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;">GB</div></div>
+          </div>
+          <!-- Metrics bar -->
+          <div style="display:flex;gap:0;background:#FFFFFA;border-bottom:1px solid rgba(35,28,7,0.06);">
+            <div style="padding:10px 24px;border-right:1px solid rgba(35,28,7,0.06);"><div style="font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);margin-bottom:3px;">Pipeline Totale</div><div style="font-family:'Oswald',sans-serif;font-size:17px;font-weight:600;color:#3E00FB;letter-spacing:-0.02em;">€ 142.400</div></div>
+            <div style="padding:10px 24px;border-right:1px solid rgba(35,28,7,0.06);"><div style="font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);margin-bottom:3px;">Vinto Mar 2026</div><div style="font-family:'Oswald',sans-serif;font-size:17px;font-weight:600;color:#059669;letter-spacing:-0.02em;">€ 53.600</div></div>
+            <div style="padding:10px 24px;border-right:1px solid rgba(35,28,7,0.06);"><div style="font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);margin-bottom:3px;">In Trattativa</div><div style="font-family:'Oswald',sans-serif;font-size:17px;font-weight:600;color:#111827;letter-spacing:-0.02em;">8</div></div>
+            <div style="padding:10px 24px;"><div style="font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);margin-bottom:3px;">Win Rate Q1</div><div style="font-family:'Oswald',sans-serif;font-size:17px;font-weight:600;color:#111827;letter-spacing:-0.02em;">62%</div></div>
+          </div>
+          <!-- Kanban -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:#F2F1EB;min-height:220px;">
+            <!-- Lead -->
+            <div style="padding:12px;border-right:1px solid rgba(35,28,7,0.07);">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><span style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(35,28,7,0.42);">Nuovo Lead</span><span style="background:rgba(35,28,7,0.08);border-radius:100px;padding:1px 7px;font-size:9px;color:rgba(35,28,7,0.45);">3</span></div>
+              <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:5px;padding:9px 10px;margin-bottom:6px;"><div style="font-size:10px;font-weight:500;color:#111827;margin-bottom:3px;">Mediagroup Srl</div><div style="font-family:'Oswald',sans-serif;font-size:11px;color:#3E00FB;">€ 8.400</div><div style="font-size:8px;color:rgba(35,28,7,0.38);margin-top:3px;">Aperto 3gg fa</div></div>
+              <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:5px;padding:9px 10px;margin-bottom:6px;"><div style="font-size:10px;font-weight:500;color:#111827;margin-bottom:3px;">Brand Nova</div><div style="font-family:'Oswald',sans-serif;font-size:11px;color:#3E00FB;">€ 2.200</div><div style="font-size:8px;color:rgba(35,28,7,0.38);margin-top:3px;">Aperto oggi</div></div>
+              <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:5px;padding:9px 10px;"><div style="font-size:10px;font-weight:500;color:#111827;margin-bottom:3px;">Italretail</div><div style="font-family:'Oswald',sans-serif;font-size:11px;color:#3E00FB;">€ 5.600</div><div style="font-size:8px;color:rgba(35,28,7,0.38);margin-top:3px;">Da contattare</div></div>
+            </div>
+            <!-- Proposta -->
+            <div style="padding:12px;border-right:1px solid rgba(35,28,7,0.07);">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><span style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#3E00FB;">Proposta Inviata</span><span style="background:rgba(62,0,251,0.1);border-radius:100px;padding:1px 7px;font-size:9px;color:#3E00FB;">2</span></div>
+              <div style="background:#FFFFFA;border:1px solid rgba(62,0,251,0.2);border-radius:5px;padding:9px 10px;margin-bottom:6px;background:rgba(62,0,251,0.04);"><div style="font-size:10px;font-weight:500;color:#111827;margin-bottom:3px;">Luxe Fashion SpA</div><div style="font-family:'Oswald',sans-serif;font-size:11px;color:#3E00FB;">€ 28.949</div><div style="font-size:8px;color:rgba(35,28,7,0.38);margin-top:3px;">Follow-up: domani</div></div>
+              <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:5px;padding:9px 10px;"><div style="font-size:10px;font-weight:500;color:#111827;margin-bottom:3px;">TechCorp Italia</div><div style="font-family:'Oswald',sans-serif;font-size:11px;color:#3E00FB;">€ 11.500</div><div style="font-size:8px;color:rgba(35,28,7,0.38);margin-top:3px;">In revisione</div></div>
+            </div>
+            <!-- Negoziazione -->
+            <div style="padding:12px;border-right:1px solid rgba(35,28,7,0.07);">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><span style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(35,28,7,0.42);">Negoziazione</span><span style="background:rgba(35,28,7,0.08);border-radius:100px;padding:1px 7px;font-size:9px;color:rgba(35,28,7,0.45);">2</span></div>
+              <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:5px;padding:9px 10px;margin-bottom:6px;"><div style="font-size:10px;font-weight:500;color:#111827;margin-bottom:3px;">GroupMedia Srl</div><div style="font-family:'Oswald',sans-serif;font-size:11px;color:#3E00FB;">€ 44.000</div><div style="font-size:8px;color:rgba(35,28,7,0.38);margin-top:3px;">Contratto in bozza</div></div>
+              <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:5px;padding:9px 10px;"><div style="font-size:10px;font-weight:500;color:#111827;margin-bottom:3px;">OmniAds SpA</div><div style="font-family:'Oswald',sans-serif;font-size:11px;color:#3E00FB;">€ 18.750</div><div style="font-size:8px;color:rgba(35,28,7,0.38);margin-top:3px;">Revisione pricing</div></div>
+            </div>
+            <!-- Vinto -->
+            <div style="padding:12px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;"><span style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:#059669;">Chiuso Vinto</span><span style="background:rgba(5,150,105,0.1);border-radius:100px;padding:1px 7px;font-size:9px;color:#059669;">2</span></div>
+              <div style="background:#FFFFFA;border:1px solid rgba(5,150,105,0.2);border-radius:5px;padding:9px 10px;margin-bottom:6px;"><div style="font-size:10px;font-weight:500;color:#111827;margin-bottom:3px;">Retailmax</div><div style="font-family:'Oswald',sans-serif;font-size:11px;color:#3E00FB;">€ 38.000</div><div style="font-size:8px;color:#059669;margin-top:3px;">&#10003; Firmato</div></div>
+              <div style="background:#FFFFFA;border:1px solid rgba(5,150,105,0.2);border-radius:5px;padding:9px 10px;"><div style="font-size:10px;font-weight:500;color:#111827;margin-bottom:3px;">AutoGroup Italia</div><div style="font-family:'Oswald',sans-serif;font-size:11px;color:#3E00FB;">€ 15.600</div><div style="font-size:8px;color:#059669;margin-top:3px;">&#10003; Firmato</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="benefits">
+    <div class="benefit">
+      <div class="benefit-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></div>
+      <h3 class="benefit-t">Pipeline sempre sotto controllo</h3>
+      <p class="benefit-d">Traccia ogni trattativa dalla prima call alla firma con una vista Kanban configurabile. Portafoglio clienti centralizzato, storico relazioni e attività sempre visibili. Nessuna opportunità sfugge.</p>
+      <a class="benefit-link" onclick="go('come-funziona','campagne')">Scopri come funziona <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="benefit">
+      <div class="benefit-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <h3 class="benefit-t">Preventivi in minuti, non in ore</h3>
+      <p class="benefit-d">Genera proposte commerciali dettagliate direttamente dall'inventory disponibile. Sconti a livello di riga, validazione margini, PDF brandizzato e workflow di approvazione: tutto incluso, tutto automatico.</p>
+      <a class="benefit-link" onclick="go('come-funziona','campagne')">Scopri come funziona <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="benefit">
+      <div class="benefit-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+      <h3 class="benefit-t">Pianificazione senza conflitti</h3>
+      <p class="benefit-d">Il calendario condiviso degli spazi mostra disponibilità in tempo reale ed elimina le doppie prenotazioni. Il Traffic Manager vede tutto, gestisce tutto, e le sorprese dell'ultimo minuto smettono di esistere.</p>
+      <a class="benefit-link" onclick="go('come-funziona','campagne')">Scopri come funziona <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="benefit">
+      <div class="benefit-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <h3 class="benefit-t">Report che parlano al management</h3>
+      <p class="benefit-d">Ricavi per campagna, margini per spazio, proiezioni basate sulla pipeline. I dati finanziari si aggregano automaticamente — il CFO ha le risposte che cerca, senza formule Excel da mantenere.</p>
+      <a class="benefit-link" onclick="go('come-funziona','reportistica')">Scopri come funziona <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+  <div class="sw-sm" style="text-align:center;padding-top:64px;">
+    <a class="btn-p" href="#come-funziona" onclick="go('come-funziona')">Esplora tutte le funzionalità</a>
+  </div>
+</div>
+
+<!-- ══ MEDIA OWNER ══ -->
+<div id="page-media-owner" class="page">
+  <div class="pc-hero">
+    <div class="pc-tag"><svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="#3E00FB"/></svg> Per i Media Owner</div>
+    <h1 class="pc-title">Il tuo patrimonio di spazi,<br>finalmente governato.</h1>
+    <p class="pc-sub">Gravity è la piattaforma operativa per media owner che vogliono trasformare la gestione degli spazi in un vantaggio competitivo.</p>
+  </div>
+
+  <!-- ── INVENTORY MOCKUP ── -->
+  <div class="pm-strip">
+    <p class="pm-label">La piattaforma in azione</p>
+    <p class="pm-head">Il tuo patrimonio di spazi,<br>governato con precisione</p>
+    <div class="pm-outer">
+      <div style="position:absolute;width:600px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(62,0,251,0.08) 0%,transparent 65%);left:-100px;top:50%;transform:translateY(-50%);pointer-events:none;filter:blur(60px);z-index:0;"></div>
+      <div class="pm-window" style="position:relative;z-index:1;">
+        <div style="background:#1A1510;padding:9px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,250,0.06);">
+          <div style="display:flex;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#FF5F57;display:inline-block"></span><span style="width:10px;height:10px;border-radius:50%;background:#FEBC2E;display:inline-block"></span><span style="width:10px;height:10px;border-radius:50%;background:#28C840;display:inline-block"></span></div>
+          <div style="flex:1;background:rgba(255,255,250,0.06);border-radius:4px;padding:3px 10px;font-size:10px;color:rgba(255,255,250,0.28);font-family:'Inter',monospace;text-align:center;">gravity.app / inventory / parco-impianti / IMP-0042</div>
+        </div>
+        <div style="background:#F8F7F2;font-family:'Inter',sans-serif;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;background:#FFFFFA;border-bottom:1px solid rgba(35,28,7,0.08);">
+            <div style="display:flex;align-items:center;gap:7px;"><svg viewBox="0 0 56 40" style="height:14px;width:auto"><circle cx="10" cy="26" r="7" fill="#3E00FB" opacity=".75"/><circle cx="24" cy="14" r="7" fill="#FF4A1C" opacity=".75"/></svg><span style="font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;color:#3E00FB;letter-spacing:0.12em;">GRAVITY</span></div>
+            <div style="display:flex;gap:1px;"><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:5px 9px;">Overview</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#3E00FB;padding:5px 9px;border-bottom:2px solid #3E00FB;">Inventory</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:5px 9px;">Delivery</span></div>
+            <div style="display:flex;gap:6px;"><button style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 10px;background:transparent;color:rgba(35,28,7,0.45);border:1px solid rgba(35,28,7,0.15);border-radius:3px;">← Parco Impianti</button><button style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;padding:5px 10px;background:#3E00FB;color:#fff;border:none;border-radius:3px;">Modifica</button></div>
+          </div>
+          <!-- Content: 2-col layout -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:200px;">
+            <!-- Left: Info -->
+            <div style="padding:14px 16px;border-right:1px solid rgba(35,28,7,0.07);">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                <div><div style="font-size:9px;color:rgba(35,28,7,0.38);font-family:'Oswald',sans-serif;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;">IMP-0042 · OOH</div><div style="font-family:'Oswald',sans-serif;font-size:14px;font-weight:500;color:#111827;letter-spacing:-0.01em;">Viale Monza ang. Via Padova</div></div>
+                <span style="margin-left:auto;background:#D1FAE5;color:#065F46;font-size:9px;padding:3px 8px;border-radius:100px;font-weight:500;white-space:nowrap;">Disponibile</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
+                <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:5px;padding:7px 10px;"><div style="font-size:8px;color:rgba(35,28,7,0.38);font-family:'Oswald',sans-serif;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;">Comune</div><div style="font-size:11px;color:#111827;font-weight:500;">Milano (MI)</div></div>
+                <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:5px;padding:7px 10px;"><div style="font-size:8px;color:rgba(35,28,7,0.38);font-family:'Oswald',sans-serif;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;">Formato</div><div style="font-size:11px;color:#111827;font-weight:500;">6×3 m (18 m²)</div></div>
+                <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:5px;padding:7px 10px;"><div style="font-size:8px;color:rgba(35,28,7,0.38);font-family:'Oswald',sans-serif;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;">Listino / gg</div><div style="font-size:11px;color:#3E00FB;font-weight:500;font-family:'Oswald',sans-serif;">€ 140</div></div>
+                <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:5px;padding:7px 10px;"><div style="font-size:8px;color:rgba(35,28,7,0.38);font-family:'Oswald',sans-serif;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px;">Fornitore</div><div style="font-size:11px;color:#111827;font-weight:500;">InstallMilano</div></div>
+              </div>
+              <!-- Permits -->
+              <div style="font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(35,28,7,0.38);margin-bottom:7px;">Permessi e Concessioni</div>
+              <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:5px;padding:7px 10px;margin-bottom:5px;display:flex;align-items:center;justify-content:space-between;"><div><div style="font-size:10px;color:#111827;font-weight:500;">Concessione Suolo Pubblico</div><div style="font-size:8px;color:rgba(35,28,7,0.45);margin-top:1px;">Prot. MI/2023/4421 · Scade 15/09/2026</div></div><span style="background:#D1FAE5;color:#065F46;font-size:8px;padding:2px 6px;border-radius:100px;white-space:nowrap;">Attiva</span></div>
+              <div style="background:#FFFFFA;border:1px solid rgba(254,243,199,0.8);border-radius:5px;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;background:rgba(254,243,199,0.4);"><div><div style="font-size:10px;color:#111827;font-weight:500;">Autorizzazione Insegna Luminosa</div><div style="font-size:8px;color:rgba(35,28,7,0.45);margin-top:1px;">Prot. MI/2020/0882 · Scade 30/06/2026</div></div><span style="background:#FEF3C7;color:#92400E;font-size:8px;padding:2px 6px;border-radius:100px;white-space:nowrap;">⚠ 102gg</span></div>
+            </div>
+            <!-- Right: Availability mini calendar -->
+            <div style="padding:14px 16px;">
+              <div style="font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(35,28,7,0.38);margin-bottom:10px;">Disponibilità — Marzo/Aprile 2026</div>
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:8px;">
+                <div style="font-family:'Oswald',sans-serif;font-size:7px;text-align:center;color:rgba(35,28,7,0.35);padding:3px 0;">L</div><div style="font-family:'Oswald',sans-serif;font-size:7px;text-align:center;color:rgba(35,28,7,0.35);padding:3px 0;">M</div><div style="font-family:'Oswald',sans-serif;font-size:7px;text-align:center;color:rgba(35,28,7,0.35);padding:3px 0;">M</div><div style="font-family:'Oswald',sans-serif;font-size:7px;text-align:center;color:rgba(35,28,7,0.35);padding:3px 0;">G</div><div style="font-family:'Oswald',sans-serif;font-size:7px;text-align:center;color:rgba(35,28,7,0.35);padding:3px 0;">V</div><div style="font-family:'Oswald',sans-serif;font-size:7px;text-align:center;color:rgba(35,28,7,0.35);padding:3px 0;">S</div><div style="font-family:'Oswald',sans-serif;font-size:7px;text-align:center;color:rgba(35,28,7,0.35);padding:3px 0;">D</div>
+                <!-- week 1 march - free -->
+                <div style="background:#D1FAE5;border-radius:2px;height:18px;"></div><div style="background:#D1FAE5;border-radius:2px;height:18px;"></div><div style="background:#D1FAE5;border-radius:2px;height:18px;"></div><div style="background:#D1FAE5;border-radius:2px;height:18px;"></div><div style="background:#D1FAE5;border-radius:2px;height:18px;"></div><div style="background:#D1FAE5;border-radius:2px;height:18px;opacity:.5"></div><div style="background:#D1FAE5;border-radius:2px;height:18px;opacity:.5"></div>
+                <!-- week 2 - booked -->
+                <div style="background:#FEE2E2;border-radius:2px;height:18px;"></div><div style="background:#FEE2E2;border-radius:2px;height:18px;"></div><div style="background:#FEE2E2;border-radius:2px;height:18px;"></div><div style="background:#FEE2E2;border-radius:2px;height:18px;"></div><div style="background:#FEE2E2;border-radius:2px;height:18px;"></div><div style="background:#FEE2E2;border-radius:2px;height:18px;opacity:.5"></div><div style="background:#FEE2E2;border-radius:2px;height:18px;opacity:.5"></div>
+                <!-- week 3 - booked cont -->
+                <div style="background:#FEE2E2;border-radius:2px;height:18px;"></div><div style="background:#FEE2E2;border-radius:2px;height:18px;"></div><div style="background:#FEE2E2;border-radius:2px;height:18px;"></div><div style="background:#D1FAE5;border-radius:2px;height:18px;"></div><div style="background:#D1FAE5;border-radius:2px;height:18px;"></div><div style="background:#D1FAE5;border-radius:2px;height:18px;opacity:.5"></div><div style="background:#D1FAE5;border-radius:2px;height:18px;opacity:.5"></div>
+                <!-- week 4 april -->
+                <div style="background:#D1FAE5;border-radius:2px;height:18px;"></div><div style="background:#D1FAE5;border-radius:2px;height:18px;"></div><div style="background:rgba(62,0,251,0.12);border:1px solid rgba(62,0,251,0.3);border-radius:2px;height:18px;"></div><div style="background:rgba(62,0,251,0.12);border:1px solid rgba(62,0,251,0.3);border-radius:2px;height:18px;"></div><div style="background:rgba(62,0,251,0.12);border:1px solid rgba(62,0,251,0.3);border-radius:2px;height:18px;"></div><div style="background:#E8E6DF;border-radius:2px;height:18px;"></div><div style="background:#E8E6DF;border-radius:2px;height:18px;"></div>
+              </div>
+              <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;background:#D1FAE5;border-radius:2px;"></div><span style="font-size:8px;color:rgba(35,28,7,0.5);">Disponibile</span></div>
+                <div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;background:#FEE2E2;border-radius:2px;"></div><span style="font-size:8px;color:rgba(35,28,7,0.5);">Occupato</span></div>
+                <div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;background:rgba(62,0,251,0.12);border:1px solid rgba(62,0,251,0.3);border-radius:2px;"></div><span style="font-size:8px;color:rgba(35,28,7,0.5);">Opzionato</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="benefits">
+    <div class="benefit">
+      <div class="benefit-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>
+      <h3 class="benefit-t">Anagrafica spazi unica e aggiornata</h3>
+      <p class="benefit-d">Ogni spazio pubblicitario, su qualsiasi canale: caratteristiche tecniche, commerciali e normative in un unico punto. Vista mappa, disponibilità real-time, import massivo CSV. Il tuo patrimonio, sempre visibile.</p>
+      <a class="benefit-link" onclick="go('come-funziona','inventory')">Scopri come funziona <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="benefit">
+      <div class="benefit-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <h3 class="benefit-t">Permessi sempre in regola</h3>
+      <p class="benefit-d">Alert automatici a 90, 30 e 7 giorni dalla scadenza di ogni concessione o autorizzazione. Dashboard riepilogativa dello stato normativo di tutti i tuoi spazi. Nessun rischio, nessuna sorpresa.</p>
+      <a class="benefit-link" onclick="go('come-funziona','inventory')">Scopri come funziona <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="benefit">
+      <div class="benefit-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <h3 class="benefit-t">Delivery tracciato, anomalie gestite</h3>
+      <p class="benefit-d">Monitora l'esecuzione di ogni campagna con il confronto planned vs actual per spazio e periodo. Registra le anomalie, gestisci i make-good e genera il report di espletamento finale con un clic.</p>
+      <a class="benefit-link" onclick="go('come-funziona','campagne')">Scopri come funziona <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="benefit">
+      <div class="benefit-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+      <h3 class="benefit-t">Diventa piattaforma con il white-label</h3>
+      <p class="benefit-d">Offri ai tuoi partner o clienti un ambiente completamente brandizzato: il tuo logo, il tuo dominio, le tue email transazionali. Gravity diventa la tua soluzione proprietaria, senza costi di sviluppo.</p>
+      <a class="benefit-link" onclick="go('come-funziona','infrastruttura')">Scopri come funziona <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+  <div class="sw-sm" style="text-align:center;padding-top:64px;">
+    <a class="btn-p" href="#come-funziona" onclick="go('come-funziona')">Esplora tutte le funzionalità</a>
+  </div>
+</div>
+
+<!-- ══ COME FUNZIONA ══ -->
+<div id="page-come-funziona" class="page">
+  <div style="max-width:1200px;margin:0 auto;padding:80px 48px 40px;">
+    <div class="sec-label">La piattaforma</div>
+    <h1 class="sec-title" style="margin-bottom:12px;">Come funziona<br>Gravity.</h1>
+    <p class="sec-sub" style="margin-bottom:0">Quattro aree funzionali, un solo sistema. Ogni modulo è integrato con gli altri — nessun dato duplicato, nessun passaggio manuale.</p>
+  </div>
+  <!-- ── CF PRODUCT OVERVIEW MOCKUP ── -->
+  <div class="cf-preview">
+    <div class="cf-preview-inner">
+      <div style="background:#1A1510;padding:9px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,250,0.06);">
+        <div style="display:flex;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#FF5F57;display:inline-block"></span><span style="width:10px;height:10px;border-radius:50%;background:#FEBC2E;display:inline-block"></span><span style="width:10px;height:10px;border-radius:50%;background:#28C840;display:inline-block"></span></div>
+        <div style="flex:1;background:rgba(255,255,250,0.06);border-radius:4px;padding:3px 12px;font-size:10px;color:rgba(255,255,250,0.28);font-family:'Inter',monospace;text-align:center;">gravity.app — dashboard overview</div>
+      </div>
+      <div style="background:#F8F7F2;font-family:'Inter',sans-serif;">
+        <!-- App nav -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:48px;background:#FFFFFA;border-bottom:1px solid rgba(35,28,7,0.08);">
+          <div style="display:flex;align-items:center;gap:8px;"><svg viewBox="0 0 56 40" style="height:16px;width:auto"><circle cx="10" cy="26" r="7" fill="#3E00FB" opacity=".75"/><circle cx="24" cy="14" r="7" fill="#FF4A1C" opacity=".75"/><path d="M10,26 Q17,20 24,14" stroke="#3E00FB" stroke-width="1.5" fill="none" opacity=".5"/></svg><span style="font-family:'Oswald',sans-serif;font-size:12px;font-weight:500;color:#3E00FB;letter-spacing:0.12em;">GRAVITY</span></div>
+          <div style="display:flex;gap:2px;"><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#3E00FB;padding:6px 12px;border-bottom:2px solid #3E00FB;">Overview</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:6px 12px;">Inventory</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:6px 12px;">Commercial</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:6px 12px;">Delivery</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:6px 12px;">Settings</span></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="position:relative;width:26px;height:26px;display:flex;align-items:center;justify-content:center;color:rgba(35,28,7,0.38);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:15px;height:15px"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span style="position:absolute;top:2px;right:2px;width:6px;height:6px;border-radius:50%;background:#FF4A1C;border:1px solid #FFFFFA;"></span></div>
+            <div style="width:28px;height:28px;border-radius:50%;background:#3E00FB;color:#fff;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;">GB</div>
+          </div>
+        </div>
+        <!-- Overview content -->
+        <div style="padding:20px 24px 18px;">
+          <div style="margin-bottom:16px;"><span style="font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);">Buongiorno, Gloria — </span><span style="font-family:'Oswald',sans-serif;font-size:13px;font-weight:500;color:#111827;letter-spacing:-0.01em;">Dashboard Operativa</span></div>
+          <!-- KPI row -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
+            <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:8px;padding:12px 14px;"><div style="font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);margin-bottom:5px;">Ricavi YTD</div><div style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;color:#3E00FB;letter-spacing:-0.02em;line-height:1;">€ 1,24M</div><div style="font-size:9px;color:#059669;margin-top:3px;">↑ +18% vs 2025</div></div>
+            <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:8px;padding:12px 14px;"><div style="font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);margin-bottom:5px;">Campagne Attive</div><div style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;color:#111827;letter-spacing:-0.02em;line-height:1;">47</div><div style="font-size:9px;color:#059669;margin-top:3px;">↑ +12 vs Q3</div></div>
+            <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:8px;padding:12px 14px;"><div style="font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);margin-bottom:5px;">Occupancy Rate</div><div style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;color:#111827;letter-spacing:-0.02em;line-height:1;">82%</div><div style="font-size:9px;color:#DC2626;margin-top:3px;">↓ −3pp</div></div>
+            <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:8px;padding:12px 14px;"><div style="font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);margin-bottom:5px;">Pipeline Attiva</div><div style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:600;color:#111827;letter-spacing:-0.02em;line-height:1;">€ 142K</div><div style="font-size:9px;color:#059669;margin-top:3px;">8 trattative</div></div>
+          </div>
+          <!-- 2-col: chart + activity -->
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;">
+            <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:8px;padding:14px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><span style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.45);">Ricavi Mensili — 2026</span><span style="font-size:9px;color:rgba(35,28,7,0.35);">€ ×1000</span></div>
+              <div style="display:flex;align-items:flex-end;gap:4px;height:60px;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;"><div style="width:100%;background:#3E00FB;border-radius:2px 2px 0 0;height:30px;opacity:.5;"></div><div style="font-size:7px;color:rgba(35,28,7,0.35);">G</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;"><div style="width:100%;background:#3E00FB;border-radius:2px 2px 0 0;height:38px;opacity:.55;"></div><div style="font-size:7px;color:rgba(35,28,7,0.35);">F</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;"><div style="width:100%;background:#3E00FB;border-radius:2px 2px 0 0;height:50px;"></div><div style="font-size:7px;color:rgba(35,28,7,0.35);font-weight:600;">M</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;"><div style="width:100%;background:#E8E6DF;border:1px dashed rgba(62,0,251,0.3);border-radius:2px 2px 0 0;height:40px;"></div><div style="font-size:7px;color:rgba(35,28,7,0.35);">A</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;"><div style="width:100%;background:#E8E6DF;border:1px dashed rgba(62,0,251,0.3);border-radius:2px 2px 0 0;height:34px;"></div><div style="font-size:7px;color:rgba(35,28,7,0.35);">M</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;"><div style="width:100%;background:#E8E6DF;border:1px dashed rgba(62,0,251,0.3);border-radius:2px 2px 0 0;height:44px;"></div><div style="font-size:7px;color:rgba(35,28,7,0.35);">G</div></div>
+              </div>
+            </div>
+            <div style="background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:8px;padding:14px;">
+              <div style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.45);margin-bottom:10px;">Attività Recenti</div>
+              <div style="border-bottom:1px solid rgba(35,28,7,0.06);padding-bottom:7px;margin-bottom:7px;"><div style="font-size:9px;color:#111827;font-weight:500;">Proposta — Luxe Fashion</div><div style="font-size:8px;color:rgba(35,28,7,0.45);margin-top:1px;">€ 28.949 · 5 min fa</div></div>
+              <div style="border-bottom:1px solid rgba(35,28,7,0.06);padding-bottom:7px;margin-bottom:7px;"><div style="font-size:9px;color:#111827;font-weight:500;">Nuovo spazio — IMP-0051</div><div style="font-size:8px;color:rgba(35,28,7,0.45);margin-top:1px;">Roma, Via Appia · 1h fa</div></div>
+              <div><div style="font-size:9px;color:#111827;font-weight:500;display:flex;align-items:center;gap:5px;"><span style="color:#059669;">✓</span> Retailmax firmato</div><div style="font-size:8px;color:rgba(35,28,7,0.45);margin-top:1px;">€ 38.000 · ieri</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cf-tabs">
+    <button class="cf-tab active" onclick="switchTab('inventory',this)">Inventory</button>
+    <button class="cf-tab" onclick="switchTab('campagne',this)">Operation &amp; Campagne</button>
+    <button class="cf-tab" onclick="switchTab('reportistica',this)">Reportistica</button>
+    <button class="cf-tab" onclick="switchTab('infrastruttura',this)">Infrastruttura</button>
+  </div>
+  <div class="cf-body">
+    <div id="cf-inventory" class="cf-sec active">
+      <div class="srv-header">
+        <div><div class="srv-tag">Modulo 01</div><h2 class="srv-title">Inventory</h2></div>
+        <p class="srv-desc">Il cuore anagrafico della piattaforma. Gestisci il patrimonio di spazi pubblicitari fisici e digitali con precisione chirurgica: disponibilità, normativa, fornitori. Tutto in un'unica fonte di verità.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><h4 class="feat-t">Gestione Spazi</h4><p class="feat-d">Anagrafica completa per ogni spazio pubblicitario, indipendentemente dal canale: formato, risoluzione, localizzazione, listino prezzi per stagionalità, upload foto e documenti tecnici. Vista mappa integrata per spazi fisici.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><h4 class="feat-t">Calendario Disponibilità</h4><p class="feat-d">Vista calendario per spazio con stati in tempo reale: disponibile, prenotato, in manutenzione. Verifica delle sovrapposizioni e aggiornamento automatico all'assegnazione di nuove campagne.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4 class="feat-t">Permessi e Concessioni</h4><p class="feat-d">Registra ogni autorizzazione con ente, numero pratica, data di rilascio e scadenza. Alert automatici a 90, 30 e 7 giorni. Dashboard riepilogativa: attivi, in scadenza, scaduti. Storico sempre disponibile.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h4 class="feat-t">Gestione Fornitori</h4><p class="feat-d">Anagrafica strutturata di installatori, stampatori, manutentori e fornitori tecnici. Contratti con scadenze, associazione agli spazi gestiti, ricerca per tipologia e area geografica.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg></div><h4 class="feat-t">Import Massivo</h4><p class="feat-d">Carica l'intero patrimonio di spazi tramite CSV o Excel. Template predefiniti, validazione automatica dei dati e report sugli errori di importazione. Aggiornamenti bulk senza perdere la storicità.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div><h4 class="feat-t">Ricerca Avanzata</h4><p class="feat-d">Filtra gli spazi per tipologia, area geografica, budget, disponibilità e caratteristiche tecniche. Il Sales Manager trova il mix perfetto per il cliente in pochi secondi, non in ore.</p></div>
+      </div>
+    </div>
+    <div id="cf-campagne" class="cf-sec">
+      <div class="srv-header">
+        <div><div class="srv-tag">Modulo 02</div><h2 class="srv-title">Operation &amp;<br>Campagne</h2></div>
+        <p class="srv-desc">Gestione end-to-end del ciclo commerciale e operativo. Dal primo contatto con il cliente fino alla rendicontazione finale della campagna, senza mai uscire dalla piattaforma.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></div><h4 class="feat-t">CRM &amp; Pipeline Trattative</h4><p class="feat-d">Vista Kanban con stati configurabili: da "Nuovo lead" a "Chiuso vinto". Ogni trattativa ha il suo log di attività, note, chiamate e incontri. Assegnazione ai Sales Manager con notifica immediata.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h4 class="feat-t">Portafoglio Clienti</h4><p class="feat-d">Anagrafica clienti e contatti con storico completo: campagne realizzate, contratti, investimento per periodo. Segmentazione per settore, budget e area geografica. Visibilità controllata per ruolo.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 20h.01M7 20v-4M12 20v-8M17 20v-12M22 4v16"/></svg></div><h4 class="feat-t">Strategie Media</h4><p class="feat-d">Costruisci la strategia di campagna selezionando spazi dall'inventory con verifica disponibilità real-time. Simula il mix media con stima di reach e investimento. Versionamento delle proposte incluso.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><h4 class="feat-t">Preventivi e Contratti</h4><p class="feat-d">Genera preventivi dettagliati con PDF brandizzato. Workflow: bozza → approvazione interna → invio cliente → accettato. Contratto generato automaticamente dal preventivo accettato, pronto per la firma.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="14" y2="18"/></svg></div><h4 class="feat-t">Pianificazione Spazi</h4><p class="feat-d">Vista Gantt degli spazi per campagna: assegna periodi, verifica disponibilità al click, ricevi alert su conflitti. Vista duale: per spazio (storico occupazione) e per campagna (tutti gli spazi pianificati).</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><h4 class="feat-t">Campagna &amp; Espletamento</h4><p class="feat-d">Dashboard di campagna con delivery planned vs actual per spazio. Gestione materiali creativi con versioni e formati. Registrazione anomalie, make-good automatico, prove di pubblicazione e report finale.</p></div>
+      </div>
+    </div>
+    <div id="cf-reportistica" class="cf-sec">
+      <div class="srv-header">
+        <div><div class="srv-tag">Modulo 03</div><h2 class="srv-title">Reportistica</h2></div>
+        <p class="srv-desc">Analisi finanziaria e di performance per prendere decisioni basate sui dati, non sulle intuizioni. Un modulo avanzato che trasforma l'operatività in intelligenza di business.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><h4 class="feat-t">Report Ricavi</h4><p class="feat-d">Analisi dei ricavi per periodo con breakdown per cliente, spazio e tipologia. Confronto periodo su periodo, trend e variazioni. Esportabile in Excel e PDF con un clic.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><h4 class="feat-t">Analisi Margini</h4><p class="feat-d">Per ogni campagna: ricavo lordo, costo fornitore, margine operativo. Identifica gli spazi e i clienti più redditizi. Il CFO ha i numeri che servono, senza aggregare dati a mano.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><h4 class="feat-t">Dashboard Executive</h4><p class="feat-d">KPI finanziari in tempo reale per il management: ricavi, margini, ordini confermati, pipeline ponderata. Proiezioni basate su trattative in corso e ordini attivi.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><h4 class="feat-t">Report Occupancy</h4><p class="feat-d">Per ogni spazio: percentuale di periodi occupati vs disponibili, tasso di utilizzo storico, ROI medio. Identifica gli spazi sottoutilizzati e ottimizza l'offerta commerciale.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h4 class="feat-t">Report Performance</h4><p class="feat-d">Delivery planned vs actual per campagna e spazio. Analisi delle anomalie, tasso di make-good, storico per cliente. Report da consegnare all'inserzionista.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><h4 class="feat-t">Dashboard Interattiva</h4><p class="feat-d">Filtri dinamici su periodo, cliente, tipologia spazio. Grafici interattivi, drill-down sui dati. Report schedulati via email a cadenza configurabile.</p></div>
+      </div>
+    </div>
+    <div id="cf-infrastruttura" class="cf-sec">
+      <div class="srv-header">
+        <div><div class="srv-tag">Modulo 04</div><h2 class="srv-title">Infrastruttura</h2></div>
+        <p class="srv-desc">Tecnologia enterprise progettata per ambienti complessi. Multi-tenancy, white-label, controllo accessi granulare e collaborazione integrata.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><h4 class="feat-t">White-Label Completo</h4><p class="feat-d">Logo, favicon, palette colori, dominio custom. Email transazionali e documenti generati con il brand del tuo cliente. Gravity diventa invisibile, il tuo brand emerge.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div><h4 class="feat-t">Multi-Tenancy</h4><p class="feat-d">Ogni cliente opera in un ambiente logicamente isolato. Configurazione per tenant di brand, ruoli, moduli e lingua. Provisioning automatizzato in meno di 5 giorni.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div><h4 class="feat-t">Controllo Accessi RBAC</h4><p class="feat-d">Ruoli predefiniti: Super Admin, Sales Manager, Traffic Manager, Operations, Finance, Viewer. Permessi granulari per ogni funzionalità. Ruoli custom per tenant.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h4 class="feat-t">Task Management</h4><p class="feat-d">Task associati a trattative, campagne e ordini. Vista personale "My Tasks". Notifiche in-app e email. Thread di commenti per team.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><circle cx="12" cy="10" r="2"/></svg></div><h4 class="feat-t">Sicurezza &amp; Compliance</h4><p class="feat-d">MFA, crittografia TLS 1.2+, OWASP Top 10, GDPR compliant. Audit log completo con retention 12 mesi.</p></div>
+        <div class="feat"><div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h4 class="feat-t">API &amp; Integrazioni</h4><p class="feat-d">API RESTful per integrazioni esterne. Architettura API-first per espansione futura verso DSP, programmatic e digital signage.</p></div>
+      </div>
+    </div>
+    <div class="cf-cta-box">
+      <h3>Pronto a vedere Gravity in azione?</h3>
+      <p>Parla con il nostro team e scopri come Gravity si adatta alla tua struttura operativa.</p>
+      <a class="btn-p" href="mailto:hello@codesour.com">Contattaci</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-top">
+    <!-- brand col -->
+    <div class="footer-brand-col">
+      <svg viewBox="0 0 383.57 226.77" xmlns="http://www.w3.org/2000/svg">
+        <path class="lf" d="M195.79,127.74c.88-1.1,1.52-2.44,1.92-4.01,.41-1.57,.62-3.32,.62-5.23,0-3.18-.54-5.74-1.63-7.68-1.08-1.93-2.71-3.33-4.89-4.19-2.18-.86-4.92-1.28-8.23-1.28h-10.34v49.56h7.34v-23.13h5.14l6.37,23.13h7.16l-7.03-24.78c1.51-.49,2.7-1.29,3.58-2.38Zm-5.32-4.31c-.55,1.16-1.42,1.99-2.61,2.48-1.18,.49-2.73,.73-4.65,.73h-2.63v-16.09h3.06c3.06,0,5.1,.65,6.12,1.93,1.02,1.29,1.52,3.33,1.52,6.15,0,2.04-.28,3.64-.82,4.81Z"/>
+        <path class="lf" d="M221.55,105.34l-10.4,49.56h6.92l2.32-12.3h9.79l2.21,12.3h6.91l-10.46-49.56h-7.28Zm-.25,32.18l3.92-22.02,4.04,22.02h-7.96Z"/>
+        <polygon class="lf" points="264.86 141.57 257.26 105.34 250.48 105.34 261.31 154.9 267.97 154.9 278.68 105.34 272.01 105.34 264.86 141.57"/>
+        <rect class="lf" x="294.89" y="105.34" width="7.22" height="49.56"/>
+        <polygon class="lf" points="318.33 110.59 326.59 110.59 326.59 154.7 333.94 154.7 333.94 110.59 342.01 110.59 342.01 105.15 318.33 105.15 318.33 110.59"/>
+        <polygon class="lf" points="376.72 105.34 369.56 128.41 362.28 105.34 355.49 105.34 366.01 137.09 366.01 154.9 373.05 154.9 373.05 137.09 383.57 105.34 376.72 105.34"/>
+        <path class="lf" d="M41.29,143.21c0,6.46,5.1,11.69,11.38,11.69s11.38-5.24,11.38-11.69-5.1-11.69-11.38-11.69-11.38,5.24-11.38,11.69Z"/>
+        <path class="lf" d="M90.87,90.3c0,6.46,5.1,11.69,11.38,11.69s11.38-5.24,11.38-11.69-5.1-11.69-11.38-11.69-11.38,5.24-11.38,11.69Z"/>
+        <path class="lf" d="M89.14,106.58c-1.16-1.13-2.19-2.19-3.26-3.72-2.83,50.18-45.79,97.8-85.88,123.91,53.27-14.06,104.94-66.73,118.07-121.91-7.06,8.48-21.11,9.2-28.93,1.72Z"/>
+        <path class="lf" d="M66.13,126.43C61.09,74.96,104.15,29.61,143.2,0c-29.62,10.82-61.61,37.79-79.82,61.24-16.09,21.71-33.68,46.19-31.17,74.4,5.17-14.03,23.39-17.67,33.92-9.21Z"/>
+        <path class="lf" d="M145,135.11h5.97v3.59c0,2.27-.18,4.19-.53,5.77-.36,1.57-1,2.76-1.91,3.55-.92,.8-2.21,1.2-3.89,1.2s-2.97-.37-3.89-1.11c-.92-.74-1.55-1.84-1.88-3.32-.34-1.47-.51-3.3-.51-5.5v-18.41c0-1.87,.11-3.57,.33-5.08,.22-1.52,.76-2.72,1.62-3.59,.86-.88,2.24-1.32,4.16-1.32,1.75,0,3.04,.32,3.85,.96,.82,.64,1.35,1.61,1.62,2.9,.26,1.3,.39,2.94,.39,4.93v1.74h6.75v-1.91c0-3.15-.42-5.77-1.26-7.86-.84-2.09-2.19-3.66-4.06-4.69s-4.35-1.55-7.41-1.55c-3.43,0-6.1,.66-8.01,1.97-1.91,1.32-3.25,3.22-4,5.71-.76,2.49-1.13,5.51-1.13,9.06v16.2c0,3.42,.4,6.39,1.22,8.88,.82,2.49,2.14,4.38,3.98,5.67,1.83,1.3,4.28,1.94,7.35,1.94,2.35,0,4.19-.55,5.52-1.67,1.33-1.11,2.32-2.55,2.96-4.3l.66,5.38h4.55v-24.09h-12.43v4.96Z"/>
+      </svg>
+      <p class="footer-tagline">Sistema operativo per l'advertising. Un punto di attrazione per media owner e concessionarie. Costruito da CodeSour Tech Srl.</p>
+    </div>
+
+    <!-- piattaforma -->
+    <div class="footer-col">
+      <div class="footer-col-title">Piattaforma</div>
+      <a onclick="go('come-funziona','inventory')">Inventory</a>
+      <a onclick="go('come-funziona','campagne')">Operation &amp; Campagne</a>
+      <a onclick="go('come-funziona','reportistica')">Reportistica</a>
+      <a onclick="go('come-funziona','infrastruttura')">White Label &amp; Infrastruttura</a>
+    </div>
+
+    <!-- per chi -->
+    <div class="footer-col">
+      <div class="footer-col-title">Per chi</div>
+      <a onclick="go('concessionarie')">Concessionarie</a>
+      <a onclick="go('media-owner')">Media Owner</a>
+      <a onclick="go('come-funziona')">Come funziona</a>
+    </div>
+
+    <!-- contatti -->
+    <div class="footer-col">
+      <div class="footer-col-title">Contatti</div>
+      <a href="mailto:hello@codesour.com">hello@codesour.com</a>
+      <a href="https://codesour.com" target="_blank" rel="noopener">codesour.com</a>
+      <a style="margin-top:16px; display:block;">
+        <span style="display:inline-flex;align-items:center;gap:8px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:#3E00FB;box-shadow:0 0 6px rgba(62,0,251,0.6);flex-shrink:0;"></span>
+          MVP in sviluppo
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 CodeSour Tech Srl — P.IVA IT00000000000 — Tutti i diritti riservati</span>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Termini di servizio</a>
+      <a href="#">Cookie Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const pages = ['home','concessionarie','media-owner','come-funziona'];
+
+  function go(pageId, tab) {
+    pages.forEach(id => {
+      const el = document.getElementById('page-' + id);
+      if (el) el.classList.remove('active');
+    });
+    const target = document.getElementById('page-' + pageId);
+    if (target) target.classList.add('active');
+    document.querySelectorAll('.nav-links a, .nav-links .ndrop-btn').forEach(el => el.classList.remove('active'));
+    const nlMap = { home: 'nl-home', 'come-funziona': 'nl-cf' };
+    if (nlMap[pageId]) document.getElementById(nlMap[pageId])?.classList.add('active');
+    if (['concessionarie','media-owner'].includes(pageId)) document.getElementById('nl-perchi')?.classList.add('active');
+    if (pageId === 'come-funziona' && tab) {
+      const tabBtn = document.querySelector(`.cf-tab[onclick*="${tab}"]`);
+      if (tabBtn) switchTab(tab, tabBtn);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    history.pushState({}, '', '#' + pageId);
+  }
+
+  window.addEventListener('popstate', () => {
+    const hash = location.hash.replace('#','') || 'home';
+    if (pages.includes(hash)) go(hash);
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const hash = location.hash.replace('#','') || 'home';
+    if (pages.includes(hash)) go(hash);
+    initBinaryStars();
+    updateThemeIcons();
+  });
+
+  function switchTab(id, btn) {
+    document.querySelectorAll('.cf-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.cf-sec').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    const sec = document.getElementById('cf-' + id);
+    if (sec) sec.classList.add('active');
+  }
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    updateThemeIcons();
+    if (window._stopAnim) window._stopAnim();
+    initBinaryStars();
+  }
+
+  function updateThemeIcons() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.getElementById('icon-sun').style.display  = isDark ? 'block' : 'none';
+    document.getElementById('icon-moon').style.display = isDark ? 'none'  : 'block';
+  }
+
+  function initBinaryStars() {
+    const canvas = document.getElementById('bcanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animId, w, h;
+    function resize() { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; }
+    resize();
+    const ro = new ResizeObserver(resize); ro.observe(canvas);
+    const stars = Array.from({length: 120}, () => ({ x: Math.random(), y: Math.random(), r: Math.random() * 1.2 + 0.2, a: Math.random() * 0.45 + 0.08 }));
+    const TRAIL = 100; const t1 = [], t2 = []; let time = Math.random() * Math.PI * 2;
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const cx = w / 2, cy = h / 2;
+      const rx = Math.min(w, h) * 0.26, ry = rx * 0.38;
+      stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x * w, s.y * h, s.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,255,250,${s.a * (isDark ? 1 : 0.25)})`; ctx.fill(); });
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(-0.2);
+      ctx.beginPath(); ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2); ctx.strokeStyle = `rgba(62,0,251,${isDark ? 0.08 : 0.06})`; ctx.lineWidth = 0.5; ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(0, 0, rx * 0.7, ry * 0.7, 0, 0, Math.PI * 2); ctx.strokeStyle = `rgba(255,74,28,${isDark ? 0.06 : 0.04})`; ctx.stroke();
+      ctx.restore();
+      const angle = time * 0.6, cos = Math.cos(-0.2), sin = Math.sin(-0.2);
+      function ellipPt(a, rxi, ryi) { const lx = Math.cos(a) * rxi, ly = Math.sin(a) * ryi; return { x: cx + lx * cos - ly * sin, y: cy + lx * sin + ly * cos }; }
+      const p1 = ellipPt(angle, rx, ry), p2 = ellipPt(angle + Math.PI, rx * 0.7, ry * 0.7);
+      t1.push(p1); t2.push(p2); if (t1.length > TRAIL) t1.shift(); if (t2.length > TRAIL) t2.shift();
+      t1.forEach((p, i) => { ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fillStyle = `rgba(62,0,251,${(i/t1.length)*0.55})`; ctx.fill(); });
+      t2.forEach((p, i) => { ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fillStyle = `rgba(255,74,28,${(i/t2.length)*0.55})`; ctx.fill(); });
+      const lg = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y); lg.addColorStop(0, 'rgba(62,0,251,0.2)'); lg.addColorStop(1, 'rgba(255,74,28,0.2)');
+      ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.strokeStyle = lg; ctx.lineWidth = 0.5; ctx.stroke();
+      const gc = ctx.createRadialGradient(cx, cy, 0, cx, cy, 40); gc.addColorStop(0, 'rgba(62,0,251,0.10)'); gc.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(cx, cy, 40, 0, Math.PI * 2); ctx.fillStyle = gc; ctx.fill();
+      const g1 = ctx.createRadialGradient(p1.x, p1.y, 0, p1.x, p1.y, 14); g1.addColorStop(0, 'rgba(98,50,255,0.95)'); g1.addColorStop(0.4, 'rgba(62,0,251,0.7)'); g1.addColorStop(1, 'rgba(62,0,251,0)');
+      ctx.beginPath(); ctx.arc(p1.x, p1.y, 14, 0, Math.PI * 2); ctx.fillStyle = g1; ctx.fill();
+      ctx.beginPath(); ctx.arc(p1.x, p1.y, 4.5, 0, Math.PI * 2); ctx.fillStyle = '#A06EFF'; ctx.fill();
+      const g2 = ctx.createRadialGradient(p2.x, p2.y, 0, p2.x, p2.y, 11); g2.addColorStop(0, 'rgba(255,100,60,0.95)'); g2.addColorStop(0.4, 'rgba(255,74,28,0.7)'); g2.addColorStop(1, 'rgba(255,74,28,0)');
+      ctx.beginPath(); ctx.arc(p2.x, p2.y, 11, 0, Math.PI * 2); ctx.fillStyle = g2; ctx.fill();
+      ctx.beginPath(); ctx.arc(p2.x, p2.y, 3.5, 0, Math.PI * 2); ctx.fillStyle = '#FFAA80'; ctx.fill();
+      time += 0.007; animId = requestAnimationFrame(draw);
+    }
+    draw();
+    window._stopAnim = () => { cancelAnimationFrame(animId); ro.disconnect(); };
+  }
+</script>
+</body>
+</html>
