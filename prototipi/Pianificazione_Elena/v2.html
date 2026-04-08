@@ -26,24 +26,24 @@
       line-height: 1.5714;
     }
 
-    /* ── Navbar ─────────────────────────── */
-    .g-navbar {
-      height: 56px; background: #fff;
-      border-bottom: 1px solid #F0F0F0;
-      display: flex; align-items: center; padding: 0 24px;
-      position: sticky; top: 0; z-index: 200; flex-shrink: 0;
+    /* ── Navbar (spec: components/navbar.md) ── */
+    .top-nav {
+      height: 73px; background: #ffffff;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100; flex-shrink: 0;
     }
-    .g-navbar-logo { margin-right: 32px; display: flex; align-items: center; }
-    .g-navbar-menu { display: flex; align-items: stretch; height: 100%; flex: 1; }
-    .g-nav-item {
-      display: flex; align-items: center; padding: 0 16px;
-      font-size: 14px; color: rgba(0,0,0,0.45); cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: color 0.15s, border-color 0.15s; user-select: none;
-    }
-    .g-nav-item:hover { color: rgba(0,0,0,0.88); }
-    .g-nav-item.active { color: #3E00FB; border-bottom-color: #3E00FB; font-weight: 500; }
-    .g-navbar-right { display: flex; align-items: center; gap: 8px; }
+    .top-nav-logo { display: flex; align-items: center; padding: 0 20px; height: 100%; flex-shrink: 0; }
+    .top-nav-logo img { display: block; }
+    .top-nav-menu-wrap { flex: 1; align-self: stretch; display: flex; align-items: stretch; }
+    .top-nav-menu-wrap .ant-menu-horizontal { border-bottom: none !important; height: 73px; line-height: 73px; }
+    .top-nav-menu-wrap .ant-menu-horizontal > .ant-menu-item,
+    .top-nav-menu-wrap .ant-menu-horizontal > .ant-menu-submenu { height: 73px; line-height: 73px; padding: 0 16px; top: 0; }
+    .top-nav-menu-wrap .ant-menu-horizontal > .ant-menu-item::after,
+    .top-nav-menu-wrap .ant-menu-horizontal > .ant-menu-submenu::after { bottom: 0 !important; border-bottom-width: 2px !important; }
+    .top-nav-right { display: flex; align-items: center; gap: 24px; padding: 0 20px; flex-shrink: 0; }
+    .top-nav-bell { background: none; border: none; cursor: pointer; display: flex; align-items: center; color: rgba(0,0,0,0.65); padding: 4px; border-radius: 6px; transition: background 0.15s; }
+    .top-nav-bell:hover { background: rgba(0,0,0,0.04); }
 
     /* ── Search group unificato ─────────── */
     .search-group {
@@ -157,7 +157,7 @@ const { useState, useEffect, useRef } = React;
 const {
   ConfigProvider, App,
   Space, Divider, Typography,
-  Button, Input, Select, Tag, AutoComplete,
+  Button, Input, Select, Tag, AutoComplete, Menu,
   Avatar, Switch, Drawer, message,
 } = antd;
 
@@ -166,6 +166,7 @@ const {
   ArrowLeftOutlined, BellOutlined, UserOutlined,
   EnvironmentOutlined, AppstoreOutlined, BarsOutlined,
   TableOutlined, CheckOutlined, PlusOutlined,
+  InboxOutlined, SendOutlined,
 } = icons;
 
 const { Title, Text } = Typography;
@@ -514,21 +515,56 @@ function SystemCard({ sys, selected, onToggle }) {
   );
 }
 
-// ── Navbar ────────────────────────────────────────────────
+// ── Navbar (spec: components/navbar.md) ──────────────────
 
 function Navbar() {
-  return React.createElement('nav', { className: 'g-navbar' },
-    React.createElement('div', { className: 'g-navbar-logo' },
-      React.createElement('img', { src: '../../brand/Gravity_mark.svg', alt: 'Gravity', style: { height: 26, width: 'auto' } })
+  const navItems = [
+    { key: 'overview',  icon: React.createElement(AppstoreOutlined), label: 'Overview'  },
+    { key: 'inventory', icon: React.createElement(InboxOutlined),    label: 'Inventory' },
+    {
+      key: 'delivery', icon: React.createElement(SendOutlined), label: 'Delivery',
+      children: [
+        { key: 'campaigns', label: 'Campaigns' },
+        { key: 'plannings', label: 'Plannings' },
+      ],
+    },
+  ];
+
+  return React.createElement('div', { className: 'top-nav' },
+    React.createElement('div', { className: 'top-nav-logo' },
+      React.createElement('img', {
+        src: '../../brand/Gravity_type.svg', alt: 'Gravity',
+        style: { height: 28, width: 'auto' },
+        onError: e => { e.target.style.display = 'none'; },
+      })
     ),
-    React.createElement('div', { className: 'g-navbar-menu' },
-      ['Overview', 'Inventory', 'Delivery'].map(item =>
-        React.createElement('div', { key: item, className: `g-nav-item ${item === 'Delivery' ? 'active' : ''}` }, item)
+    React.createElement('div', { className: 'top-nav-menu-wrap' },
+      React.createElement(Menu, {
+        mode: 'horizontal',
+        selectedKeys: ['plannings'],
+        items: navItems,
+        style: { flex: 1, border: 'none', height: 73, lineHeight: '73px' },
+        theme: 'light',
+      })
+    ),
+    React.createElement('div', { className: 'top-nav-right' },
+      React.createElement('button', { className: 'top-nav-bell' },
+        React.createElement(BellOutlined, { style: { fontSize: 20 } })
+      ),
+      React.createElement('div', {
+        style: { width: 32, height: 32, borderRadius: '999px', overflow: 'hidden', flexShrink: 0, cursor: 'pointer' },
+      },
+        React.createElement('img', {
+          src: 'https://www.figma.com/api/mcp/asset/df094a9b-9185-4165-9f4c-fdb584fa6cac',
+          alt: 'Planner',
+          style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' },
+          onError: e => {
+            e.target.parentElement.style.background = '#3E00FB';
+            e.target.style.display = 'none';
+            e.target.parentElement.innerHTML = '<span style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700">P</span>';
+          },
+        })
       )
-    ),
-    React.createElement('div', { className: 'g-navbar-right' },
-      React.createElement(Button, { type: 'text', size: 'small', icon: React.createElement(BellOutlined, { style: { fontSize: 16 } }) }),
-      React.createElement(Avatar, { size: 32, icon: React.createElement(UserOutlined), style: { background: '#3E00FB', cursor: 'pointer' } })
     )
   );
 }
@@ -606,7 +642,7 @@ function SelectSystemsV2() {
 
         React.createElement(Navbar),
 
-        React.createElement('div', { style: { flex: 1, overflow: 'auto', padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: 12 } },
+        React.createElement('div', { style: { flex: 1, overflow: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: 12 } },
 
           // ── Card 1: info pianificazione ──────────────────
           React.createElement('div', {
