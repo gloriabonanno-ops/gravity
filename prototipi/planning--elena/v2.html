@@ -210,8 +210,8 @@ const STATUS = {
   option:    { color: '#FF4A1C', label: 'In Option'  },
 };
 
-const SYSTEM_TYPES = ['Palina', 'Poster', 'Palina Butterfly', 'Rotor'];
-const SYSTEM_SIZES = ['6×3', '4×3', '2×1.4', '1.2×1.8'];
+const SYSTEM_TYPES = ['Palina', 'Poster', 'Rotor'];
+const SYSTEM_SIZES = ['6×3', '4×3', '1.2×1.8'];
 
 // ── Location autocomplete data ────────────────────────────
 
@@ -721,7 +721,7 @@ function SelectSystemsV2() {
               style: {
                 flexGrow: hasSearched ? 0 : 1,
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end',
-                padding: '0 24px 28px',
+                padding: '0 24px 10px',
                 opacity: hasSearched ? 0 : 1,
                 transition: 'opacity 0.25s ease',
                 pointerEvents: hasSearched ? 'none' : 'auto',
@@ -731,7 +731,7 @@ function SelectSystemsV2() {
             ),
 
             // Search content
-            React.createElement('div', { style: { padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 } },
+            React.createElement('div', { style: { padding: '16px 24px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 } },
 
               // Row 1: search group + Filters + Search
               React.createElement('div', { style: { display: 'flex', gap: 8, alignItems: 'center', width: '100%', maxWidth: 850 } },
@@ -830,7 +830,7 @@ function SelectSystemsV2() {
                   }, s, React.createElement('span', { style: { opacity: 0.5, fontSize: 10, marginLeft: 1 } }, ' m'));
                 }),
                 React.createElement('div', { style: { width: 1, height: 14, background: '#E8E8E8', flexShrink: 0, alignSelf: 'center', margin: '0 2px' } }),
-                ...['Palermo Centro', 'Via Libertà', 'Palermo Mondello', 'Viale Regione Siciliana', 'Palermo Noce'].map(loc =>
+                ...['Palermo Centro', 'Via Libertà', 'Palermo Mondello'].map(loc =>
                   React.createElement(Tag, {
                     key: loc,
                     style: {
