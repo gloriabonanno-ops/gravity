@@ -204,6 +204,7 @@ const STATUS = {
 };
 
 const SYSTEM_TYPES = ['Palina', 'Poster', 'Palina Butterfly', 'Rotor'];
+const SYSTEM_SIZES = ['6×3', '4×3', '2×1.4', '1.2×1.8'];
 
 // ── Location autocomplete data ────────────────────────────
 
@@ -587,6 +588,7 @@ function SelectSystemsV2() {
   const [suggestions,  setSuggestions]  = useState([]);
   const [searchScope,  setSearchScope]  = useState('address');
   const [activeTypes,  setActiveTypes]  = useState([]);
+  const [activeSizes,  setActiveSizes]  = useState([]);
   const [drawerOpen,   setDrawerOpen]   = useState(false);
   const [advFilters,   setAdvFilters]   = useState({ salesModel: [], statusF: [], format: [], illuminated: null });
   const [hasSearched,  setHasSearched]  = useState(false);
@@ -597,6 +599,9 @@ function SelectSystemsV2() {
   const toggleType = t =>
     setActiveTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
 
+  const toggleSize = s =>
+    setActiveSizes(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
+
   const toggleSystem = id =>
     setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
 
@@ -605,6 +610,7 @@ function SelectSystemsV2() {
 
   const activeChips = [
     ...activeTypes.map(t  => ({ key: `type_${t}`,  label: t })),
+    ...activeSizes.map(s  => ({ key: `size_${s}`,  label: s })),
     ...advFilters.salesModel.map(v => ({ key: `sm_${v}`,   label: v })),
     ...advFilters.statusF.map(v    => ({ key: `st_${v}`,   label: STATUS[v]?.label || v })),
     ...advFilters.format.map(v     => ({ key: `fmt_${v}`,  label: v })),
@@ -613,6 +619,7 @@ function SelectSystemsV2() {
 
   const removeChip = key => {
     if (key.startsWith('type_'))   setActiveTypes(p => p.filter(x => `type_${x}` !== key));
+    else if (key.startsWith('size_')) setActiveSizes(p => p.filter(x => `size_${x}` !== key));
     else if (key.startsWith('sm_'))  setAdvFilters(p => ({ ...p, salesModel: p.salesModel.filter(v => `sm_${v}`  !== key) }));
     else if (key.startsWith('st_'))  setAdvFilters(p => ({ ...p, statusF:    p.statusF.filter(v    => `st_${v}`  !== key) }));
     else if (key.startsWith('fmt_')) setAdvFilters(p => ({ ...p, format:     p.format.filter(v     => `fmt_${v}` !== key) }));
@@ -621,6 +628,7 @@ function SelectSystemsV2() {
 
   const clearAll = () => {
     setActiveTypes([]);
+    setActiveSizes([]);
     setAdvFilters({ salesModel: [], statusF: [], format: [], illuminated: null });
   };
 
@@ -764,9 +772,8 @@ function SelectSystemsV2() {
                 }, 'Search'),
               ),
 
-              // Row 2: quick type filter pills
+              // Row 2: quick type + size filter pills
               React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, flexWrap: 'wrap', width: '100%', maxWidth: 850, justifyContent: 'center' } },
-                React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.3)', fontWeight: 500, flexShrink: 0, marginRight: 2 } }, 'Type:'),
                 ...SYSTEM_TYPES.map(t => {
                   const active = activeTypes.includes(t);
                   return React.createElement('span', {
@@ -776,6 +783,18 @@ function SelectSystemsV2() {
                   },
                     active && React.createElement(CheckOutlined, { style: { fontSize: 9 } }),
                     t
+                  );
+                }),
+                React.createElement('div', { style: { width: 1, height: 14, background: '#E8E8E8', flexShrink: 0, alignSelf: 'center', margin: '0 2px' } }),
+                ...SYSTEM_SIZES.map(s => {
+                  const active = activeSizes.includes(s);
+                  return React.createElement('span', {
+                    key: s,
+                    className: `quick-pill ${active ? 'active' : ''}`,
+                    onClick: () => toggleSize(s),
+                  },
+                    active && React.createElement(CheckOutlined, { style: { fontSize: 9 } }),
+                    s, React.createElement('span', { style: { opacity: 0.5, fontSize: 10, marginLeft: 1 } }, ' m')
                   );
                 }),
               ),
