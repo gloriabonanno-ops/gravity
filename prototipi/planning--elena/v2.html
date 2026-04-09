@@ -113,6 +113,7 @@
     .search-hero-spacer {
       flex-shrink: 0;
       min-height: 0;
+      overflow: hidden;
       transition: flex-grow 0.45s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -708,8 +709,45 @@ function SelectSystemsV2() {
             style: { background: '#fff', borderRadius: 8, border: '1px solid #F0F0F0', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }
           },
 
-            // Spacer top — si riduce quando l'utente cerca (Google-style lift)
-            React.createElement('div', { className: 'search-hero-spacer', style: { flexGrow: hasSearched ? 0 : 1 } }),
+            // Spacer top con contenuto hero — si riduce e sfuma quando si cerca
+            React.createElement('div', {
+              className: 'search-hero-spacer',
+              style: {
+                flexGrow: hasSearched ? 0 : 1,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end',
+                padding: '0 24px 28px',
+                opacity: hasSearched ? 0 : 1,
+                transition: 'opacity 0.25s ease',
+                pointerEvents: hasSearched ? 'none' : 'auto',
+              }
+            },
+              React.createElement('div', { style: { textAlign: 'center', width: '100%', maxWidth: 680 } },
+                React.createElement('div', { style: { marginBottom: 16 } },
+                  React.createElement(Title, { level: 5, style: { margin: '0 0 4px', color: 'rgba(0,0,0,0.72)', fontWeight: 600, fontSize: 15 } }, 'Gohan Sushi Planning Luglio'),
+                  React.createElement(Text, { style: { fontSize: 12, color: 'rgba(0,0,0,0.32)' } },
+                    'Zanga Sushi Palermo  ·  OOH  ·  10/06/2025 – 25/06/2025'
+                  ),
+                ),
+                React.createElement('div', { style: { display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' } },
+                  React.createElement('span', { style: { fontSize: 11, color: 'rgba(0,0,0,0.25)', fontWeight: 500, marginRight: 2 } }, 'Aree suggerite:'),
+                  ...['Palermo Centro', 'Via Libertà', 'Palermo Mondello', 'Viale Regione Siciliana', 'Palermo Noce'].map(loc =>
+                    React.createElement(Tag, {
+                      key: loc,
+                      style: {
+                        cursor: 'pointer', borderRadius: 10, fontSize: 12, margin: 0,
+                        background: '#FAFAFA', border: '1px solid #E8E8E8', color: 'rgba(0,0,0,0.5)',
+                        lineHeight: '22px', height: 24, display: 'inline-flex', alignItems: 'center', gap: 4,
+                        transition: 'all 0.15s',
+                      },
+                      onClick: () => { setSearchText(loc); setSuggestions(getSuggestions(loc)); },
+                    },
+                      React.createElement(EnvironmentOutlined, { style: { fontSize: 10 } }),
+                      loc
+                    )
+                  ),
+                ),
+              )
+            ),
 
             // Search content
             React.createElement('div', { style: { padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 } },
@@ -772,30 +810,42 @@ function SelectSystemsV2() {
                 }, 'Search'),
               ),
 
-              // Row 2: quick type + size filter pills
+              // Row 2: quick type + size filter pills (Tag closable)
               React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, flexWrap: 'wrap', width: '100%', maxWidth: 850, justifyContent: 'center' } },
                 ...SYSTEM_TYPES.map(t => {
                   const active = activeTypes.includes(t);
-                  return React.createElement('span', {
+                  return React.createElement(Tag, {
                     key: t,
-                    className: `quick-pill ${active ? 'active' : ''}`,
-                    onClick: () => toggleType(t),
-                  },
-                    active && React.createElement(CheckOutlined, { style: { fontSize: 9 } }),
-                    t
-                  );
+                    closable: active,
+                    onClose: e => { e.preventDefault(); toggleType(t); },
+                    onClick: () => { if (!active) toggleType(t); },
+                    style: {
+                      height: 24, lineHeight: '22px', borderRadius: 12, fontSize: 12,
+                      padding: '0 10px', cursor: 'pointer', userSelect: 'none', margin: 0,
+                      ...(active
+                        ? { border: '1px solid #3E00FB', background: '#F0EEFF', color: '#3E00FB', fontWeight: 500 }
+                        : { border: '1px dashed #D9D9D9', background: '#FAFAFA', color: 'rgba(0,0,0,0.4)' }
+                      ),
+                    },
+                  }, t);
                 }),
                 React.createElement('div', { style: { width: 1, height: 14, background: '#E8E8E8', flexShrink: 0, alignSelf: 'center', margin: '0 2px' } }),
                 ...SYSTEM_SIZES.map(s => {
                   const active = activeSizes.includes(s);
-                  return React.createElement('span', {
+                  return React.createElement(Tag, {
                     key: s,
-                    className: `quick-pill ${active ? 'active' : ''}`,
-                    onClick: () => toggleSize(s),
-                  },
-                    active && React.createElement(CheckOutlined, { style: { fontSize: 9 } }),
-                    s, React.createElement('span', { style: { opacity: 0.5, fontSize: 10, marginLeft: 1 } }, ' m')
-                  );
+                    closable: active,
+                    onClose: e => { e.preventDefault(); toggleSize(s); },
+                    onClick: () => { if (!active) toggleSize(s); },
+                    style: {
+                      height: 24, lineHeight: '22px', borderRadius: 12, fontSize: 12,
+                      padding: '0 10px', cursor: 'pointer', userSelect: 'none', margin: 0,
+                      ...(active
+                        ? { border: '1px solid #3E00FB', background: '#F0EEFF', color: '#3E00FB', fontWeight: 500 }
+                        : { border: '1px dashed #D9D9D9', background: '#FAFAFA', color: 'rgba(0,0,0,0.4)' }
+                      ),
+                    },
+                  }, s, React.createElement('span', { style: { opacity: 0.5, fontSize: 10, marginLeft: 1 } }, ' m'));
                 }),
               ),
             ),
