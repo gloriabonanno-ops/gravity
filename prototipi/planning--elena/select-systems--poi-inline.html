@@ -763,6 +763,101 @@ function SystemCard({ sys, selected, onToggle }) {
   );
 }
 
+// ── POI Drawer ───────────────────────────────────────────
+
+function POIDrawer({ open, onClose, onApply, currentCategory, currentRadii }) {
+  const [draftCategory, setDraftCategory] = useState(currentCategory);
+  const [draftRadii,    setDraftRadii]    = useState(currentRadii);
+
+  useEffect(() => {
+    if (open) { setDraftCategory(currentCategory); setDraftRadii(currentRadii); }
+  }, [open]);
+
+  const handleCategoryClick = key => {
+    if (draftCategory === key) {
+      setDraftCategory(null); setDraftRadii({});
+    } else {
+      setDraftCategory(key);
+      const pois = POI_DATA[key] || [];
+      const r = {};
+      pois.forEach(p => { r[p.id] = currentRadii[p.id] || 500; });
+      setDraftRadii(r);
+    }
+  };
+
+  const draftPOIs = draftCategory ? (POI_DATA[draftCategory] || []) : [];
+  const isActive = !!draftCategory;
+
+  return React.createElement(Drawer, {
+    title: React.createElement('span', { style: { fontWeight: 600 } }, 'Cerca vicino a POI'),
+    extra: isActive && React.createElement(Text, { type: 'secondary', style: { fontSize: 12 } },
+      POI_CATEGORIES.find(c => c.key === draftCategory)?.label
+    ),
+    placement: 'right', width: 340, open, onClose,
+    styles: { body: { padding: '20px 20px', display: 'flex', flexDirection: 'column', gap: 16 } },
+    footer: React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between' } },
+      React.createElement(Button, {
+        onClick: () => { setDraftCategory(null); setDraftRadii({}); },
+        disabled: !isActive,
+      }, 'Reimposta'),
+      React.createElement(Button, {
+        type: 'primary',
+        onClick: () => { onApply(draftCategory, draftRadii); onClose(); },
+      }, 'Applica'),
+    ),
+  },
+
+    // Categoria
+    React.createElement('div', null,
+      React.createElement('div', { style: { fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: 'rgba(0,0,0,0.3)', marginBottom: 10 } }, 'Categoria'),
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 } },
+        POI_CATEGORIES.map(cat =>
+          React.createElement('div', {
+            key: cat.key,
+            className: `poi-category-card${draftCategory === cat.key ? ' active' : ''}`,
+            onClick: () => handleCategoryClick(cat.key),
+          },
+            React.createElement('span', { className: 'poi-icon' }, React.createElement(cat.icon)),
+            cat.label
+          )
+        )
+      ),
+    ),
+
+    // Lista POI con slider
+    draftPOIs.length > 0 && React.createElement('div', null,
+      React.createElement('div', { style: { fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: 'rgba(0,0,0,0.3)', marginBottom: 8 } },
+        `POI trovati (${draftPOIs.length})`
+      ),
+      React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 12 } },
+        draftPOIs.map(poi => {
+          const radius = draftRadii[poi.id] || 500;
+          return React.createElement('div', { key: poi.id, style: { background: '#FAFAFA', borderRadius: 8, padding: '10px 12px' } },
+            React.createElement('div', { style: { fontWeight: 600, fontSize: 13, marginBottom: 2 } }, poi.name),
+            React.createElement('div', { style: { fontSize: 11, color: 'rgba(0,0,0,0.38)', marginBottom: 8 } }, poi.address),
+            React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+              React.createElement(Slider, {
+                min: 100, max: 2000, step: 100, value: radius,
+                onChange: v => setDraftRadii(prev => ({ ...prev, [poi.id]: v })),
+                tooltip: { formatter: v => `${v}m` },
+                style: { flex: 1, margin: 0 },
+              }),
+              React.createElement('span', { style: { fontSize: 11, color: 'rgba(0,0,0,0.38)', whiteSpace: 'nowrap', minWidth: 36, textAlign: 'right' } },
+                radius >= 1000 ? `${radius / 1000}km` : `${radius}m`
+              ),
+            ),
+          );
+        })
+      ),
+    ),
+
+    draftCategory && draftPOIs.length === 0 && React.createElement('div', {
+      style: { textAlign: 'center', color: 'rgba(0,0,0,0.3)', fontSize: 13, paddingTop: 20 }
+    }, 'Nessun POI disponibile per questa categoria'),
+
+  );
+}
+
 // ── Navbar (spec: components/navbar.md) ──────────────────
 
 function Navbar() {
@@ -830,6 +925,7 @@ function SelectSystemsV2() {
   const [hiddenLocs,   setHiddenLocs]   = useState([]);
   const [activeLocs,   setActiveLocs]   = useState([]);
   const [drawerOpen,   setDrawerOpen]   = useState(false);
+  const [poiDrawerOpen, setPoiDrawerOpen] = useState(false);
   const [advFilters,   setAdvFilters]   = useState({ salesModel: [], statusF: [], format: [], illuminated: null });
   const [hasSearched,  setHasSearched]  = useState(false);
   const [viewMode,     setViewMode]     = useState('map');
@@ -843,21 +939,11 @@ function SelectSystemsV2() {
 
   const foundPOIs = poiCategory ? (POI_DATA[poiCategory] || []) : [];
 
-  const handlePoiCategoryClick = key => {
-    if (poiCategory === key) {
-      setPoiCategory(null); setPoiRadii({}); setActivePOI(null);
-    } else {
-      setPoiCategory(key);
-      const pois = POI_DATA[key] || [];
-      const defaultRadii = {};
-      pois.forEach(p => { defaultRadii[p.id] = 500; });
-      setPoiRadii(defaultRadii);
-      setActivePOI(pois[0]?.id || null);
-    }
+  const handlePoiApply = (cat, radii) => {
+    setPoiCategory(cat);
+    setPoiRadii(radii);
+    setActivePOI(cat ? (POI_DATA[cat]?.[0]?.id || null) : null);
   };
-
-  const handlePoiRadiusChange = (poiId, value) =>
-    setPoiRadii(prev => ({ ...prev, [poiId]: value }));
 
   const toggleType = t =>
     setActiveTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
@@ -878,6 +964,7 @@ function SelectSystemsV2() {
     ...advFilters.statusF.map(v    => ({ key: `st_${v}`,   label: STATUS[v]?.label || v, prefix: 'Disponibilità', active: true })),
     ...advFilters.format.map(v     => ({ key: `fmt_${v}`,  label: v, prefix: 'Formato',        active: true })),
     ...(advFilters.illuminated ? [{ key: 'ill', label: advFilters.illuminated, prefix: 'Illuminato', active: true }] : []),
+    ...(poiCategory ? [{ key: 'poi', label: POI_CATEGORIES.find(c => c.key === poiCategory)?.label || poiCategory, prefix: 'POI', active: true }] : []),
   ];
 
   const removeChip = key => {
@@ -887,12 +974,14 @@ function SelectSystemsV2() {
     else if (key.startsWith('st_'))  setAdvFilters(p => ({ ...p, statusF:    p.statusF.filter(v    => `st_${v}`  !== key) }));
     else if (key.startsWith('fmt_')) setAdvFilters(p => ({ ...p, format:     p.format.filter(v     => `fmt_${v}` !== key) }));
     else if (key === 'ill')          setAdvFilters(p => ({ ...p, illuminated: null }));
+    else if (key === 'poi')          { setPoiCategory(null); setPoiRadii({}); setActivePOI(null); }
   };
 
   const clearAll = () => {
     setActiveTypes([]);
     setActiveSizes([]);
     setAdvFilters({ salesModel: [], statusF: [], format: [], illuminated: null });
+    setPoiCategory(null); setPoiRadii({}); setActivePOI(null);
   };
 
   const handleSearch = () => {
@@ -1060,6 +1149,17 @@ function SelectSystemsV2() {
                   }, advCount)
                 ),
                 React.createElement(Button, {
+                  icon: React.createElement(AimOutlined),
+                  onClick: () => setPoiDrawerOpen(true),
+                  style: {
+                    height: 46, borderRadius: 8, paddingInline: 16, fontSize: 14, flexShrink: 0,
+                    display: 'flex', alignItems: 'center', gap: 6,
+                    borderColor: poiCategory ? '#3E00FB' : undefined,
+                    color:       poiCategory ? '#3E00FB' : undefined,
+                    background:  poiCategory ? '#F0EEFF' : undefined,
+                  },
+                }, 'POI'),
+                React.createElement(Button, {
                   type: 'primary',
                   onClick: handleSearch,
                   style: { height: 46, borderRadius: 8, paddingInline: 28, fontSize: 14, fontWeight: 500, flexShrink: 0 },
@@ -1157,24 +1257,6 @@ function SelectSystemsV2() {
                 }, 'Cancella tutti'),
               ),
 
-              // ── Sezione POI ────────────────────────────────────────────
-              React.createElement('div', {
-                style: { width: '100%', borderTop: '1px solid #F0F0F0', paddingTop: 14, marginTop: 6 }
-              },
-                React.createElement('div', { className: 'poi-section-label' }, 'Filtra per prossimità a un POI'),
-                React.createElement('div', { className: 'poi-category-grid' },
-                  POI_CATEGORIES.map(cat =>
-                    React.createElement('div', {
-                      key: cat.key,
-                      className: `poi-category-card${poiCategory === cat.key ? ' active' : ''}`,
-                      onClick: () => handlePoiCategoryClick(cat.key),
-                    },
-                      React.createElement('span', { className: 'poi-icon' }, React.createElement(cat.icon)),
-                      cat.label
-                    )
-                  )
-                ),
-              ),
             ),
 
           ),
@@ -1336,6 +1418,14 @@ function SelectSystemsV2() {
           onClose: () => setDrawerOpen(false),
           onApply: vals => setAdvFilters(vals),
           current: advFilters,
+        }),
+
+        React.createElement(POIDrawer, {
+          open: poiDrawerOpen,
+          onClose: () => setPoiDrawerOpen(false),
+          onApply: handlePoiApply,
+          currentCategory: poiCategory,
+          currentRadii: poiRadii,
         }),
 
       )
