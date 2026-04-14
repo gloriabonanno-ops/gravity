@@ -78,7 +78,7 @@
     .gravity-ac-input { min-width: 0; flex: 1; }
     .gravity-ac-input .ant-select-selector {
       border-right: none !important; box-shadow: none !important;
-      height: 40px !important; padding: 0 12px !important; background: #fff !important;
+      height: 36px !important; padding: 0 12px !important; background: #fff !important;
       display: flex !important; align-items: center !important;
     }
     .gravity-ac-input:hover .ant-select-selector,
@@ -97,7 +97,7 @@
     /* Stato filled */
     .gravity-ac-input .ant-select-selection-item {
       display: flex !important; align-items: center !important;
-      height: 40px !important; padding: 0 !important; margin: 0 !important;
+      height: 36px !important; padding: 0 !important; margin: 0 !important;
       font-size: 14px !important; line-height: 1 !important; color: rgba(0,0,0,0.85) !important;
     }
     .gravity-ac-input .ant-select-clear { top: 50% !important; margin-top: -7px !important; right: 8px !important; }
@@ -1605,7 +1605,7 @@ function SelectSystemsV2() {
                       })
                     ),
                     style: {
-                      height: 40, flexShrink: 0, paddingInline: 14,
+                      height: 36, flexShrink: 0, paddingInline: 14,
                       borderColor: advCount > 0 ? '#3E00FB' : undefined,
                       color:       advCount > 0 ? '#3E00FB' : undefined,
                       background:  advCount > 0 ? '#F0EEFF' : undefined,
@@ -1620,7 +1620,7 @@ function SelectSystemsV2() {
                       })
                     ),
                     style: {
-                      height: 40, flexShrink: 0, paddingInline: 14,
+                      height: 36, flexShrink: 0, paddingInline: 14,
                       borderColor: poiCategory ? '#3E00FB' : undefined,
                       color:       poiCategory ? '#3E00FB' : undefined,
                       background:  poiCategory ? '#F0EEFF' : undefined,
@@ -1630,8 +1630,8 @@ function SelectSystemsV2() {
                     type: 'primary',
                     icon: React.createElement(SearchOutlined),
                     onClick: handleSearch,
-                    style: { height: 40, flexShrink: 0 },
-                  }),
+                    style: { height: 36, flexShrink: 0, paddingInline: 16, fontWeight: 500 },
+                  }, 'Cerca'),
                 ),
               ),
 
