@@ -1487,6 +1487,36 @@ function SelectSystemsV2() {
     return list;
   })();
 
+  // ── Selezione in massa ────────────────────────────────────
+  const selectableFromResults = displayed.filter(s => !isFullyReserved(s));
+  const selectedFromResults   = selectableFromResults.filter(s => selectedIds.includes(s.id));
+  const allResultsSelected    = selectableFromResults.length > 0 && selectedFromResults.length === selectableFromResults.length;
+  const someResultsSelected   = selectedFromResults.length > 0 && !allResultsSelected;
+
+  const selectAllFromResults = () => {
+    const toAdd = selectableFromResults.filter(s => !selectedIds.includes(s.id));
+    if (!toAdd.length) return;
+    const newFaceKeys = [...selectedFaceKeys];
+    toAdd.forEach(sys => {
+      sys.faces.filter(f => getFaceStatus(f) !== 'reserved').forEach(f => {
+        const key = `${sys.id}-${f.id}`;
+        if (!newFaceKeys.includes(key)) newFaceKeys.push(key);
+      });
+    });
+    setSelectedIds(prev => [...prev, ...toAdd.map(s => s.id)]);
+    setSelectedFaceKeys(newFaceKeys);
+  };
+
+  const deselectAllFromResults = () => {
+    const removeSet = new Set(selectableFromResults.map(s => s.id));
+    setSelectedIds(prev => prev.filter(id => !removeSet.has(id)));
+    setSelectedFaceKeys(prev => prev.filter(k => !selectableFromResults.some(s => k.startsWith(`${s.id}-`))));
+  };
+
+  const toggleSelectAll = () => allResultsSelected || someResultsSelected
+    ? deselectAllFromResults()
+    : selectAllFromResults();
+
   const MapIcon = () => React.createElement('svg', {
     viewBox: '0 0 14 14', width: 14, height: 14, fill: 'none',
     stroke: 'currentColor', strokeWidth: 1.4, strokeLinecap: 'round', strokeLinejoin: 'round',
@@ -1739,6 +1769,33 @@ function SelectSystemsV2() {
             React.createElement('div', {
               style: { padding: '8px 16px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, flexWrap: 'wrap' }
             },
+                    // Opzione A — Checkbox con stato indeterminate
+                    React.createElement(Checkbox, {
+                      checked: allResultsSelected,
+                      indeterminate: someResultsSelected,
+                      onChange: toggleSelectAll,
+                      style: { fontSize: 13, userSelect: 'none', whiteSpace: 'nowrap' },
+                    }, `Seleziona tutti (${selectableFromResults.length})`),
+
+                    // Divisore tra le due opzioni
+                    React.createElement('div', { style: { width: 1, height: 14, background: '#E8E8E8', alignSelf: 'center' } }),
+
+                    // Opzione B — Link testuale
+                    React.createElement('span', {
+                      onClick: toggleSelectAll,
+                      style: {
+                        fontSize: 13, cursor: 'pointer', userSelect: 'none', whiteSpace: 'nowrap',
+                        color: allResultsSelected || someResultsSelected ? '#FF4A1C' : '#3E00FB',
+                        fontWeight: 500,
+                      },
+                    }, allResultsSelected || someResultsSelected
+                      ? 'Deseleziona tutti'
+                      : `Seleziona tutti (${selectableFromResults.length})`
+                    ),
+
+                    // Divisore prima del contatore
+                    React.createElement('div', { style: { width: 1, height: 14, background: '#E8E8E8', alignSelf: 'center' } }),
+
                     React.createElement(Text, { style: { fontSize: 13, whiteSpace: 'nowrap' } },
                       React.createElement('span', { style: { fontWeight: 700 } }, 'Totale: '),
                       React.createElement('span', { style: { fontWeight: 400 } }, `${displayed.length}`),
