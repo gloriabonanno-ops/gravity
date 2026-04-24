@@ -72,6 +72,7 @@
       backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
       transition: all var(--t);
+      overflow: visible;
     }
     [data-theme="light"] nav { background: rgba(255,255,250,0.80); }
     .nav-logo { cursor: pointer; display: flex; align-items: center; text-decoration: none; }
@@ -97,13 +98,15 @@
       border-radius: 8px; padding: 6px;
       min-width: 200px; display: none; flex-direction: column; gap: 2px;
       transition: background var(--t);
+      z-index: 300;
     }
-    .nav-links li:hover .ndrop-menu { display: flex; }
+    .nav-links li.open .ndrop-menu { display: flex; }
     .ndrop-menu a {
       padding: 10px 16px; border-radius: 4px;
       display: block; color: var(--muted); text-decoration: none;
       font-family: 'Oswald', sans-serif; font-size: 12px;
       letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer;
       transition: background var(--t), color var(--t);
     }
     .ndrop-menu a:hover { background: var(--card); color: var(--text); }
@@ -129,7 +132,7 @@
 
     /* ── PAGES ── */
     .page { display: none; padding-top: 64px; }
-    .page.active { display: block; animation: fadeUp 0.5s ease both; }
+    .page.active, .page:target { display: block; animation: fadeUp 0.5s ease both; }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -425,7 +428,7 @@
 
     /* ── ORBITA ── */
     .orbita-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .orbita-card { position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: 16px; padding: 56px 48px 48px; cursor: pointer; transition: all var(--t); background: var(--card); }
+    .orbita-card { display: block; position: relative; overflow: hidden; border: 1px solid var(--border); border-radius: 16px; padding: 56px 48px 48px; cursor: pointer; transition: all var(--t); background: var(--card); color: inherit; text-decoration: none; }
     .orbita-card::before { content: ''; position: absolute; top: -80px; right: -80px; width: 280px; height: 280px; border-radius: 50%; pointer-events: none; opacity: 0; transition: opacity var(--t); }
     .orbita-card.cc::before { background: radial-gradient(circle, rgba(255,74,28,0.15), transparent 70%); }
     .orbita-card.mo::before { background: radial-gradient(circle, rgba(62,0,251,0.15), transparent 70%); }
@@ -865,7 +868,7 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" onclick="go('home')" href="#home" aria-label="Home">
+  <a class="nav-logo" onclick="go('home')" href="#page-home" aria-label="Home">
     <svg viewBox="0 0 383.57 226.77" xmlns="http://www.w3.org/2000/svg">
       <path class="lf" d="M195.79,127.74c.88-1.1,1.52-2.44,1.92-4.01,.41-1.57,.62-3.32,.62-5.23,0-3.18-.54-5.74-1.63-7.68-1.08-1.93-2.71-3.33-4.89-4.19-2.18-.86-4.92-1.28-8.23-1.28h-10.34v49.56h7.34v-23.13h5.14l6.37,23.13h7.16l-7.03-24.78c1.51-.49,2.7-1.29,3.58-2.38Zm-5.32-4.31c-.55,1.16-1.42,1.99-2.61,2.48-1.18,.49-2.73,.73-4.65,.73h-2.63v-16.09h3.06c3.06,0,5.1,.65,6.12,1.93,1.02,1.29,1.52,3.33,1.52,6.15,0,2.04-.28,3.64-.82,4.81Z"/>
       <path class="lf" d="M221.55,105.34l-10.4,49.56h6.92l2.32-12.3h9.79l2.21,12.3h6.91l-10.46-49.56h-7.28Zm-.25,32.18l3.92-22.02,4.04,22.02h-7.96Z"/>
@@ -881,15 +884,16 @@
     </svg>
   </a>
   <ul class="nav-links">
-    <li><a id="nl-home" href="#home" onclick="go('home')">Home</a></li>
+    <li><a id="nl-home" href="#page-home" onclick="go('home')">Home</a></li>
     <li>
-      <button class="ndrop-btn" id="nl-perchi">Per chi &#9662;</button>
+      <button class="ndrop-btn" id="nl-perchi" onclick="toggleDrop(this)">Per chi &#9662;</button>
       <div class="ndrop-menu">
-        <a href="#concessionarie" onclick="go('concessionarie')">Concessionarie</a>
-        <a href="#media-owner" onclick="go('media-owner')">Media Owner</a>
+        <a href="#page-concessionarie" onclick="go('concessionarie')">Concessionarie</a>
+        <a href="#page-media-owner" onclick="go('media-owner')">Media Owner</a>
       </div>
     </li>
-    <li><a id="nl-cf" href="#come-funziona" onclick="go('come-funziona')">Come funziona</a></li>
+    <li><a id="nl-cf" href="#page-come-funziona" onclick="go('come-funziona')">Come funziona</a></li>
+    <li><a id="nl-cs" href="#page-chi-siamo" onclick="go('chi-siamo')">Chi siamo</a></li>
   </ul>
   <div class="nav-right">
     <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Cambia tema">
@@ -900,7 +904,7 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
       </svg>
     </button>
-    <a class="btn-cta" href="#come-funziona" onclick="go('come-funziona')">Fai un tour</a>
+    <a class="btn-cta" href="mailto:hello@codesour.com">Richiedi demo</a>
   </div>
 </nav>
 
@@ -917,145 +921,12 @@
         Spazi, trattative e campagne multicanale convergono in un unico <strong>software verticale</strong>, costruito per chi vende e gestisce media.
       </p>
       <div class="hero-ctas">
-        <a class="btn-p" href="#come-funziona" onclick="go('come-funziona')">Fai un tour</a>
+        <a class="btn-p" href="mailto:hello@codesour.com">Richiedi demo</a>
         <a class="btn-s" href="mailto:hello@codesour.com">Contattaci</a>
       </div>
     </div>
   </div>
 
-  <div class="divider"></div>
-
-  <!-- ── MOCKUP SHOWCASE ── -->
-  <div class="mkp-showcase">
-    <div class="mkp-scene">
-
-      <!-- ══ MAIN: Inventory ══ -->
-      <div class="mkp-main">
-        <div class="mkp-chrome">
-          <div class="mkp-bar">
-            <div class="mkp-dots"><span class="mkp-dot" style="background:#FF5F57"></span><span class="mkp-dot" style="background:#FEBC2E"></span><span class="mkp-dot" style="background:#28C840"></span></div>
-            <div class="mkp-url">gravity.app / inventory / parco-impianti</div>
-            <div style="width:44px"></div>
-          </div>
-        </div>
-        <div class="mkp-app">
-          <div class="mkp-hdr">
-            <div class="mkp-lrow">
-              <svg viewBox="0 0 56 40" style="height:15px;width:auto"><circle cx="10" cy="26" r="7" fill="#3E00FB" opacity=".75"/><circle cx="24" cy="14" r="7" fill="#FF4A1C" opacity=".75"/><path d="M10,26 Q17,20 24,14" stroke="#3E00FB" stroke-width="1.5" fill="none" opacity=".5"/></svg>
-              <span class="mkp-ltxt">GRAVITY</span>
-            </div>
-            <nav class="mkp-nav">
-              <span class="mkp-nl">Overview</span>
-              <span class="mkp-nl mkp-nl-on">Inventory</span>
-              <span class="mkp-nl">Commercial</span>
-              <span class="mkp-nl">Delivery</span>
-              <span class="mkp-nl">Settings</span>
-            </nav>
-            <div class="mkp-rrow">
-              <div class="mkp-bell"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:13px;height:13px"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="mkp-bdot"></span></div>
-              <div class="mkp-av">GB</div>
-            </div>
-          </div>
-          <div class="mkp-body">
-            <div class="mkp-ph">
-              <div><div class="mkp-bc">Inventory</div><div class="mkp-pt">Parco Impianti</div></div>
-              <div style="display:flex;gap:5px"><button class="mkp-bs">Importa CSV</button><button class="mkp-bp">+ Nuovo Impianto</button></div>
-            </div>
-            <div class="mkp-frow">
-              <div class="mkp-srch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:10px;height:10px;color:#9CA3AF;flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span>Cerca impianto...</span></div>
-              <button class="mkp-fbt">Tipo ▾</button><button class="mkp-fbt">Comune ▾</button><button class="mkp-fbt">Status ▾</button>
-            </div>
-            <div class="mkp-tw">
-              <table class="mkp-tbl">
-                <thead><tr>
-                  <th style="width:22px"><input type="checkbox" style="accent-color:#3E00FB;width:10px;height:10px"></th>
-                  <th>Codice</th><th>Descrizione</th><th>Comune</th><th>Formato</th><th>Tipo</th><th>Status</th><th style="width:24px"></th>
-                </tr></thead>
-                <tbody>
-                  <tr class="mkp-tr-s"><td><input type="checkbox" checked style="accent-color:#3E00FB;width:10px;height:10px"></td><td class="mkp-code">IMP-0042</td><td>Viale Monza ang. Via Padova</td><td>Milano</td><td>6×3m</td><td><span class="mkp-tag tag-ooh">OOH</span></td><td><span class="mkp-st st-ok">Disponibile</span></td><td class="mkp-act">⋯</td></tr>
-                  <tr><td><input type="checkbox" style="accent-color:#3E00FB;width:10px;height:10px"></td><td class="mkp-code">IMP-0043</td><td>Corso Buenos Aires 12</td><td>Milano</td><td>Totem LED</td><td><span class="mkp-tag tag-dooh">DOOH</span></td><td><span class="mkp-st st-busy">Occupato</span></td><td class="mkp-act">⋯</td></tr>
-                  <tr><td><input type="checkbox" style="accent-color:#3E00FB;width:10px;height:10px"></td><td class="mkp-code">IMP-0044</td><td>Piazza Venezia — Colonna A</td><td>Roma</td><td>4×3m</td><td><span class="mkp-tag tag-ooh">OOH</span></td><td><span class="mkp-st st-ok">Disponibile</span></td><td class="mkp-act">⋯</td></tr>
-                  <tr><td><input type="checkbox" style="accent-color:#3E00FB;width:10px;height:10px"></td><td class="mkp-code">IMP-0045</td><td>Via Roma 88 — Pensilina</td><td>Torino</td><td>Maxi 12×4m</td><td><span class="mkp-tag tag-ooh">OOH</span></td><td><span class="mkp-st st-warn">In scadenza</span></td><td class="mkp-act">⋯</td></tr>
-                  <tr><td><input type="checkbox" style="accent-color:#3E00FB;width:10px;height:10px"></td><td class="mkp-code">IMP-0046</td><td>Via Caracciolo — Schermo LED</td><td>Napoli</td><td>3×2m LED</td><td><span class="mkp-tag tag-dooh">DOOH</span></td><td><span class="mkp-st st-ok">Disponibile</span></td><td class="mkp-act">⋯</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="mkp-pgn"><span class="mkp-pi">247 spazi totali</span><div class="mkp-pbs"><div class="mkp-pb mkp-pb-a">1</div><div class="mkp-pb">2</div><div class="mkp-pb">3</div><span style="font-size:8px;color:rgba(35,28,7,0.3);padding:0 2px">…</span><div class="mkp-pb">25</div></div></div>
-          </div>
-        </div>
-        <div class="mkp-refline"></div>
-      </div>
-
-      <!-- ══ SATELLITE LEFT: CRM Pipeline ══ -->
-      <div class="mkp-sat-l">
-        <div class="mkp-chrome"><div class="mkp-bar"><div class="mkp-dots"><span class="mkp-dot" style="background:#FF5F57"></span><span class="mkp-dot" style="background:#FEBC2E"></span><span class="mkp-dot" style="background:#28C840"></span></div><div class="mkp-url">gravity.app / commercial / pipeline</div><div style="width:36px"></div></div></div>
-        <div class="mkp-app">
-          <div class="mkp-hdr">
-            <div class="mkp-lrow"><svg viewBox="0 0 56 40" style="height:13px;width:auto"><circle cx="10" cy="26" r="7" fill="#3E00FB" opacity=".75"/><circle cx="24" cy="14" r="7" fill="#FF4A1C" opacity=".75"/></svg><span class="mkp-ltxt">GRAVITY</span></div>
-            <nav class="mkp-nav"><span class="mkp-nl">Inventory</span><span class="mkp-nl mkp-nl-on">Commercial</span><span class="mkp-nl">Delivery</span></nav>
-            <div class="mkp-rrow"><div class="mkp-av">GB</div></div>
-          </div>
-          <div class="mkp-kb">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="mkp-pt" style="font-size:12px">Pipeline Trattative</div><button class="mkp-bp" style="font-size:8px;padding:4px 9px">+ Nuova</button></div>
-            <div class="mkp-kc">
-              <div>
-                <div class="mkp-kct">Nuovo lead</div>
-                <div class="mkp-kcard"><div class="mkp-kco">Mediagroup Srl</div><div class="mkp-kval">€ 8.400</div><div class="mkp-kdt">Aperto 3gg fa</div></div>
-                <div class="mkp-kcard"><div class="mkp-kco">Brand Nova</div><div class="mkp-kval">€ 2.200</div><div class="mkp-kdt">Aperto oggi</div></div>
-              </div>
-              <div>
-                <div class="mkp-kct mkp-kct-on">Proposta inviata</div>
-                <div class="mkp-kcard mkp-kcard-a"><div class="mkp-kco">Luxe Fashion</div><div class="mkp-kval">€ 24.000</div><div class="mkp-kdt">Follow-up: domani</div></div>
-                <div class="mkp-kcard"><div class="mkp-kco">TechCorp Italia</div><div class="mkp-kval">€ 11.500</div><div class="mkp-kdt">In revisione</div></div>
-              </div>
-              <div>
-                <div class="mkp-kct">Chiuso vinto</div>
-                <div class="mkp-kcard"><div class="mkp-kco">Retailmax</div><div class="mkp-kval">€ 38.000</div><div class="mkp-kdt" style="color:#059669">&#10003; Firmato</div></div>
-                <div class="mkp-kcard"><div class="mkp-kco">AutoGroup</div><div class="mkp-kval">€ 15.600</div><div class="mkp-kdt" style="color:#059669">&#10003; Firmato</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ══ SATELLITE RIGHT: Reporting ══ -->
-      <div class="mkp-sat-r">
-        <div class="mkp-chrome"><div class="mkp-bar"><div class="mkp-dots"><span class="mkp-dot" style="background:#FF5F57"></span><span class="mkp-dot" style="background:#FEBC2E"></span><span class="mkp-dot" style="background:#28C840"></span></div><div class="mkp-url">gravity.app / reporting</div><div style="width:28px"></div></div></div>
-        <div class="mkp-app">
-          <div class="mkp-hdr">
-            <div class="mkp-lrow"><svg viewBox="0 0 56 40" style="height:13px;width:auto"><circle cx="10" cy="26" r="7" fill="#3E00FB" opacity=".75"/><circle cx="24" cy="14" r="7" fill="#FF4A1C" opacity=".75"/></svg><span class="mkp-ltxt">GRAVITY</span></div>
-            <nav class="mkp-nav"><span class="mkp-nl mkp-nl-on">Reporting</span><span class="mkp-nl">Delivery</span></nav>
-            <div class="mkp-rrow"><div class="mkp-av">GB</div></div>
-          </div>
-          <div class="mkp-rp">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px"><div class="mkp-pt" style="font-size:12px">Dashboard Executive</div><button class="mkp-bs" style="font-size:8px;padding:3px 7px">Esporta ▾</button></div>
-            <div class="mkp-kg">
-              <div class="mkp-kpi"><div class="mkp-kl">Ricavi YTD</div><div class="mkp-kv">€ 1,24M</div><div class="mkp-kd">↑ +18%</div></div>
-              <div class="mkp-kpi"><div class="mkp-kl">Margine medio</div><div class="mkp-kv">34%</div><div class="mkp-kd">↑ +4pp</div></div>
-              <div class="mkp-kpi"><div class="mkp-kl">Campagne attive</div><div class="mkp-kv">47</div><div class="mkp-kd">↑ +12 vs Q3</div></div>
-              <div class="mkp-kpi"><div class="mkp-kl">Occupancy rate</div><div class="mkp-kv">82%</div><div class="mkp-kd mkp-kd-dn">↓ −3pp</div></div>
-            </div>
-            <div class="mkp-cl">Ricavi mensili — 2026</div>
-            <div class="mkp-bars">
-              <div class="mkp-bc2"><div class="mkp-b" style="height:24px;opacity:.5"></div><div class="mkp-bl">G</div></div>
-              <div class="mkp-bc2"><div class="mkp-b" style="height:32px;opacity:.55"></div><div class="mkp-bl">F</div></div>
-              <div class="mkp-bc2"><div class="mkp-b" style="height:28px;opacity:.6"></div><div class="mkp-bl">M</div></div>
-              <div class="mkp-bc2"><div class="mkp-b" style="height:38px;opacity:.65"></div><div class="mkp-bl">A</div></div>
-              <div class="mkp-bc2"><div class="mkp-b" style="height:34px;opacity:.7"></div><div class="mkp-bl">M</div></div>
-              <div class="mkp-bc2"><div class="mkp-b" style="height:44px;opacity:.8"></div><div class="mkp-bl">G</div></div>
-              <div class="mkp-bc2"><div class="mkp-b" style="height:40px;opacity:.75"></div><div class="mkp-bl">L</div></div>
-              <div class="mkp-bc2"><div class="mkp-b" style="height:44px;opacity:.8"></div><div class="mkp-bl">A</div></div>
-              <div class="mkp-bc2"><div class="mkp-b" style="height:38px;opacity:.75"></div><div class="mkp-bl">S</div></div>
-              <div class="mkp-bc2"><div class="mkp-b" style="height:42px"></div><div class="mkp-bl">O</div></div>
-              <div class="mkp-bc2"><div class="mkp-b" style="height:36px;opacity:.9;background:#FF4A1C"></div><div class="mkp-bl">N</div></div>
-              <div class="mkp-bc2"><div class="mkp-b" style="height:16px;opacity:.35;border:1px dashed rgba(62,0,251,.4);background:transparent"></div><div class="mkp-bl">D</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
 
   <!-- METRICHE — fuse con il mockup showcase -->
   <div class="mkp-stats-strip">
@@ -1123,78 +994,37 @@
         <div class="wf-d"><strong>Analisi finanziaria</strong> e di <strong>performance</strong> per campagna e per cliente. Esportabile in <strong>PDF ed Excel</strong>, pronto da condividere.</div>
       </div>
     </div>
-
-  <div class="wf-mockup-wrap" style="max-width:760px;margin:64px auto 0;padding:0 48px;">
-    <p class="wf-mkp-caption">Dalla piattaforma — Gestione Preventivi</p>
-    <div class="pm-window">
-      <!-- Browser chrome -->
-      <div style="background:#1A1510;padding:9px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,250,0.06);">
-        <div style="display:flex;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#FF5F57;display:inline-block"></span><span style="width:10px;height:10px;border-radius:50%;background:#FEBC2E;display:inline-block"></span><span style="width:10px;height:10px;border-radius:50%;background:#28C840;display:inline-block"></span></div>
-        <div style="flex:1;background:rgba(255,255,250,0.06);border-radius:4px;padding:3px 10px;font-size:10px;color:rgba(255,255,250,0.28);font-family:'Inter',monospace;text-align:center;">gravity.app / commercial / preventivi / nuovo</div>
-      </div>
-      <!-- Light app -->
-      <div style="background:#F8F7F2;font-family:'Inter',sans-serif;">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:44px;background:#FFFFFA;border-bottom:1px solid rgba(35,28,7,0.08);">
-          <div style="display:flex;align-items:center;gap:7px;"><svg viewBox="0 0 56 40" style="height:14px;width:auto"><circle cx="10" cy="26" r="7" fill="#3E00FB" opacity=".75"/><circle cx="24" cy="14" r="7" fill="#FF4A1C" opacity=".75"/><path d="M10,26 Q17,20 24,14" stroke="#3E00FB" stroke-width="1.5" fill="none" opacity=".5"/></svg><span style="font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;color:#3E00FB;letter-spacing:0.12em;">GRAVITY</span></div>
-          <div style="display:flex;gap:1px;"><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:5px 9px;">Inventory</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#3E00FB;padding:5px 9px;border-bottom:2px solid #3E00FB;">Commercial</span><span style="font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(35,28,7,0.38);padding:5px 9px;">Delivery</span></div>
-          <div style="width:24px;height:24px;border-radius:50%;background:#3E00FB;color:#fff;font-size:9px;font-weight:600;display:flex;align-items:center;justify-content:center;">GB</div>
-        </div>
-        <div style="padding:14px 18px 16px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-            <div><div style="font-size:9px;color:rgba(35,28,7,0.38);font-family:'Oswald',sans-serif;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px;">Commercial / Preventivi</div><div style="font-family:'Oswald',sans-serif;font-size:16px;font-weight:500;color:#111827;letter-spacing:-0.02em;">Nuova Proposta — <span style="color:#3E00FB">Luxe Fashion SpA</span></div></div>
-            <div style="display:flex;gap:6px;"><button style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 10px;background:transparent;color:rgba(35,28,7,0.45);border:1px solid rgba(35,28,7,0.15);border-radius:3px;">Salva Bozza</button><button style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;font-weight:500;padding:5px 12px;background:#3E00FB;color:#fff;border:none;border-radius:3px;box-shadow:0 2px 12px rgba(62,0,251,0.3);">↓ Genera PDF</button></div>
-          </div>
-          <div style="border:1px solid rgba(35,28,7,0.08);border-radius:6px;overflow:hidden;background:#fff;margin-bottom:10px;">
-            <table style="width:100%;border-collapse:collapse;font-size:10px;">
-              <thead><tr style="background:#F2F1EB;"><th style="padding:6px 10px;text-align:left;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Spazio</th><th style="padding:6px 10px;text-align:left;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Comune</th><th style="padding:6px 10px;text-align:left;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Periodo</th><th style="padding:6px 10px;text-align:left;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Gg</th><th style="padding:6px 10px;text-align:right;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">€/gg</th><th style="padding:6px 10px;text-align:right;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Sc.</th><th style="padding:6px 10px;text-align:right;font-family:'Oswald',sans-serif;font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(35,28,7,0.38);font-weight:400;">Totale</th></tr></thead>
-              <tbody>
-                <tr style="background:rgba(62,0,251,0.03);"><td style="padding:7px 10px;color:#111827;font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">Viale Monza ang. Via Padova</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">Milano</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">01/03–28/03</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">28</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;">€ 140</td><td style="padding:7px 10px;font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;color:#059669;">−10%</td><td style="padding:7px 10px;font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;color:#111827;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;">€ 3.528</td></tr>
-                <tr><td style="padding:7px 10px;color:#111827;font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">Corso Buenos Aires 12 — Totem LED</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">Milano</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">01/03–31/03</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);">31</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;">€ 310</td><td style="padding:7px 10px;font-size:10px;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;color:#059669;">−10%</td><td style="padding:7px 10px;font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;color:#111827;border-bottom:1px solid rgba(35,28,7,0.05);text-align:right;">€ 8.649</td></tr>
-                <tr><td style="padding:7px 10px;color:#111827;font-size:10px;">Piazza Venezia — Colonna A</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;">Roma</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;">15/03–15/04</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;">32</td><td style="padding:7px 10px;color:rgba(35,28,7,0.55);font-size:10px;text-align:right;">€ 380</td><td style="padding:7px 10px;font-size:10px;text-align:right;color:#059669;">−5%</td><td style="padding:7px 10px;font-family:'Oswald',sans-serif;font-size:11px;font-weight:500;color:#111827;text-align:right;">€ 11.552</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:flex-end;gap:24px;padding:8px 12px;background:#FFFFFA;border:1px solid rgba(35,28,7,0.08);border-radius:6px;">
-            <div style="font-size:10px;color:rgba(35,28,7,0.5);">Imponibile: <span style="color:#111827;font-weight:500;">€ 23.729</span></div>
-            <div style="font-size:10px;color:rgba(35,28,7,0.5);">IVA 22%: <span style="color:#111827;font-weight:500;">€ 5.220</span></div>
-            <div style="display:flex;align-items:center;gap:10px;padding-left:16px;border-left:1px solid rgba(35,28,7,0.1);"><span style="font-family:'Oswald',sans-serif;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(35,28,7,0.4);">Totale</span><span style="font-family:'Oswald',sans-serif;font-size:19px;font-weight:600;color:#3E00FB;letter-spacing:-0.02em;">€ 28.949</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
-  </div>
-
 
   <div class="divider"></div>
 
   <!-- ── SCEGLI LA TUA ORBITA ── -->
   <div class="sw">
     <div class="sec-label">Scegli la tua orbita</div>
-    <h2 class="sec-title">Due corpi.<br>Due traiettorie.</h2>
+    <h2 class="sec-title">Due corpi.<br>Una traiettoria.</h2>
     <p class="sec-sub">Gravity è costruito per due attori complementari del settore advertising. Entrambi trovano il loro punto di equilibrio nella stessa piattaforma.</p>
 
     <div class="orbita-grid">
-      <div class="orbita-card cc" onclick="go('concessionarie')">
+      <a class="orbita-card cc" href="#page-concessionarie" onclick="go('concessionarie')">
         <div class="orbita-card-ring"></div>
         <div class="orbita-body"></div>
         <h3 class="orbita-title">Concessionarie</h3>
         <p class="orbita-desc">Gestisci ogni trattativa, genera preventivi in minuti, pianifica senza conflitti e monitora le performance di ogni campagna che vendi.</p>
-        <a class="orbita-link">
+        <span class="orbita-link">
           Scopri la tua orbita
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-      <div class="orbita-card mo" onclick="go('media-owner')">
+        </span>
+      </a>
+      <a class="orbita-card mo" href="#page-media-owner" onclick="go('media-owner')">
         <div class="orbita-card-ring"></div>
         <div class="orbita-body"></div>
         <h3 class="orbita-title">Media Owner</h3>
         <p class="orbita-desc">Governa il tuo patrimonio di spazi multicanale, mantieni i permessi in regola e traccia il delivery di ogni campagna che ospiti.</p>
-        <a class="orbita-link">
+        <span class="orbita-link">
           Scopri la tua orbita
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
+        </span>
+      </a>
     </div>
   </div>
 
@@ -1353,62 +1183,6 @@
     </div>
   </div>
 
-  <div class="divider"></div>
-
-  <!-- ── MANIFESTO ── -->
-  <div class="manifesto-wrap">
-    <div class="manifesto-inner">
-
-      <!-- Deco: sistema binario -->
-      <div class="manifesto-orbit-wrap" aria-hidden="true">
-        <div class="manifesto-orbit manifesto-orbit-1"></div>
-        <div class="manifesto-orbit manifesto-orbit-2"></div>
-        <div class="manifesto-star manifesto-star-a"></div>
-        <div class="manifesto-star manifesto-star-b"></div>
-        <div class="manifesto-bary"></div>
-      </div>
-
-      <div class="sec-label" style="text-align:center;margin-bottom:32px;">Manifesto</div>
-
-      <p class="manifesto-concept">
-        In astronomia, un <em>sistema binario</em> è composto da due stelle
-        che non orbitano l'una attorno all'altra — orbitano entrambe
-        attorno a un punto condiviso: il baricentro.<br>
-        Un centro di massa invisibile, generato dalla loro relazione.
-        Rimuovi una stella, e l'altra non ha più orbita.
-        Il sistema esiste solo perché esistono entrambi.
-      </p>
-
-      <div class="manifesto-divline"></div>
-
-      <div class="manifesto-beliefs">
-
-        <div class="manifesto-belief">
-          <span class="manifesto-n">01</span>
-          <p>Il settore advertising funziona come un sistema binario. <strong>Concessionaria e media owner</strong> sono due corpi distinti — masse diverse, traiettorie diverse — ma legati da un'unica forza: la campagna che costruiscono insieme. Il baricentro non appartiene a nessuno dei due. Appartiene alla loro relazione.</p>
-        </div>
-
-        <div class="manifesto-belief">
-          <span class="manifesto-n">02</span>
-          <p>Un software costruito solo per chi vende non è abbastanza. Uno costruito solo per chi possiede gli spazi nemmeno. <strong>Gravity vuole essere il baricentro</strong>: il punto condiviso attorno a cui entrambi trovano il loro equilibrio operativo, senza che nessuno perda la propria identità.</p>
-        </div>
-
-        <div class="manifesto-belief">
-          <span class="manifesto-n">03</span>
-          <p>Crediamo che <strong>l'attrito sia lo spreco più silenzioso</strong> del settore. Email che sostituiscono sistemi. Excel che sostituiscono dati. PDF che sostituiscono processi. Ogni workaround è energia sottratta al lavoro reale. Il nostro compito è eliminarlo.</p>
-        </div>
-
-        <div class="manifesto-belief">
-          <span class="manifesto-n">04</span>
-          <p>Non costruiamo uno strumento generico calato su un settore verticale. <strong>Costruiamo per chi vive dentro questo settore ogni giorno</strong> — per chi sa cosa vuol dire un impianto in scadenza a 48 ore dalla campagna, un preventivo rivisto tre volte, un report che non torna. Quella conoscenza è il progetto.</p>
-        </div>
-
-      </div>
-
-      <p class="manifesto-sign">— Il team di Gravity · CodeSour Tech</p>
-
-    </div>
-  </div>
 
 </div><!-- /page-home -->
 
@@ -1503,7 +1277,7 @@
     </div>
   </div>
   <div class="sw-sm" style="text-align:center;padding-top:64px;">
-    <a class="btn-p" href="#come-funziona" onclick="go('come-funziona')">Esplora tutte le funzionalità</a>
+    <a class="btn-p" href="#page-come-funziona" onclick="go('come-funziona')">Esplora tutte le funzionalità</a>
   </div>
 </div>
 
@@ -1603,7 +1377,7 @@
     </div>
   </div>
   <div class="sw-sm" style="text-align:center;padding-top:64px;">
-    <a class="btn-p" href="#come-funziona" onclick="go('come-funziona')">Esplora tutte le funzionalità</a>
+    <a class="btn-p" href="#page-come-funziona" onclick="go('come-funziona')">Esplora tutte le funzionalità</a>
   </div>
 </div>
 
@@ -1736,6 +1510,63 @@
   </div>
 </div>
 
+<!-- ══ CHI SIAMO ══ -->
+<div id="page-chi-siamo" class="page">
+  <div class="manifesto-wrap" style="border-top:none;">
+    <div class="manifesto-inner" style="padding-top:100px;">
+
+      <!-- Deco: sistema binario -->
+      <div class="manifesto-orbit-wrap" aria-hidden="true">
+        <div class="manifesto-orbit manifesto-orbit-1"></div>
+        <div class="manifesto-orbit manifesto-orbit-2"></div>
+        <div class="manifesto-star manifesto-star-a"></div>
+        <div class="manifesto-star manifesto-star-b"></div>
+        <div class="manifesto-bary"></div>
+      </div>
+
+      <div class="sec-label" style="text-align:center;margin-bottom:32px;">Manifesto</div>
+
+      <p class="manifesto-concept">
+        In astronomia, un <em>sistema binario</em> è composto da due stelle
+        che non orbitano l'una attorno all'altra — orbitano entrambe
+        attorno a un punto condiviso: il baricentro.<br>
+        Un centro di massa invisibile, generato dalla loro relazione.
+        Rimuovi una stella, e l'altra non ha più orbita.
+        Il sistema esiste solo perché esistono entrambi.
+      </p>
+
+      <div class="manifesto-divline"></div>
+
+      <div class="manifesto-beliefs">
+
+        <div class="manifesto-belief">
+          <span class="manifesto-n">01</span>
+          <p>Il settore advertising funziona come un sistema binario. <strong>Concessionaria e media owner</strong> sono due corpi distinti — masse diverse, traiettorie diverse — ma legati da un'unica forza: la campagna che costruiscono insieme. Il baricentro non appartiene a nessuno dei due. Appartiene alla loro relazione.</p>
+        </div>
+
+        <div class="manifesto-belief">
+          <span class="manifesto-n">02</span>
+          <p>Un software costruito solo per chi vende non è abbastanza. Uno costruito solo per chi possiede gli spazi nemmeno. <strong>Gravity vuole essere il baricentro</strong>: il punto condiviso attorno a cui entrambi trovano il loro equilibrio operativo, senza che nessuno perda la propria identità.</p>
+        </div>
+
+        <div class="manifesto-belief">
+          <span class="manifesto-n">03</span>
+          <p>Crediamo che <strong>l'attrito sia lo spreco più silenzioso</strong> del settore. Email che sostituiscono sistemi. Excel che sostituiscono dati. PDF che sostituiscono processi. Ogni workaround è energia sottratta al lavoro reale. Il nostro compito è eliminarlo.</p>
+        </div>
+
+        <div class="manifesto-belief">
+          <span class="manifesto-n">04</span>
+          <p>Non costruiamo uno strumento generico calato su un settore verticale. <strong>Costruiamo per chi vive dentro questo settore ogni giorno</strong> — per chi sa cosa vuol dire un impianto in scadenza a 48 ore dalla campagna, un preventivo rivisto tre volte, un report che non torna. Quella conoscenza è il progetto.</p>
+        </div>
+
+      </div>
+
+      <p class="manifesto-sign">— Il team di Gravity · CodeSour Tech</p>
+
+    </div>
+  </div>
+</div>
+
 <!-- ══ FOOTER ══ -->
 <footer>
   <div class="footer-top">
@@ -1760,18 +1591,19 @@
     <!-- piattaforma -->
     <div class="footer-col">
       <div class="footer-col-title">Piattaforma</div>
-      <a onclick="go('come-funziona','inventory')">Inventory</a>
-      <a onclick="go('come-funziona','campagne')">Operation &amp; Campagne</a>
-      <a onclick="go('come-funziona','reportistica')">Reportistica</a>
-      <a onclick="go('come-funziona','infrastruttura')">White Label &amp; Infrastruttura</a>
+      <a href="#page-come-funziona" onclick="go('come-funziona','inventory')">Inventory</a>
+      <a href="#page-come-funziona" onclick="go('come-funziona','campagne')">Operation &amp; Campagne</a>
+      <a href="#page-come-funziona" onclick="go('come-funziona','reportistica')">Reportistica</a>
+      <a href="#page-come-funziona" onclick="go('come-funziona','infrastruttura')">White Label &amp; Infrastruttura</a>
     </div>
 
     <!-- per chi -->
     <div class="footer-col">
       <div class="footer-col-title">Per chi</div>
-      <a onclick="go('concessionarie')">Concessionarie</a>
-      <a onclick="go('media-owner')">Media Owner</a>
-      <a onclick="go('come-funziona')">Come funziona</a>
+      <a href="#page-concessionarie" onclick="go('concessionarie')">Concessionarie</a>
+      <a href="#page-media-owner" onclick="go('media-owner')">Media Owner</a>
+      <a href="#page-come-funziona" onclick="go('come-funziona')">Come funziona</a>
+      <a href="#page-chi-siamo" onclick="go('chi-siamo')">Chi siamo</a>
     </div>
 
     <!-- contatti -->
@@ -1799,9 +1631,23 @@
 </footer>
 
 <script>
-  const pages = ['home','concessionarie','media-owner','come-funziona'];
+  const pages = ['home','concessionarie','media-owner','come-funziona','chi-siamo'];
+
+  function toggleDrop(btn) {
+    const li = btn.closest('li');
+    const isOpen = li.classList.contains('open');
+    document.querySelectorAll('.nav-links li.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) li.classList.add('open');
+  }
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.nav-links li')) {
+      document.querySelectorAll('.nav-links li.open').forEach(el => el.classList.remove('open'));
+    }
+  });
 
   function go(pageId, tab) {
+    document.querySelectorAll('.nav-links li.open').forEach(el => el.classList.remove('open'));
     pages.forEach(id => {
       const el = document.getElementById('page-' + id);
       if (el) el.classList.remove('active');
@@ -1809,7 +1655,7 @@
     const target = document.getElementById('page-' + pageId);
     if (target) target.classList.add('active');
     document.querySelectorAll('.nav-links a, .nav-links .ndrop-btn').forEach(el => el.classList.remove('active'));
-    const nlMap = { home: 'nl-home', 'come-funziona': 'nl-cf' };
+    const nlMap = { home: 'nl-home', 'come-funziona': 'nl-cf', 'chi-siamo': 'nl-cs' };
     if (nlMap[pageId]) document.getElementById(nlMap[pageId])?.classList.add('active');
     if (['concessionarie','media-owner'].includes(pageId)) document.getElementById('nl-perchi')?.classList.add('active');
     if (pageId === 'come-funziona' && tab) {
@@ -1817,16 +1663,16 @@
       if (tabBtn) switchTab(tab, tabBtn);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    history.pushState({}, '', '#' + pageId);
+    history.pushState({}, '', '#page-' + pageId);
   }
 
   window.addEventListener('popstate', () => {
-    const hash = location.hash.replace('#','') || 'home';
+    const hash = location.hash.replace('#page-','').replace('#','') || 'home';
     if (pages.includes(hash)) go(hash);
   });
 
   window.addEventListener('DOMContentLoaded', () => {
-    const hash = location.hash.replace('#','') || 'home';
+    const hash = location.hash.replace('#page-','').replace('#','') || 'home';
     if (pages.includes(hash)) go(hash);
     initBinaryStars();
     updateThemeIcons();
