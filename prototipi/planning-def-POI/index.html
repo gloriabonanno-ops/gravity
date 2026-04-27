@@ -129,6 +129,8 @@
     .bpn {
       width: 264px;
       flex-shrink: 0;
+      flex: 1;
+      min-height: 0;
       overflow-y: auto;
       background: transparent;
       padding: 0 0 16px;
@@ -170,30 +172,6 @@
       color: #3E00FB;
       background: #F9F7FF;
     }
-    .bpn-collapsed {
-      width: 28px;
-      flex-shrink: 0;
-      background: #fff;
-      border-right: 1px solid #F0F0F0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .bpn-collapsed:hover { background: #F9F7FF; }
-    .bpn-collapsed-label {
-      writing-mode: vertical-rl;
-      text-orientation: mixed;
-      transform: rotate(180deg);
-      font-size: 11px;
-      font-weight: 600;
-      color: rgba(0,0,0,0.35);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      user-select: none;
-    }
-    .bpn-collapsed:hover .bpn-collapsed-label { color: #3E00FB; }
     /* ── DataCard — pattern comune a tutte le schermate ── */
     .data-card {
       background: #fff;
@@ -459,44 +437,43 @@
     .ss-breadcrumb:hover { color: #3E00FB; }
     .ss-title-row { display: flex; align-items: center; justify-content: space-between; }
     .ss-title-meta { display: flex; align-items: center; gap: 10px; }
-    /* Card 2 — Search */
-    .ss-card-search { padding: 14px 20px; }
+    /* Area ricerca — in flusso normale sopra la mappa */
+    .ss-search-area {
+      padding: 14px 20px 12px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: #fff;
+      border-bottom: 1px solid #F0F0F0;
+    }
     .ss-search-bar { display: flex; gap: 8px; align-items: center; }
-    .ss-search-input-wrap { flex: 1; position: relative; }
-    /* Unified search bar */
-    .ss-search-unified {
-      display: flex; align-items: center; flex: 1;
-      border: 1.5px solid #d9d9d9; border-radius: 10px; background: #fff;
-      position: relative; height: 52px;
-      transition: border-color 0.2s, box-shadow 0.2s;
+    /* Area mappa — occupa lo spazio rimanente */
+    .ss-map-area {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
     }
-    .ss-search-unified:focus-within {
-      border-color: #3E00FB;
-      box-shadow: 0 0 0 3px rgba(62,0,251,0.1);
-    }
-    .ss-search-unified .ant-input-affix-wrapper {
-      flex: 1; min-width: 0;
-      border: none !important; box-shadow: none !important;
-      border-radius: 10px 0 0 10px !important; background: transparent !important;
-      height: 100%; font-size: 16px;
-    }
-    .ss-search-unified .ant-input-affix-wrapper:hover { background: transparent !important; }
-    .ss-vdivider { width: 1px; height: 22px; background: #e4e4e4; flex-shrink: 0; margin: 0 2px; }
+
     .ss-filter-inline.ant-btn {
-      border: 1px solid #d9d9d9 !important; box-shadow: none !important;
-      border-radius: 7px !important; height: 38px !important;
-      margin: 0 4px; padding: 0 14px;
-      background: #fff !important; color: rgba(0,0,0,0.88) !important;
-      font-weight: 400;
+      border: none !important; box-shadow: none !important;
+      border-radius: 0 !important; height: 40px !important;
+      margin: 0; padding: 0 14px;
+      background: transparent !important; color: rgba(0,0,0,0.65) !important;
+      font-weight: 400; white-space: nowrap; flex-shrink: 0;
+      display: inline-flex !important; align-items: center !important;
     }
     .ss-filter-inline.ant-btn:hover {
-      border-color: #3E00FB !important; color: #3E00FB !important;
-      background: #fff !important;
+      color: #3E00FB !important;
+      background: rgba(0,0,0,0.03) !important;
     }
     .ss-cerca-inline.ant-btn {
       border: none !important; box-shadow: none !important;
-      border-radius: 7px !important; height: 38px !important;
-      margin: 0 7px 0 4px; padding: 0 22px; font-weight: 500;
+      border-radius: 0 8px 8px 0 !important; height: 40px !important;
+      margin: 0; padding: 0 22px; font-weight: 500;
+      white-space: nowrap; flex-shrink: 0;
+      display: inline-flex !important; align-items: center !important;
     }
     .ss-suggestions-wrap {
       position: absolute;
@@ -524,7 +501,6 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-top: 10px;
       flex-wrap: wrap;
     }
     .ss-brief-label {
@@ -597,12 +573,13 @@
       flex-wrap: wrap;
       align-items: center;
     }
-    /* Card 3 — Map */
+    /* Card unica — Search + Map */
     .ss-card-map {
       flex: 1;
-      overflow: hidden;
-      position: relative;
       min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
     .ss-leaflet-map {
       position: absolute;
@@ -654,7 +631,7 @@
       padding: 6px 8px;
       font-size: 13px;
       font-weight: 500;
-      color: rgba(0,0,0,0.45);
+      color: rgba(0,0,0,0.88);
       cursor: pointer;
       text-align: center;
       border-radius: 6px;
@@ -1304,6 +1281,239 @@
       gap: 12px;
       background: #FAFAFA;
     }
+
+/* ── POI mode toggle ─────────────────────────────── */
+/* ── Pill search: switch integrato ───────────────────── */
+.ss-search-pill {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #D9D9D9;
+  border-radius: 8px;
+  background: #fff;
+  flex: 1;
+  height: 40px;
+  overflow: visible;
+  transition: border-color 0.2s;
+  flex-shrink: 1;
+  position: relative;
+}
+.ss-search-pill.poi { border-color: #3E00FB; }
+.ss-search-pill:focus-within { border-color: #3E00FB; box-shadow: 0 0 0 3px rgba(62,0,251,0.08); }
+.ss-pill-tabs {
+  display: flex;
+  align-items: center;
+  padding: 3px 4px;
+  gap: 2px;
+  flex-shrink: 0;
+  align-self: stretch;
+  background: rgba(0,0,0,0.04);
+  border-radius: 6px;
+  margin: 4px;
+}
+.ss-pill-tab {
+  padding: 0 12px;
+  height: 26px;
+  border-radius: 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.ss-pill-tab.active {
+  background: #fff;
+  color: rgba(0,0,0,0.88);
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12), 0 0 0 0.5px rgba(0,0,0,0.06);
+}
+.ss-pill-tab:hover:not(.active) { color: rgba(0,0,0,0.65); }
+.ss-pill-sep {
+  width: 1px; align-self: stretch;
+  background: #E8E8E8; flex-shrink: 0;
+  margin: 8px 0;
+}
+.ss-pill-input {
+  flex: 1; height: 100%;
+  min-width: 0; overflow: visible;
+}
+/* AntD Input borderless inside pill */
+.ss-pill-input .ant-input-affix-wrapper {
+  border: none !important; box-shadow: none !important;
+  background: transparent !important; border-radius: 0 !important;
+  height: 40px !important; padding: 0 14px !important; font-size: 14px;
+  display: flex !important; align-items: center !important;
+}
+.ss-pill-input .ant-input { background: transparent !important; }
+
+/* ── Radius control (map overlay) ─────────────────────── */
+.ss-radius-map-ctrl {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255,255,255,0.98);
+  border: 1.5px solid #3E00FB;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13), 0 1px 4px rgba(0,0,0,0.06);
+  z-index: 400;
+  padding: 10px 14px 10px 10px;
+  width: 280px;
+}
+.ss-radius-map-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #3E00FB;
+  margin-bottom: 8px;
+}
+.ss-radius-map-inner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 32px;
+}
+.ss-radius-units {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.ss-radius-unit-btn {
+  padding: 2px 7px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.35);
+  line-height: 1.5;
+  transition: all 0.12s;
+  white-space: nowrap;
+}
+.ss-radius-unit-btn.active { border-color: #3E00FB; background: #fff; color: #3E00FB; }
+.ss-radius-unit-btn:hover:not(.active) { color: rgba(0,0,0,0.65); background: rgba(0,0,0,0.04); }
+.ss-radius-ctrl-sep {
+  width: 1px; height: 28px;
+  background: #D3ADF7; flex-shrink: 0;
+  margin: 0 10px;
+}
+.ss-radius-slider-wrap { flex: 1; min-width: 80px; }
+.ss-radius-slider-wrap .ant-slider { margin: 2px 0; }
+.ss-radius-slider-wrap .ant-slider-track { background-color: #3E00FB; }
+.ss-radius-slider-wrap .ant-slider-handle::after { box-shadow: 0 0 0 2px #3E00FB; }
+.ss-radius-val {
+  font-size: 12px; font-weight: 700;
+  color: #3E00FB; white-space: nowrap;
+  min-width: 46px; text-align: right;
+  flex-shrink: 0; margin-left: 10px;
+}
+
+/* ── POI autocomplete suggestions ───────────────── */
+.ss-poi-suggestion {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px; cursor: pointer;
+  font-size: 13px; transition: background 0.1s;
+}
+.ss-poi-suggestion:hover { background: #F5F5F5; }
+.ss-poi-suggestion-icon { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
+.ss-poi-suggestion-label { color: rgba(0,0,0,0.85); font-weight: 500; }
+.ss-poi-suggestion-sub { font-size: 11px; color: rgba(0,0,0,0.4); margin-top: 1px; }
+
+/* ── Pending POI — radius picker ─────────────────── */
+.ss-poi-pending {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 10px; padding: 8px 12px;
+  background: #F9F7FF; border: 1px solid #D3ADF7; border-radius: 8px;
+  flex-wrap: wrap;
+}
+.ss-poi-pending-label {
+  font-size: 12px; color: rgba(0,0,0,0.65); font-weight: 500;
+  flex: 1; min-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ss-radius-opts { display: flex; gap: 4px; flex-wrap: wrap; }
+.ss-radius-opt {
+  padding: 3px 8px; border-radius: 6px; border: 1px solid #D9D9D9;
+  background: #fff; font-size: 11px; cursor: pointer;
+  color: rgba(0,0,0,0.65); transition: all 0.12s; white-space: nowrap;
+}
+.ss-radius-opt.active { border-color: #3E00FB; background: #F0EAFF; color: #3E00FB; font-weight: 600; }
+.ss-radius-opt:hover:not(.active) { border-color: #3E00FB; color: #3E00FB; }
+
+/* ── Active POI chip nel brief bar ───────────────── */
+.ss-poi-active-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 12px; border: 1px solid #3E00FB;
+  font-size: 12px; color: #3E00FB; cursor: pointer;
+  background: #F0EAFF; font-weight: 600; transition: all 0.15s;
+}
+.ss-poi-active-chip:hover { background: #E8DFFF; }
+
+/* ── POI drawer list ─────────────────────────────── */
+.poi-drawer-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid #F5F5F5;
+}
+.poi-drawer-item:last-child { border-bottom: none; }
+.poi-drawer-icon { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; line-height: 1; }
+.poi-drawer-info { flex: 1; min-width: 0; }
+.poi-drawer-name { font-size: 13px; font-weight: 500; color: rgba(0,0,0,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.poi-drawer-meta { font-size: 11px; color: rgba(0,0,0,0.4); margin-top: 2px; display: flex; align-items: center; gap: 6px; }
+.poi-drawer-empty { text-align: center; padding: 32px 0; color: rgba(0,0,0,0.3); }
+.poi-drawer-empty-icon { font-size: 36px; display: block; margin-bottom: 10px; }
+
+/* ── Fullscreen layout transitions ─────────────────────────── */
+.ss-content-nr {
+  transition:
+    padding 0.36s cubic-bezier(0.4, 0, 0.2, 1),
+    gap     0.36s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ss-main-nr {
+  transition: padding 0.36s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ss-card-map {
+  transition:
+    border-radius 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color  0.3s  ease;
+}
+/* Header: scivola su e svanisce */
+.ss-fs-header {
+  overflow: hidden;
+  transition:
+    opacity    0.22s ease,
+    transform  0.26s cubic-bezier(0.4, 0, 0.2, 1),
+    max-height 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ss-fs-header--visible { opacity: 1; transform: translateY(0);     max-height: 200px; }
+.ss-fs-header--hidden  { opacity: 0; transform: translateY(-10px); max-height: 0; pointer-events: none; }
+/* Brief: si restringe verso sinistra */
+.ss-fs-brief-wrap {
+  overflow-x: hidden;
+  overflow-y: visible;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  transition:
+    opacity   0.22s ease,
+    max-width 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ss-fs-brief-wrap--visible { max-width: 300px; opacity: 1; }
+.ss-fs-brief-wrap--hidden  { max-width: 0;     opacity: 0; pointer-events: none; }
+/* Flash d'ingresso/uscita fullscreen */
+@keyframes fs-flash {
+  0%   { box-shadow: inset 0 0 0 0   rgba(62,0,251,0);    }
+  25%  { box-shadow: inset 0 0 0 3px rgba(62,0,251,0.2);  }
+  100% { box-shadow: inset 0 0 0 0   rgba(62,0,251,0);    }
+}
+.ss-root-nr--flashing { animation: fs-flash 0.5s ease forwards; }
+
   </style>
 </head>
 <body>
@@ -1352,6 +1562,8 @@ const {
   ShopOutlined, HomeOutlined, BulbOutlined, InboxOutlined,
   CarOutlined, PlayCircleOutlined, PictureOutlined,
   ColumnHeightOutlined, PushpinOutlined, BranchesOutlined, HeartOutlined,
+  FullscreenOutlined, FullscreenExitOutlined,
+  LockOutlined, CopyOutlined,
 } = icons;
 
 // Mappa tipo impianto → icona Ant Design (placeholder per le SVG Gravity)
@@ -1409,12 +1621,12 @@ function markerSrc(type, state) {
   return `../assets/${folder}/${file}.svg`;
 }
 function getMarkerSize(zoom) {
-  if (zoom <= 11) return [16, 25];
-  if (zoom <= 12) return [20, 31];
-  if (zoom <= 13) return [28, 43];
-  if (zoom <= 14) return [36, 55];
-  if (zoom <= 15) return [44, 68];
-  return [52, 80];
+  if (zoom <= 11) return [10, 15];
+  if (zoom <= 12) return [12, 18];
+  if (zoom <= 13) return [16, 24];
+  if (zoom <= 14) return [20, 30];
+  if (zoom <= 15) return [26, 38];
+  return [32, 48];
 }
 
 // ── Label system (Gmail-style) ─────────────────────────
@@ -1509,6 +1721,7 @@ const ADVERTISER_PROFILES = {
   'TechConf Italia':    { sector: 'Tecnologia & Eventi', audience: { gender: { M:65, F:35 }, age: [{ range:'18–24', pct:15 },{ range:'25–34', pct:38 },{ range:'35–44', pct:35 },{ range:'45+', pct:12 }], professions: ['Developer','Manager IT','Startup founder','CTO'], interests: ['Tech','AI','Innovazione','Networking','Open source'], adPreferences: ['Zone fiera e congressi','Aeroporti','DOOH premium','Centri città'] } },
   'SushiLab Palermo':   { sector: 'Ristorazione', audience: { gender: { M:38, F:62 }, age: [{ range:'18–24', pct:28 },{ range:'25–34', pct:40 },{ range:'35–44', pct:22 },{ range:'45+', pct:10 }], professions: ['Studenti','Giovani professionisti','Creativi'], interests: ['Food','Serate','Delivery','Social','Lifestyle'], adPreferences: ['Near-store','DOOH serale','Zone movida','Alta frequenza'] } },
   'WindTre':            { sector: 'Telecomunicazioni', audience: { gender: { M:52, F:48 }, age: [{ range:'18–24', pct:22 },{ range:'25–34', pct:30 },{ range:'35–44', pct:28 },{ range:'45+', pct:20 }], professions: ['Tutti i segmenti','Famiglie','Business','Giovani'], interests: ['Connettività','Streaming','Gaming','Smart home','Lavoro da remoto'], adPreferences: ['Alta frequenza','Copertura nazionale','OOH primari','Grande formato'] } },
+  'La Rinascente':      { sector: 'Fashion & Retail premium', audience: { gender: { M:32, F:68 }, age: [{ range:'18–24', pct:15 },{ range:'25–34', pct:30 },{ range:'35–44', pct:28 },{ range:'45–54', pct:18 },{ range:'55+', pct:9 }], professions: ['Professioniste','Manager','Imprenditrici','Studenti universitarie'], interests: ['Moda','Lusso','Beauty','Design','Lifestyle'], adPreferences: ['Zone centrali e di lusso','Grande formato','Alta visibilità pedonale','Prossimità centri commerciali premium'] } },
 };
 
 function AdvertiserAvatar({ name, size = 32 }) {
@@ -1580,8 +1793,8 @@ const PLANNINGS = [
     requestedTypes:['Totem', 'Alux'] },
   { id:'0106', name:'Arredo Urbano Palermo Q4',         category:'OOH',  state:'Bozza', start:'01/10/2026', end:'31/12/2026', advertiser:'Comune di Palermo', goal:'coinvolgimento', budget:'€ 90.000', faces:0,  hasSystems:false, createdAt:'22/01/2025', assignee:null,
     briefZones:[], requestedTypes:['Pensilina', 'Cassonetto', 'Palina'] },
-  { id:'0115', name:'Rinascente — Apertura Catania',    category:'OOH',  state:'Bozza', start:'15/05/2026', end:'28/05/2026', advertiser:'La Rinascente',     goal:'consapevolezza del brand', budget:'€ 18.000', faces:0,  hasSystems:false, createdAt:'22/04/2026', assignee:null,
-    briefZones:[{ label:'Catania', lat:37.5079, lng:15.0830, zoom:13 }], requestedTypes:['Billboard', 'Poster', 'Pensilina'] },
+  { id:'0116', name:'Rinascente — Apertura Palermo',    category:'OOH',  state:'Bozza', start:'15/05/2026', end:'28/05/2026', advertiser:'La Rinascente',     goal:'consapevolezza del brand', budget:'€ 18.000', faces:0,  hasSystems:false, createdAt:'22/04/2026', assignee:null,
+    briefZones:[{ label:'Palermo Centro', city:'Palermo', lat:38.1157, lng:13.3615, zoom:14 }], requestedTypes:['Billboard', 'Poster', 'Pensilina'] },
 ];
 
 const GOAL_KPIS = {
@@ -1667,6 +1880,104 @@ const SYSTEMS = [
   { id:'S08', name:'Nome Impianto', type:'Stendardo',       address:'Corso V. Emanuele, 3',  city:'90133 Palermo (PA)', cimasa:'H234L', account:'234L45', faces:1, state:'In Option'  },
 ];
 
+// STREET_PATHS non più usato — le coordinate vengono generate direttamente
+// dalle coordinate base di ZONES con scatter minimo (±15m).
+const STREET_PATHS = {
+    // PALERMO ─────────────────────────────────────────────────────────
+    // Waypoints verificati su OSM — tip marker = punta della goccia = coordinata esatta
+    'Via della Libertà|Palermo':       [[38.1196,13.3558],[38.1228,13.3543],[38.1260,13.3526],[38.1295,13.3508],[38.1325,13.3493],[38.1348,13.3481]],
+    'Via Roma|Palermo':                [[38.1072,13.3668],[38.1100,13.3663],[38.1130,13.3658],[38.1162,13.3652],[38.1186,13.3647]],
+    'Via Maqueda|Palermo':             [[38.1035,13.3588],[38.1070,13.3580],[38.1108,13.3572],[38.1145,13.3565],[38.1178,13.3558]],
+    'Corso V. Emanuele|Palermo':       [[38.1113,13.3448],[38.1116,13.3560],[38.1118,13.3648],[38.1114,13.3748]],
+    'Via Notarbartolo|Palermo':        [[38.1258,13.3464],[38.1290,13.3472],[38.1322,13.3479],[38.1348,13.3484]],
+    'Viale Reg. Siciliana|Palermo':    [[38.0900,13.2720],[38.0930,13.2980],[38.0950,13.3240],[38.0960,13.3454],[38.0968,13.3700],[38.0978,13.3960],[38.0988,13.4220]],
+    'Via Cavour|Palermo':              [[38.1132,13.3660],[38.1148,13.3680],[38.1165,13.3700],[38.1178,13.3718]],
+    'Via Dante|Palermo':               [[38.1178,13.3548],[38.1192,13.3558],[38.1205,13.3568],[38.1218,13.3578]],
+    'Corso Calatafimi|Palermo':        [[38.1032,13.3520],[38.1025,13.3360],[38.1012,13.3200],[38.0998,13.3040]],
+    'Via Oreto|Palermo':               [[38.1070,13.3538],[38.1055,13.3570],[38.1038,13.3604],[38.1022,13.3638]],
+    'Viale Lazio|Palermo':             [[38.1098,13.3340],[38.1094,13.3378],[38.1090,13.3416],[38.1086,13.3454]],
+    'Via Ugo La Malfa|Palermo':        [[38.1175,13.3322],[38.1175,13.3352],[38.1175,13.3382],[38.1175,13.3412]],
+    'Via Resuttana|Palermo':           [[38.1348,13.3378],[38.1354,13.3400],[38.1360,13.3422],[38.1366,13.3444]],
+    'Via Messina Marine|Palermo':      [[38.0965,13.3748],[38.0952,13.3798],[38.0940,13.3848],[38.0928,13.3898]],
+    'Piazza Politeama|Palermo':        [[38.1190,13.3546],[38.1196,13.3562],[38.1202,13.3578]],
+    'Via Marchese Ugo|Palermo':        [[38.1220,13.3455],[38.1228,13.3475],[38.1236,13.3496],[38.1244,13.3516]],
+    'Via Emerico Amari|Palermo':       [[38.1182,13.3628],[38.1188,13.3652],[38.1194,13.3676],[38.1200,13.3700]],
+    'Piazza Castelnuovo|Palermo':      [[38.1194,13.3562],[38.1198,13.3574],[38.1202,13.3586],[38.1206,13.3598]],
+    'Via Leonardo da Vinci|Palermo':   [[38.1224,13.3432],[38.1256,13.3443],[38.1288,13.3454],[38.1320,13.3465]],
+    'Via Perpignano|Palermo':          [[38.1042,13.3238],[38.1050,13.3256],[38.1058,13.3274],[38.1066,13.3292]],
+    'Via Ausonia|Palermo':             [[38.1154,13.3670],[38.1160,13.3682],[38.1166,13.3694],[38.1172,13.3706]],
+    'Via Duca della Verdura|Palermo':  [[38.1208,13.3530],[38.1215,13.3543],[38.1222,13.3556]],
+    'Piazza Sturzo|Palermo':           [[38.1152,13.3580],[38.1158,13.3590],[38.1164,13.3600]],
+    // TRAPANI ─────────────────────────────────────────────────────────
+    'Via Fardella|Trapani':            [[37.9808,12.6080],[37.9830,12.6095],[37.9854,12.6112]],
+    'Piazza Vittorio Veneto|Trapani':  [[37.9810,12.5978],[37.9816,12.5985],[37.9822,12.5993]],
+    'Corso Vittorio Emanuele|Trapani': [[37.9690,12.5960],[37.9695,12.5991],[37.9701,12.6022]],
+    'Via G. B. Fardella|Trapani':      [[37.9772,12.6058],[37.9780,12.6070],[37.9788,12.6082]],
+    // MARSALA ─────────────────────────────────────────────────────────
+    'Viale delle Sirene|Marsala':      [[37.7998,12.4322],[37.8010,12.4340],[37.8022,12.4358]],
+    'Via XI Maggio|Marsala':           [[37.7988,12.4376],[37.7990,12.4390],[37.7993,12.4404]],
+    'Lungomare Mediterraneo|Marsala':  [[37.7950,12.4248],[37.7955,12.4270],[37.7960,12.4292]],
+    // MAZARA DEL VALLO ────────────────────────────────────────────────
+    'Lungomare Mazzini|Mazara del Vallo':   [[37.6574,12.5910],[37.6580,12.5930],[37.6586,12.5952]],
+    'Via Castelvetrano|Mazara del Vallo':   [[37.6504,12.5870],[37.6510,12.5880],[37.6517,12.5892]],
+    // ALCAMO ──────────────────────────────────────────────────────────
+    'Via Alcide De Gasperi|Alcamo':    [[37.9793,13.0270],[37.9800,13.0280],[37.9808,13.0292]],
+    'Corso 6 Aprile|Alcamo':           [[37.9762,13.0236],[37.9770,13.0250],[37.9778,13.0264]],
+    // AGRIGENTO ───────────────────────────────────────────────────────
+    'Via Atenea|Agrigento':            [[37.3108,13.5766],[37.3115,13.5780],[37.3122,13.5796]],
+    'Viale della Vittoria|Agrigento':  [[37.3078,13.5702],[37.3085,13.5710],[37.3092,13.5720]],
+    'Via Empedocle|Agrigento':         [[37.3053,13.5750],[37.3060,13.5760],[37.3067,13.5772]],
+    // SCIACCA ─────────────────────────────────────────────────────────
+    'Lungomare Cristoforo Colombo|Sciacca': [[37.5082,13.0686],[37.5090,13.0700],[37.5098,13.0716]],
+    'Viale della Vittoria|Sciacca':    [[37.5073,13.0850],[37.5080,13.0860],[37.5088,13.0872]],
+    'Via Licata|Sciacca':              [[37.5044,13.0810],[37.5050,13.0820],[37.5057,13.0832]],
+    // PORTO EMPEDOCLE ─────────────────────────────────────────────────
+    'Via Roma|Porto Empedocle':        [[37.2943,13.5260],[37.2950,13.5270],[37.2957,13.5282]],
+    // CALTANISSETTA ───────────────────────────────────────────────────
+    'Corso Vittorio Emanuele|Caltanissetta': [[37.4912,14.0624],[37.4920,14.0640],[37.4928,14.0656]],
+    'Via Turati|Caltanissetta':        [[37.4892,14.0548],[37.4900,14.0560],[37.4908,14.0572]],
+    'Viale Amedeo|Caltanissetta':      [[37.4932,14.0600],[37.4940,14.0610],[37.4948,14.0622]],
+    // GELA ────────────────────────────────────────────────────────────
+    'Corso Vittorio Emanuele|Gela':    [[37.0702,14.2526],[37.0710,14.2540],[37.0718,14.2554]],
+    'Lungomare Federico II|Gela':      [[37.0653,14.2566],[37.0660,14.2580],[37.0667,14.2594]],
+    'Via Generale Cascino|Gela':       [[37.0732,14.2488],[37.0740,14.2500],[37.0748,14.2514]],
+    // BAGHERIA ────────────────────────────────────────────────────────
+    'Corso Butera|Bagheria':           [[38.0879,13.5104],[38.0887,13.5117],[38.0895,13.5130]],
+    'Via Consolare|Bagheria':          [[38.0857,13.5126],[38.0865,13.5134],[38.0872,13.5144]],
+    // MONREALE ────────────────────────────────────────────────────────
+    'Corso Pietro Novelli|Monreale':   [[38.0812,13.2920],[38.0819,13.2930],[38.0826,13.2942]],
+    // CARINI ──────────────────────────────────────────────────────────
+    'Via Aldo Moro|Carini':            [[38.1282,13.1890],[38.1290,13.1900],[38.1298,13.1912]],
+    // PARTINICO ───────────────────────────────────────────────────────
+    'Via Roma|Partinico':              [[38.0432,13.1100],[38.0440,13.1110],[38.0448,13.1122]],
+    // TERMINI IMERESE ─────────────────────────────────────────────────
+    'Piazza Duomo|Termini Imerese':    [[37.9840,13.6955],[37.9847,13.6963],[37.9854,13.6972]],
+    'Via Libertà|Termini Imerese':     [[37.9863,13.6930],[37.9870,13.6940],[37.9877,13.6952]],
+    // CASTELVETRANO ───────────────────────────────────────────────────
+    'Piazza Garibaldi|Castelvetrano':  [[37.6750,12.7908],[37.6757,12.7916],[37.6764,12.7926]],
+    'Viale Vittorio Veneto|Castelvetrano': [[37.6723,12.7876],[37.6730,12.7885],[37.6738,12.7896]],
+    // SAN VITO LO CAPO ────────────────────────────────────────────────
+    'Via Savoia|San Vito Lo Capo':     [[38.1752,12.7304],[38.1759,12.7313],[38.1766,12.7324]],
+    // CASTELLAMMARE DEL GOLFO ─────────────────────────────────────────
+    'Via G. Garibaldi|Castellammare del Golfo': [[38.0282,12.8802],[38.0290,12.8810],[38.0298,12.8820]],
+    // CAMPOBELLO DI MAZARA ────────────────────────────────────────────
+    'Via Roma|Campobello di Mazara':   [[37.6373,12.7432],[37.6380,12.7440],[37.6387,12.7450]],
+    // LICATA ──────────────────────────────────────────────────────────
+    'Via Roma|Licata':                 [[37.1004,13.9380],[37.1012,13.9388],[37.1020,13.9398]],
+    'Corso Roma|Licata':               [[37.1032,13.9342],[37.1040,13.9350],[37.1048,13.9360]],
+    // CANICATTÌ ───────────────────────────────────────────────────────
+    'Corso Umberto|Canicattì':         [[37.3574,13.8470],[37.3582,13.8479],[37.3590,13.8490]],
+    'Via Roma|Canicattì':              [[37.3552,13.8492],[37.3560,13.8500],[37.3568,13.8512]],
+    // FAVARA ──────────────────────────────────────────────────────────
+    'Corso Vittorio Emanuele|Favara':  [[37.3168,13.6604],[37.3176,13.6613],[37.3184,13.6624]],
+    // RIBERA ──────────────────────────────────────────────────────────
+    'Via Palermo|Ribera':              [[37.4991,13.2665],[37.4999,13.2674],[37.5007,13.2685]],
+    // NISCEMI ─────────────────────────────────────────────────────────
+    'Corso Vittorio Emanuele|Niscemi': [[37.1477,14.3863],[37.1485,14.3872],[37.1493,14.3883]],
+    // MUSSOMELI ───────────────────────────────────────────────────────
+    'Via Roma|Mussomeli':              [[37.5777,13.7494],[37.5785,13.7503],[37.5793,13.7514]],
+};
+
 const SEARCH_RESULTS = (() => {
   // Palina e Cartello sono i più numerosi — compaiono più volte nell'array per il campionamento
   const OOH_TYPES = [
@@ -1684,98 +1995,106 @@ const SEARCH_RESULTS = (() => {
     'Totem',
   ];
   const STATES = ['Available','Available','Available','Available','Available','In Option','In Option','Reserved','Reserved'];
-  // [street, baseLat, baseLng, count, city, province, capPrefix]
-  const ZONES  = [
-    // ── PALERMO ───────────────────────────────────────────────────────────────
-    ['Via della Libertà',        38.1230, 13.3521, 14, 'Palermo',          'PA', 'PA'],
-    ['Via Roma',                 38.1118, 13.3666, 12, 'Palermo',          'PA', 'PA'],
-    ['Via Maqueda',              38.1100, 13.3600, 12, 'Palermo',          'PA', 'PA'],
-    ['Corso V. Emanuele',        38.1118, 13.3612, 10, 'Palermo',          'PA', 'PA'],
-    ['Via Notarbartolo',         38.1310, 13.3478, 10, 'Palermo',          'PA', 'PA'],
-    ['Viale Reg. Siciliana',     38.0960, 13.3454, 16, 'Palermo',          'PA', 'PA'],
-    ['Via Cavour',               38.1155, 13.3690, 10, 'Palermo',          'PA', 'PA'],
-    ['Via Dante',                38.1195, 13.3560,  8, 'Palermo',          'PA', 'PA'],
-    ['Corso Calatafimi',         38.1024, 13.3349, 12, 'Palermo',          'PA', 'PA'],
-    ['Via Oreto',                38.1052, 13.3578, 10, 'Palermo',          'PA', 'PA'],
-    ['Viale Lazio',              38.1092, 13.3383,  8, 'Palermo',          'PA', 'PA'],
-    ['Via Ugo La Malfa',         38.1175, 13.3365, 10, 'Palermo',          'PA', 'PA'],
-    ['Via Resuttana',            38.1355, 13.3405,  8, 'Palermo',          'PA', 'PA'],
-    ['Via Messina Marine',       38.0950, 13.3800,  8, 'Palermo',          'PA', 'PA'],
-    ['Piazza Politeama',         38.1196, 13.3564,  6, 'Palermo',          'PA', 'PA'],
-    ['Via Marchese Ugo',         38.1230, 13.3480,  8, 'Palermo',          'PA', 'PA'],
-    // ── TRAPANI (città) ───────────────────────────────────────────────────────
-    ['Via Fardella',             37.9830, 12.6095, 10, 'Trapani',          'TP', 'TP'],
-    ['Piazza Vittorio Veneto',   37.9816, 12.5985,  8, 'Trapani',          'TP', 'TP'],
-    ['Corso Vittorio Emanuele',  37.9695, 12.5991,  8, 'Trapani',          'TP', 'TP'],
-    ['Via G. B. Fardella',       37.9780, 12.6070,  6, 'Trapani',          'TP', 'TP'],
-    // ── MARSALA ───────────────────────────────────────────────────────────────
-    ['Viale delle Sirene',       37.8010, 12.4340,  8, 'Marsala',          'TP', 'TP'],
-    ['Via XI Maggio',            37.7990, 12.4390,  8, 'Marsala',          'TP', 'TP'],
-    ['Lungomare Mediterraneo',   37.7955, 12.4270,  6, 'Marsala',          'TP', 'TP'],
-    // ── MAZARA DEL VALLO ──────────────────────────────────────────────────────
-    ['Lungomare Mazzini',        37.6580, 12.5930,  8, 'Mazara del Vallo', 'TP', 'TP'],
-    ['Via Castelvetrano',        37.6510, 12.5880,  6, 'Mazara del Vallo', 'TP', 'TP'],
-    // ── ALCAMO ────────────────────────────────────────────────────────────────
-    ['Via Alcide De Gasperi',    37.9800, 13.0280,  6, 'Alcamo',           'TP', 'TP'],
-    ['Corso 6 Aprile',           37.9770, 13.0250,  6, 'Alcamo',           'TP', 'TP'],
-    // ── AGRIGENTO (città) ────────────────────────────────────────────────────
-    ['Via Atenea',               37.3115, 13.5780, 10, 'Agrigento',        'AG', 'AG'],
-    ['Viale della Vittoria',     37.3085, 13.5710,  8, 'Agrigento',        'AG', 'AG'],
-    ['Via Empedocle',            37.3060, 13.5760,  6, 'Agrigento',        'AG', 'AG'],
-    // ── SCIACCA ───────────────────────────────────────────────────────────────
-    ['Lungomare Cristoforo Colombo', 37.5090, 13.0700,  8, 'Sciacca',      'AG', 'AG'],
-    ['Viale della Vittoria',         37.5080, 13.0860,  8, 'Sciacca',      'AG', 'AG'],
-    ['Via Licata',               37.5050, 13.0820,  6, 'Sciacca',          'AG', 'AG'],
-    // ── PORTO EMPEDOCLE ───────────────────────────────────────────────────────
-    ['Via Roma',                 37.2950, 13.5270,  8, 'Porto Empedocle',  'AG', 'AG'],
-    // ── CALTANISSETTA ────────────────────────────────────────────────────────
-    ['Corso Vittorio Emanuele',  37.4920, 14.0640, 10, 'Caltanissetta',    'CL', 'CL'],
-    ['Via Turati',               37.4900, 14.0560,  8, 'Caltanissetta',    'CL', 'CL'],
-    ['Viale Amedeo',             37.4940, 14.0610,  6, 'Caltanissetta',    'CL', 'CL'],
-    // ── GELA ──────────────────────────────────────────────────────────────────
-    ['Corso Vittorio Emanuele',  37.0710, 14.2540,  8, 'Gela',             'CL', 'CL'],
-    ['Lungomare Federico II',    37.0660, 14.2580,  8, 'Gela',             'CL', 'CL'],
-    ['Via Generale Cascino',     37.0740, 14.2500,  6, 'Gela',             'CL', 'CL'],
-    // ── PALERMO — strade aggiuntive ───────────────────────────────────────────
-    ['Via Emerico Amari',        38.1190, 13.3660, 10, 'Palermo',          'PA', 'PA'],
-    ['Piazza Castelnuovo',       38.1200, 13.3578,  8, 'Palermo',          'PA', 'PA'],
-    ['Via Leonardo da Vinci',    38.1270, 13.3450, 12, 'Palermo',          'PA', 'PA'],
-    ['Via Perpignano',           38.1050, 13.3260,  8, 'Palermo',          'PA', 'PA'],
-    ['Via Ausonia',              38.1160, 13.3685,  8, 'Palermo',          'PA', 'PA'],
-    ['Via Duca della Verdura',   38.1215, 13.3545,  6, 'Palermo',          'PA', 'PA'],
-    ['Piazza Sturzo',            38.1158, 13.3590,  6, 'Palermo',          'PA', 'PA'],
-    // ── PALERMO hinterland ────────────────────────────────────────────────────
-    ['Corso Butera',             38.0887, 13.5117,  8, 'Bagheria',         'PA', 'PA'],
-    ['Via Consolare',            38.0865, 13.5134,  6, 'Bagheria',         'PA', 'PA'],
-    ['Corso Pietro Novelli',     38.0819, 13.2930,  6, 'Monreale',         'PA', 'PA'],
-    ['Via Aldo Moro',            38.1290, 13.1900,  6, 'Carini',           'PA', 'PA'],
-    ['Via Roma',                 38.0440, 13.1110,  6, 'Partinico',        'PA', 'PA'],
-    // ── TERMINI IMERESE (PA) ──────────────────────────────────────────────────
-    ['Piazza Duomo',             37.9847, 13.6963,  6, 'Termini Imerese',  'PA', 'PA'],
-    ['Via Libertà',              37.9870, 13.6940,  6, 'Termini Imerese',  'PA', 'PA'],
-    // ── CASTELVETRANO (TP) ────────────────────────────────────────────────────
-    ['Piazza Garibaldi',         37.6757, 12.7916,  8, 'Castelvetrano',    'TP', 'TP'],
-    ['Viale Vittorio Veneto',    37.6730, 12.7885,  6, 'Castelvetrano',    'TP', 'TP'],
-    // ── SAN VITO LO CAPO (TP) ────────────────────────────────────────────────
-    ['Via Savoia',               38.1759, 12.7313,  6, 'San Vito Lo Capo', 'TP', 'TP'],
-    // ── CASTELLAMMARE DEL GOLFO (TP) ─────────────────────────────────────────
-    ['Via G. Garibaldi',         38.0290, 12.8810,  6, 'Castellammare del Golfo', 'TP', 'TP'],
-    // ── CAMPOBELLO DI MAZARA (TP) ─────────────────────────────────────────────
-    ['Via Roma',                 37.6380, 12.7440,  4, 'Campobello di Mazara', 'TP', 'TP'],
-    // ── LICATA (AG) ───────────────────────────────────────────────────────────
-    ['Via Roma',                 37.1012, 13.9388,  8, 'Licata',           'AG', 'AG'],
-    ['Corso Roma',               37.1040, 13.9350,  6, 'Licata',           'AG', 'AG'],
-    // ── CANICATTÌ (AG) ────────────────────────────────────────────────────────
-    ['Corso Umberto',            37.3582, 13.8479,  8, 'Canicattì',        'AG', 'AG'],
-    ['Via Roma',                 37.3560, 13.8500,  6, 'Canicattì',        'AG', 'AG'],
-    // ── FAVARA (AG) ───────────────────────────────────────────────────────────
-    ['Corso Vittorio Emanuele',  37.3176, 13.6613,  6, 'Favara',           'AG', 'AG'],
-    // ── RIBERA (AG) ───────────────────────────────────────────────────────────
-    ['Via Palermo',              37.4999, 13.2674,  6, 'Ribera',           'AG', 'AG'],
-    // ── NISCEMI (CL) ──────────────────────────────────────────────────────────
-    ['Corso Vittorio Emanuele',  37.1485, 14.3872,  6, 'Niscemi',          'CL', 'CL'],
-    // ── MUSSOMELI (CL) ────────────────────────────────────────────────────────
-    ['Via Roma',                 37.5785, 13.7503,  4, 'Mussomeli',        'CL', 'CL'],
+
+  // [street, baseLat, baseLng, count, city, province, channel]
+  // channel: 'OOH' (arredo urbano classico) | 'DOOH' (digitale, strade ad alto traffico)
+  // Totale: 524 impianti — 394 OOH · 130 DOOH
+  const ZONES = window._GRAVITY_ZONES = [
+    // ── PALERMO — DOOH (arterie principali, alta percorrenza) ─────────────────
+    ['Via della Libertà',        38.1230, 13.3521, 14, 'Palermo',          'PA', 'DOOH'],
+    ['Via Roma',                 38.1118, 13.3666, 12, 'Palermo',          'PA', 'DOOH'],
+    ['Via Maqueda',              38.1100, 13.3600, 12, 'Palermo',          'PA', 'DOOH'],
+    ['Viale Reg. Siciliana',     38.0960, 13.3454, 16, 'Palermo',          'PA', 'DOOH'],
+    ['Via Emerico Amari',        38.1190, 13.3660, 10, 'Palermo',          'PA', 'DOOH'],
+    ['Via Leonardo da Vinci',    38.1270, 13.3450, 12, 'Palermo',          'PA', 'DOOH'],
+    ['Piazza Castelnuovo',       38.1200, 13.3578,  8, 'Palermo',          'PA', 'DOOH'],
+    // ── PALERMO — OOH ────────────────────────────────────────────────────────
+    ['Corso V. Emanuele',        38.1118, 13.3612, 10, 'Palermo',          'PA', 'OOH'],
+    ['Via Notarbartolo',         38.1310, 13.3478, 10, 'Palermo',          'PA', 'OOH'],
+    ['Via Cavour',               38.1155, 13.3690, 10, 'Palermo',          'PA', 'OOH'],
+    ['Via Dante',                38.1195, 13.3560,  8, 'Palermo',          'PA', 'OOH'],
+    ['Corso Calatafimi',         38.1024, 13.3349, 12, 'Palermo',          'PA', 'OOH'],
+    ['Via Oreto',                38.1052, 13.3578, 10, 'Palermo',          'PA', 'OOH'],
+    ['Viale Lazio',              38.1092, 13.3383,  8, 'Palermo',          'PA', 'OOH'],
+    ['Via Ugo La Malfa',         38.1175, 13.3365, 10, 'Palermo',          'PA', 'OOH'],
+    ['Via Resuttana',            38.1355, 13.3405,  8, 'Palermo',          'PA', 'OOH'],
+    ['Via Messina Marine',       38.0950, 13.3800,  8, 'Palermo',          'PA', 'OOH'],
+    ['Piazza Politeama',         38.1196, 13.3564,  6, 'Palermo',          'PA', 'OOH'],
+    ['Via Marchese Ugo',         38.1230, 13.3480,  8, 'Palermo',          'PA', 'OOH'],
+    ['Via Perpignano',           38.1050, 13.3260,  8, 'Palermo',          'PA', 'OOH'],
+    ['Via Ausonia',              38.1160, 13.3685,  8, 'Palermo',          'PA', 'OOH'],
+    ['Via Duca della Verdura',   38.1215, 13.3545,  6, 'Palermo',          'PA', 'OOH'],
+    ['Piazza Sturzo',            38.1158, 13.3590,  6, 'Palermo',          'PA', 'OOH'],
+    // ── TRAPANI — DOOH ────────────────────────────────────────────────────────
+    ['Via Fardella',             37.9830, 12.6095, 10, 'Trapani',          'TP', 'DOOH'],
+    // ── TRAPANI — OOH ─────────────────────────────────────────────────────────
+    ['Piazza Vittorio Veneto',   37.9816, 12.5985,  8, 'Trapani',          'TP', 'OOH'],
+    ['Corso Vittorio Emanuele',  37.9695, 12.5991,  8, 'Trapani',          'TP', 'OOH'],
+    ['Via G. B. Fardella',       37.9780, 12.6070,  6, 'Trapani',          'TP', 'OOH'],
+    // ── MARSALA — DOOH ────────────────────────────────────────────────────────
+    ['Viale delle Sirene',       37.8010, 12.4340,  8, 'Marsala',          'TP', 'DOOH'],
+    // ── MARSALA — OOH ─────────────────────────────────────────────────────────
+    ['Via XI Maggio',            37.7990, 12.4390,  8, 'Marsala',          'TP', 'OOH'],
+    ['Lungomare Mediterraneo',   37.7955, 12.4270,  6, 'Marsala',          'TP', 'OOH'],
+    // ── MAZARA DEL VALLO — OOH ────────────────────────────────────────────────
+    ['Lungomare Mazzini',        37.6580, 12.5930,  8, 'Mazara del Vallo', 'TP', 'OOH'],
+    ['Via Castelvetrano',        37.6510, 12.5880,  6, 'Mazara del Vallo', 'TP', 'OOH'],
+    // ── ALCAMO — OOH ──────────────────────────────────────────────────────────
+    ['Via Alcide De Gasperi',    37.9800, 13.0280,  6, 'Alcamo',           'TP', 'OOH'],
+    ['Corso 6 Aprile',           37.9770, 13.0250,  6, 'Alcamo',           'TP', 'OOH'],
+    // ── AGRIGENTO — DOOH ──────────────────────────────────────────────────────
+    ['Via Atenea',               37.3115, 13.5780, 10, 'Agrigento',        'AG', 'DOOH'],
+    // ── AGRIGENTO — OOH ───────────────────────────────────────────────────────
+    ['Viale della Vittoria',     37.3085, 13.5710,  8, 'Agrigento',        'AG', 'OOH'],
+    ['Via Empedocle',            37.3060, 13.5760,  6, 'Agrigento',        'AG', 'OOH'],
+    // ── SCIACCA — OOH ─────────────────────────────────────────────────────────
+    ['Lungomare Cristoforo Colombo', 37.5090, 13.0700, 8, 'Sciacca',       'AG', 'OOH'],
+    ['Viale della Vittoria',         37.5080, 13.0860, 8, 'Sciacca',       'AG', 'OOH'],
+    ['Via Licata',               37.5050, 13.0820,  6, 'Sciacca',          'AG', 'OOH'],
+    // ── PORTO EMPEDOCLE — OOH ─────────────────────────────────────────────────
+    ['Via Roma',                 37.2950, 13.5270,  8, 'Porto Empedocle',  'AG', 'OOH'],
+    // ── CALTANISSETTA — DOOH ──────────────────────────────────────────────────
+    ['Corso Vittorio Emanuele',  37.4920, 14.0640, 10, 'Caltanissetta',    'CL', 'DOOH'],
+    // ── CALTANISSETTA — OOH ───────────────────────────────────────────────────
+    ['Via Turati',               37.4900, 14.0560,  8, 'Caltanissetta',    'CL', 'OOH'],
+    ['Viale Amedeo',             37.4940, 14.0610,  6, 'Caltanissetta',    'CL', 'OOH'],
+    // ── GELA — DOOH ───────────────────────────────────────────────────────────
+    ['Corso Vittorio Emanuele',  37.0710, 14.2540,  8, 'Gela',             'CL', 'DOOH'],
+    // ── GELA — OOH ────────────────────────────────────────────────────────────
+    ['Lungomare Federico II',    37.0660, 14.2580,  8, 'Gela',             'CL', 'OOH'],
+    ['Via Generale Cascino',     37.0740, 14.2500,  6, 'Gela',             'CL', 'OOH'],
+    // ── PALERMO hinterland — OOH ──────────────────────────────────────────────
+    ['Corso Butera',             38.0887, 13.5117,  8, 'Bagheria',         'PA', 'OOH'],
+    ['Via Consolare',            38.0865, 13.5134,  6, 'Bagheria',         'PA', 'OOH'],
+    ['Corso Pietro Novelli',     38.0819, 13.2930,  6, 'Monreale',         'PA', 'OOH'],
+    ['Via Aldo Moro',            38.1290, 13.1900,  6, 'Carini',           'PA', 'OOH'],
+    ['Via Roma',                 38.0440, 13.1110,  6, 'Partinico',        'PA', 'OOH'],
+    // ── TERMINI IMERESE — OOH ─────────────────────────────────────────────────
+    ['Piazza Duomo',             37.9847, 13.6963,  6, 'Termini Imerese',  'PA', 'OOH'],
+    ['Via Libertà',              37.9870, 13.6940,  6, 'Termini Imerese',  'PA', 'OOH'],
+    // ── CASTELVETRANO — OOH ───────────────────────────────────────────────────
+    ['Piazza Garibaldi',         37.6757, 12.7916,  8, 'Castelvetrano',    'TP', 'OOH'],
+    ['Viale Vittorio Veneto',    37.6730, 12.7885,  6, 'Castelvetrano',    'TP', 'OOH'],
+    // ── SAN VITO LO CAPO — OOH ────────────────────────────────────────────────
+    ['Via Savoia',               38.1759, 12.7313,  6, 'San Vito Lo Capo', 'TP', 'OOH'],
+    // ── CASTELLAMMARE DEL GOLFO — OOH ─────────────────────────────────────────
+    ['Via G. Garibaldi',         38.0290, 12.8810,  6, 'Castellammare del Golfo', 'TP', 'OOH'],
+    // ── CAMPOBELLO DI MAZARA — OOH ────────────────────────────────────────────
+    ['Via Roma',                 37.6380, 12.7440,  4, 'Campobello di Mazara', 'TP', 'OOH'],
+    // ── LICATA — OOH ──────────────────────────────────────────────────────────
+    ['Via Roma',                 37.1012, 13.9388,  8, 'Licata',           'AG', 'OOH'],
+    ['Corso Roma',               37.1040, 13.9350,  6, 'Licata',           'AG', 'OOH'],
+    // ── CANICATTÌ — OOH ───────────────────────────────────────────────────────
+    ['Corso Umberto',            37.3582, 13.8479,  8, 'Canicattì',        'AG', 'OOH'],
+    ['Via Roma',                 37.3560, 13.8500,  6, 'Canicattì',        'AG', 'OOH'],
+    // ── FAVARA — OOH ──────────────────────────────────────────────────────────
+    ['Corso Vittorio Emanuele',  37.3176, 13.6613,  6, 'Favara',           'AG', 'OOH'],
+    // ── RIBERA — OOH ──────────────────────────────────────────────────────────
+    ['Via Palermo',              37.4999, 13.2674,  6, 'Ribera',           'AG', 'OOH'],
+    // ── NISCEMI — OOH ─────────────────────────────────────────────────────────
+    ['Corso Vittorio Emanuele',  37.1485, 14.3872,  6, 'Niscemi',          'CL', 'OOH'],
+    // ── MUSSOMELI — OOH ───────────────────────────────────────────────────────
+    ['Via Roma',                 37.5785, 13.7503,  4, 'Mussomeli',        'CL', 'OOH'],
   ];
 
   // Face labels by system type
@@ -1867,73 +2186,75 @@ const SEARCH_RESULTS = (() => {
 
   const out = [];
   let n = 1;
-  ZONES.forEach(([street, bLat, bLng, count, city, province]) => {
+  ZONES.forEach(([street, bLat, bLng, count, city, province, channel]) => {
+    const isDooh = channel === 'DOOH';
     for (let i = 0; i < count; i++, n++) {
-      const latOff   = ((n * 17 + i * 31) % 200 - 100) * 0.000065;
-      const lngOff   = ((n * 23 + i * 13) % 200 - 100) * 0.000065;
-      const sysState = STATES[(n * 7 + i * 11) % STATES.length];
-      const id      = `SYS-${String(n).padStart(3,'0')}`;
-      // ~20% DOOH nelle zone con ≥8 impianti (strade urbane principali)
-      const isDooh  = count >= 8 && (n * 13 + i * 7) % 5 === 0;
-      const channel = isDooh ? 'DOOH' : 'OOH';
-      const type    = isDooh
+      // Scatter deterministico ±15m attorno alla coordinata base della via
+      const sysLat = +(bLat + ((n * 17 + i * 31) % 30 - 15) * 0.00001).toFixed(6);
+      const sysLng = +(bLng + ((n * 23 + i * 13) % 30 - 15) * 0.00001).toFixed(6);
+      const sysState  = STATES[(n * 7 + i * 11) % STATES.length];
+      const id        = `SYS-${String(n).padStart(3,'0')}`;
+      const type      = isDooh
         ? DOOH_TYPES[(n * 3 + i * 7) % DOOH_TYPES.length]
         : OOH_TYPES[(n * 3 + i * 7) % OOH_TYPES.length];
       // Modello di vendita: tipi speciali sempre LT-only, ~20% degli altri anche (solo OOH)
       const saleModel = !isDooh && (LT_ONLY_TYPES.has(type) || (n * 7 + i * 3) % 5 === 0)
         ? 'long_term_only' : 'standard';
-      const labels      = FACE_LABELS[type] || ['Anteriore','Posteriore'];
-      // Formato: unico per tipologia OPPURE uno dei formati possibili (varia per impianto, costante per le sue facce)
-      const fmtOptions  = FACE_FORMAT_MULTI[type];
-      const fmt         = fmtOptions
+      const labels     = FACE_LABELS[type] || ['Anteriore','Posteriore'];
+      const fmtOptions = FACE_FORMAT_MULTI[type];
+      const fmt        = fmtOptions
         ? fmtOptions[(n * 11) % fmtOptions.length]
         : (FACE_FORMAT[type] || '140×200cm');
-      // Prezzo per faccia: base tipo + variazione ±15% + premium illuminazione
-      const basePrice = TYPE_FACE_PRICE[type] || 250;
+      const basePrice  = TYPE_FACE_PRICE[type] || 250;
+
       const faceObjs = labels.map((lbl, fi) => {
         const illuminated = (n * 7 + fi * 3) % 10 < (ILLUMINATED_PROB[type] || 0);
-        const rawPrice = basePrice * (85 + (n * 7 + fi * 13) % 30) / 100;
-        const price = Math.round(rawPrice * (illuminated ? 1.2 : 1) / 10) * 10;
-        const slotsAvailable  = isDooh ? (type === 'Billboard' ? 6 : type === 'Alux' ? 8 : 4) : null;
-        const slotDurationSec = isDooh ? 10 : null;
-        return {
-          id:     `${id}-F${fi + 1}`,
-          label:  lbl,
-          format: fmt,
-          state:  sysState === 'Reserved'   ? 'Reserved' :
-                  sysState === 'In Option'  ? (fi === 0 ? 'Available' : 'In Option') :
-                  FACE_STATES[(n * 5 + fi * 7) % FACE_STATES.length],
+        const rawPrice    = basePrice * (85 + (n * 7 + fi * 13) % 30) / 100;
+        const price       = Math.round(rawPrice * (illuminated ? 1.2 : 1) / 10) * 10;
+        const face = {
+          id:         `${id}-F${fi + 1}`,
+          label:      lbl,
+          format:     fmt,
+          state:      sysState === 'Reserved'  ? 'Reserved' :
+                      sysState === 'In Option' ? (fi === 0 ? 'Available' : 'In Option') :
+                      FACE_STATES[(n * 5 + fi * 7) % FACE_STATES.length],
           price,
           illuminated,
-          saleModel,
-          channel,
-          ...(isDooh ? { slotsAvailable, slotDurationSec } : {}),
         };
+        if (isDooh) face.slots = {
+          available:   type === 'Billboard' ? 6 : type === 'Alux' ? 8 : 4,
+          durationSec: 10,
+        };
+        return face;
       });
+
       out.push({
         id,
+        code:     `${province}-${String(n).padStart(3,'0')}`,
+        channel,
         type,
-        address: `${street}, ${4 + (i * 13 + n * 3) % 180}`,
+        saleModel,
+        label:    PREMIUM[id] || null,
+        address:  `${street}, ${4 + (i * 13 + n * 3) % 180}`,
         city,
         province,
-        cimasa:  `${province}-${String(n).padStart(3,'0')}`,
-        state:   sysState,
-        lat:     +(bLat + latOff).toFixed(6),
-        lng:     +(bLng + lngOff).toFixed(6),
-        faces:   faceObjs.length,
+        lat:      sysLat,
+        lng:      sysLng,
+        state:    sysState,
         faceObjs,
-        label:   PREMIUM[id] || null,
-        saleModel,
-        channel,
       });
     }
   });
   return out;
 })();
 
-// Lookup faceId → oggetto face completo
-const FACE_MAP = {};
-SEARCH_RESULTS.forEach(sys => (sys.faceObjs || []).forEach(f => { FACE_MAP[f.id] = f; }));
+// Lookup faceId → face, faceId → sistema padre
+const FACE_MAP     = {};
+const FACE_SYS_MAP = {};
+SEARCH_RESULTS.forEach(sys => (sys.faceObjs || []).forEach(f => {
+  FACE_MAP[f.id]     = f;
+  FACE_SYS_MAP[f.id] = sys;
+}));
 
 // Pre-seleziona facce per pianificazioni con hasSystems:true
 PLANNINGS.forEach(p => {
@@ -1988,7 +2309,7 @@ function computeFacePrice(face, planning) {
   // OOH: prezzo proporzionale ai giorni reali (unitPrice = tariffa base/14gg)
   const isLongTerm     = days >= LONG_TERM_THRESHOLD;
   const discount       = isLongTerm ? LONG_TERM_DISCOUNT : 0;
-  const isLongTermOnly = face.saleModel === 'long_term_only';
+  const isLongTermOnly = (FACE_SYS_MAP[face.id]?.saleModel ?? 'standard') === 'long_term_only';
   const isIncompatible = isLongTermOnly && !isLongTerm;
   const dailyRate      = unitPrice / 14;
   const total          = Math.round(dailyRate * days * (1 - discount) / 10) * 10;
@@ -2016,58 +2337,110 @@ function planningDurationLabel(planning) {
   return `${days} ${days === 1 ? 'giorno' : 'giorni'}`;
 }
 
+// Ogni voce: { label, type, lat, lng, filterCity?, filterProvince?, filterRadius, mapRadius }
+// filterCity/filterProvince → matching per nome; filterRadius → haversine per strade
 const GEO_SUGGESTIONS = [
-  // Palermo
-  { label: 'Via della Libertà, Palermo',       lat:38.1230, lng:13.3521 },
-  { label: 'Via Roma, Palermo',                lat:38.1118, lng:13.3666 },
-  { label: 'Via Maqueda, Palermo',             lat:38.1100, lng:13.3600 },
-  { label: 'Piazza Politeama, Palermo',        lat:38.1196, lng:13.3564 },
-  { label: 'Viale Regione Siciliana, Palermo', lat:38.0960, lng:13.3454 },
-  { label: 'Corso Calatafimi, Palermo',        lat:38.1024, lng:13.3349 },
-  { label: 'Via Notarbartolo, Palermo',        lat:38.1310, lng:13.3478 },
-  { label: 'Corso V. Emanuele, Palermo',       lat:38.1118, lng:13.3610 },
-  // Trapani
-  { label: 'Via Fardella, Trapani',            lat:37.9830, lng:12.6095 },
-  { label: 'Piazza Vittorio Veneto, Trapani',  lat:37.9816, lng:12.5985 },
-  { label: 'Corso V. Emanuele, Trapani',       lat:37.9695, lng:12.5991 },
-  { label: 'Viale delle Sirene, Marsala',      lat:37.8010, lng:12.4340 },
-  { label: 'Via XI Maggio, Marsala',           lat:37.7990, lng:12.4390 },
-  { label: 'Lungomare Mazzini, Mazara del Vallo', lat:37.6580, lng:12.5930 },
-  { label: 'Corso 6 Aprile, Alcamo',           lat:37.9770, lng:13.0250 },
-  // Agrigento
-  { label: 'Via Atenea, Agrigento',            lat:37.3115, lng:13.5780 },
-  { label: 'Viale della Vittoria, Agrigento',  lat:37.3085, lng:13.5710 },
-  { label: 'Lungomare C. Colombo, Sciacca',    lat:37.5090, lng:13.0700 },
-  { label: 'Via Roma, Porto Empedocle',        lat:37.2950, lng:13.5270 },
-  // Caltanissetta
-  { label: 'Corso V. Emanuele, Caltanissetta', lat:37.4920, lng:14.0640 },
-  { label: 'Via Turati, Caltanissetta',        lat:37.4900, lng:14.0560 },
-  { label: 'Corso V. Emanuele, Gela',          lat:37.0710, lng:14.2540 },
-  { label: 'Lungomare Federico II, Gela',            lat:37.0660, lng:14.2580 },
-  // Palermo — strade aggiuntive
-  { label: 'Via Emerico Amari, Palermo',             lat:38.1190, lng:13.3660 },
-  { label: 'Piazza Castelnuovo, Palermo',            lat:38.1200, lng:13.3578 },
-  { label: 'Via Leonardo da Vinci, Palermo',         lat:38.1270, lng:13.3450 },
-  { label: 'Via Perpignano, Palermo',                lat:38.1050, lng:13.3260 },
-  { label: 'Via Ausonia, Palermo',                   lat:38.1160, lng:13.3685 },
-  // Palermo hinterland
-  { label: 'Corso Butera, Bagheria',                 lat:38.0887, lng:13.5117 },
-  { label: 'Corso Pietro Novelli, Monreale',         lat:38.0819, lng:13.2930 },
-  { label: 'Via Aldo Moro, Carini',                  lat:38.1290, lng:13.1900 },
-  { label: 'Via Roma, Partinico',                    lat:38.0440, lng:13.1110 },
-  { label: 'Piazza Duomo, Termini Imerese',          lat:37.9847, lng:13.6963 },
-  // Trapani provincia
-  { label: 'Piazza Garibaldi, Castelvetrano',        lat:37.6757, lng:12.7916 },
-  { label: 'Via Savoia, San Vito Lo Capo',           lat:38.1759, lng:12.7313 },
-  { label: 'Via G. Garibaldi, Castellammare del Golfo', lat:38.0290, lng:12.8810 },
-  // Agrigento provincia
-  { label: 'Via Roma, Licata',                       lat:37.1012, lng:13.9388 },
-  { label: 'Corso Umberto, Canicattì',               lat:37.3582, lng:13.8479 },
-  { label: 'Corso Vittorio Emanuele, Favara',        lat:37.3176, lng:13.6613 },
-  { label: 'Via Palermo, Ribera',                    lat:37.4999, lng:13.2674 },
-  // Caltanissetta provincia
-  { label: 'Corso Vittorio Emanuele, Niscemi',       lat:37.1485, lng:14.3872 },
-  { label: 'Via Roma, Mussomeli',                    lat:37.5785, lng:13.7503 },
+  // ── Province ──────────────────────────────────────────────────────────────────
+  { label:'Palermo',           type:'Provincia', lat:38.1157, lng:13.3615, filterProvince:'PA', mapRadius:40000 },
+  { label:'Trapani',           type:'Provincia', lat:37.9800, lng:12.6150, filterProvince:'TP', mapRadius:35000 },
+  { label:'Agrigento',         type:'Provincia', lat:37.3104, lng:13.5765, filterProvince:'AG', mapRadius:38000 },
+  { label:'Caltanissetta',     type:'Provincia', lat:37.4920, lng:14.0640, filterProvince:'CL', mapRadius:30000 },
+  // ── Città ─────────────────────────────────────────────────────────────────────
+  { label:'Palermo',           type:'Città',     lat:38.1157, lng:13.3615, filterCity:'Palermo',                   mapRadius:12000 },
+  { label:'Trapani',           type:'Città',     lat:37.9800, lng:12.6150, filterCity:'Trapani',                   mapRadius:5000  },
+  { label:'Marsala',           type:'Città',     lat:37.7998, lng:12.4289, filterCity:'Marsala',                   mapRadius:5000  },
+  { label:'Mazara del Vallo',  type:'Città',     lat:37.6555, lng:12.5908, filterCity:'Mazara del Vallo',          mapRadius:4000  },
+  { label:'Alcamo',            type:'Città',     lat:37.9770, lng:13.0250, filterCity:'Alcamo',                    mapRadius:3500  },
+  { label:'Agrigento',         type:'Città',     lat:37.3104, lng:13.5765, filterCity:'Agrigento',                 mapRadius:5000  },
+  { label:'Sciacca',           type:'Città',     lat:37.5076, lng:13.0783, filterCity:'Sciacca',                   mapRadius:4000  },
+  { label:'Porto Empedocle',   type:'Città',     lat:37.2950, lng:13.5270, filterCity:'Porto Empedocle',           mapRadius:3000  },
+  { label:'Caltanissetta',     type:'Città',     lat:37.4920, lng:14.0640, filterCity:'Caltanissetta',             mapRadius:5000  },
+  { label:'Gela',              type:'Città',     lat:37.0710, lng:14.2540, filterCity:'Gela',                      mapRadius:5000  },
+  { label:'Bagheria',          type:'Città',     lat:38.0887, lng:13.5117, filterCity:'Bagheria',                  mapRadius:3500  },
+  { label:'Monreale',          type:'Città',     lat:38.0819, lng:13.2930, filterCity:'Monreale',                  mapRadius:3000  },
+  { label:'Carini',            type:'Città',     lat:38.1290, lng:13.1900, filterCity:'Carini',                    mapRadius:3000  },
+  { label:'Partinico',         type:'Città',     lat:38.0440, lng:13.1110, filterCity:'Partinico',                 mapRadius:3000  },
+  { label:'Termini Imerese',   type:'Città',     lat:37.9847, lng:13.6963, filterCity:'Termini Imerese',           mapRadius:3000  },
+  { label:'Castelvetrano',     type:'Città',     lat:37.6757, lng:12.7916, filterCity:'Castelvetrano',             mapRadius:3500  },
+  { label:'San Vito Lo Capo',  type:'Città',     lat:38.1759, lng:12.7313, filterCity:'San Vito Lo Capo',          mapRadius:2500  },
+  { label:'Castellammare del Golfo', type:'Città', lat:38.0290, lng:12.8810, filterCity:'Castellammare del Golfo', mapRadius:3000  },
+  { label:'Campobello di Mazara', type:'Città',  lat:37.6380, lng:12.7440, filterCity:'Campobello di Mazara',      mapRadius:2500  },
+  { label:'Licata',            type:'Città',     lat:37.1012, lng:13.9388, filterCity:'Licata',                    mapRadius:3500  },
+  { label:'Canicattì',         type:'Città',     lat:37.3582, lng:13.8479, filterCity:'Canicattì',                 mapRadius:3500  },
+  { label:'Favara',            type:'Città',     lat:37.3176, lng:13.6613, filterCity:'Favara',                    mapRadius:3000  },
+  { label:'Ribera',            type:'Città',     lat:37.4999, lng:13.2674, filterCity:'Ribera',                    mapRadius:2500  },
+  { label:'Niscemi',           type:'Città',     lat:37.1485, lng:14.3872, filterCity:'Niscemi',                   mapRadius:3000  },
+  { label:'Mussomeli',         type:'Città',     lat:37.5785, lng:13.7503, filterCity:'Mussomeli',                 mapRadius:2500  },
+  // ── Strade Palermo ────────────────────────────────────────────────────────────
+  { label:'Via della Libertà, Palermo',       type:'Via',       lat:38.1230, lng:13.3521, filterRadius:700,  mapRadius:700  },
+  { label:'Via Roma, Palermo',                type:'Via',       lat:38.1118, lng:13.3666, filterRadius:700,  mapRadius:700  },
+  { label:'Via Maqueda, Palermo',             type:'Via',       lat:38.1100, lng:13.3600, filterRadius:700,  mapRadius:700  },
+  { label:'Via Notarbartolo, Palermo',        type:'Via',       lat:38.1310, lng:13.3478, filterRadius:700,  mapRadius:700  },
+  { label:'Via Emerico Amari, Palermo',       type:'Via',       lat:38.1190, lng:13.3660, filterRadius:600,  mapRadius:600  },
+  { label:'Via Leonardo da Vinci, Palermo',   type:'Via',       lat:38.1270, lng:13.3450, filterRadius:700,  mapRadius:700  },
+  { label:'Via Perpignano, Palermo',          type:'Via',       lat:38.1050, lng:13.3260, filterRadius:600,  mapRadius:600  },
+  { label:'Via Ausonia, Palermo',             type:'Via',       lat:38.1160, lng:13.3685, filterRadius:600,  mapRadius:600  },
+  { label:'Via Cavour, Palermo',              type:'Via',       lat:38.1155, lng:13.3690, filterRadius:600,  mapRadius:600  },
+  { label:'Via Dante, Palermo',               type:'Via',       lat:38.1195, lng:13.3560, filterRadius:600,  mapRadius:600  },
+  { label:'Via Oreto, Palermo',               type:'Via',       lat:38.1052, lng:13.3578, filterRadius:700,  mapRadius:700  },
+  { label:'Via Ugo La Malfa, Palermo',        type:'Via',       lat:38.1175, lng:13.3365, filterRadius:700,  mapRadius:700  },
+  { label:'Via Resuttana, Palermo',           type:'Via',       lat:38.1355, lng:13.3405, filterRadius:700,  mapRadius:700  },
+  { label:'Via Messina Marine, Palermo',      type:'Via',       lat:38.0950, lng:13.3800, filterRadius:800,  mapRadius:800  },
+  { label:'Via Marchese Ugo, Palermo',        type:'Via',       lat:38.1230, lng:13.3480, filterRadius:600,  mapRadius:600  },
+  { label:'Viale Regione Siciliana, Palermo', type:'Viale',     lat:38.0960, lng:13.3454, filterRadius:1000, mapRadius:1000 },
+  { label:'Viale Lazio, Palermo',             type:'Viale',     lat:38.1092, lng:13.3383, filterRadius:800,  mapRadius:800  },
+  { label:'Corso Calatafimi, Palermo',        type:'Corso',     lat:38.1024, lng:13.3349, filterRadius:900,  mapRadius:900  },
+  { label:'Corso V. Emanuele, Palermo',       type:'Corso',     lat:38.1118, lng:13.3610, filterRadius:800,  mapRadius:800  },
+  { label:'Piazza Politeama, Palermo',        type:'Piazza',    lat:38.1196, lng:13.3564, filterRadius:500,  mapRadius:500  },
+  { label:'Piazza Castelnuovo, Palermo',      type:'Piazza',    lat:38.1200, lng:13.3578, filterRadius:500,  mapRadius:500  },
+  { label:'Piazza Sturzo, Palermo',           type:'Piazza',    lat:38.1158, lng:13.3590, filterRadius:400,  mapRadius:400  },
+  // ── Strade Trapani / provincia TP ─────────────────────────────────────────────
+  { label:'Via Fardella, Trapani',              type:'Via',     lat:37.9830, lng:12.6095, filterRadius:700,  mapRadius:700  },
+  { label:'Corso Vittorio Emanuele, Trapani',   type:'Corso',   lat:37.9695, lng:12.5991, filterRadius:800,  mapRadius:800  },
+  { label:'Via G. B. Fardella, Trapani',        type:'Via',     lat:37.9780, lng:12.6070, filterRadius:600,  mapRadius:600  },
+  { label:'Viale delle Sirene, Marsala',        type:'Viale',   lat:37.8010, lng:12.4340, filterRadius:800,  mapRadius:800  },
+  { label:'Via XI Maggio, Marsala',             type:'Via',     lat:37.7990, lng:12.4390, filterRadius:600,  mapRadius:600  },
+  { label:'Lungomare Mediterraneo, Marsala',    type:'Lungomare', lat:37.7955, lng:12.4270, filterRadius:900, mapRadius:900 },
+  { label:'Lungomare Mazzini, Mazara del Vallo',type:'Lungomare', lat:37.6580, lng:12.5930, filterRadius:900, mapRadius:900 },
+  { label:'Via Castelvetrano, Mazara del Vallo',type:'Via',     lat:37.6510, lng:12.5880, filterRadius:600,  mapRadius:600  },
+  { label:'Corso 6 Aprile, Alcamo',             type:'Corso',   lat:37.9770, lng:13.0250, filterRadius:700,  mapRadius:700  },
+  { label:'Via Alcide De Gasperi, Alcamo',      type:'Via',     lat:37.9800, lng:13.0280, filterRadius:600,  mapRadius:600  },
+  { label:'Piazza Vittorio Veneto, Trapani',    type:'Piazza',  lat:37.9816, lng:12.5985, filterRadius:450,  mapRadius:450  },
+  { label:'Piazza Garibaldi, Castelvetrano',    type:'Piazza',  lat:37.6757, lng:12.7916, filterRadius:400,  mapRadius:400  },
+  { label:'Via Savoia, San Vito Lo Capo',       type:'Via',     lat:38.1759, lng:12.7313, filterRadius:500,  mapRadius:500  },
+  { label:'Via G. Garibaldi, Castellammare del Golfo', type:'Via', lat:38.0290, lng:12.8810, filterRadius:600, mapRadius:600 },
+  // ── Strade Agrigento / provincia AG ───────────────────────────────────────────
+  { label:'Via Atenea, Agrigento',              type:'Via',     lat:37.3115, lng:13.5780, filterRadius:700,  mapRadius:700  },
+  { label:'Viale della Vittoria, Agrigento',    type:'Viale',   lat:37.3085, lng:13.5710, filterRadius:800,  mapRadius:800  },
+  { label:'Via Empedocle, Agrigento',           type:'Via',     lat:37.3060, lng:13.5760, filterRadius:600,  mapRadius:600  },
+  { label:'Lungomare Colombo, Sciacca',         type:'Lungomare', lat:37.5090, lng:13.0700, filterRadius:900, mapRadius:900 },
+  { label:'Viale della Vittoria, Sciacca',      type:'Viale',   lat:37.5080, lng:13.0860, filterRadius:700,  mapRadius:700  },
+  { label:'Via Licata, Sciacca',                type:'Via',     lat:37.5050, lng:13.0820, filterRadius:600,  mapRadius:600  },
+  { label:'Via Roma, Porto Empedocle',          type:'Via',     lat:37.2950, lng:13.5270, filterRadius:600,  mapRadius:600  },
+  { label:'Via Roma, Licata',                   type:'Via',     lat:37.1012, lng:13.9388, filterRadius:600,  mapRadius:600  },
+  { label:'Corso Roma, Licata',                 type:'Corso',   lat:37.1040, lng:13.9350, filterRadius:700,  mapRadius:700  },
+  { label:'Corso Umberto, Canicattì',           type:'Corso',   lat:37.3582, lng:13.8479, filterRadius:700,  mapRadius:700  },
+  { label:'Corso Vittorio Emanuele, Favara',    type:'Corso',   lat:37.3176, lng:13.6613, filterRadius:700,  mapRadius:700  },
+  { label:'Via Palermo, Ribera',                type:'Via',     lat:37.4999, lng:13.2674, filterRadius:600,  mapRadius:600  },
+  // ── Strade Caltanissetta / provincia CL ───────────────────────────────────────
+  { label:'Corso Vittorio Emanuele, Caltanissetta', type:'Corso', lat:37.4920, lng:14.0640, filterRadius:800, mapRadius:800 },
+  { label:'Via Turati, Caltanissetta',          type:'Via',     lat:37.4900, lng:14.0560, filterRadius:600,  mapRadius:600  },
+  { label:'Viale Amedeo, Caltanissetta',        type:'Viale',   lat:37.4940, lng:14.0610, filterRadius:700,  mapRadius:700  },
+  { label:'Corso Vittorio Emanuele, Gela',      type:'Corso',   lat:37.0710, lng:14.2540, filterRadius:800,  mapRadius:800  },
+  { label:'Lungomare Federico II, Gela',        type:'Lungomare', lat:37.0660, lng:14.2580, filterRadius:900, mapRadius:900 },
+  { label:'Via Generale Cascino, Gela',         type:'Via',     lat:37.0740, lng:14.2500, filterRadius:600,  mapRadius:600  },
+  { label:'Corso Vittorio Emanuele, Niscemi',   type:'Corso',   lat:37.1485, lng:14.3872, filterRadius:600,  mapRadius:600  },
+  { label:'Via Roma, Mussomeli',                type:'Via',     lat:37.5785, lng:13.7503, filterRadius:500,  mapRadius:500  },
+  // ── Strade Palermo hinterland ─────────────────────────────────────────────────
+  { label:'Corso Butera, Bagheria',             type:'Corso',   lat:38.0887, lng:13.5117, filterRadius:700,  mapRadius:700  },
+  { label:'Via Consolare, Bagheria',            type:'Via',     lat:38.0865, lng:13.5134, filterRadius:600,  mapRadius:600  },
+  { label:'Corso Pietro Novelli, Monreale',     type:'Corso',   lat:38.0819, lng:13.2930, filterRadius:600,  mapRadius:600  },
+  { label:'Via Aldo Moro, Carini',              type:'Via',     lat:38.1290, lng:13.1900, filterRadius:600,  mapRadius:600  },
+  { label:'Via Roma, Partinico',                type:'Via',     lat:38.0440, lng:13.1110, filterRadius:600,  mapRadius:600  },
+  { label:'Piazza Duomo, Termini Imerese',      type:'Piazza',  lat:37.9847, lng:13.6963, filterRadius:400,  mapRadius:400  },
+  { label:'Via Libertà, Termini Imerese',       type:'Via',     lat:37.9870, lng:13.6940, filterRadius:600,  mapRadius:600  },
+  { label:'Viale Vittorio Veneto, Castelvetrano', type:'Viale', lat:37.6730, lng:12.7885, filterRadius:700,  mapRadius:700  },
+  { label:'Via Roma, Campobello di Mazara',     type:'Via',     lat:37.6380, lng:12.7440, filterRadius:500,  mapRadius:500  },
 ];
 
 const POI_CATEGORIES = [
@@ -2085,21 +2458,164 @@ const POI_COLLECTIONS = [
   { id:'col3', name:'Centri Commerciali PA',   count:4 },
 ];
 
+const POI_MOCK_PLACES = [
+  { key: 'liceo-garibaldi',    label: 'Liceo Classico G. Garibaldi',      category: 'education',     icon: '🏫', lat: 38.1196, lng: 13.3612 },
+  { key: 'unipa-giurisprud',   label: 'Università di Palermo – Giurisprudenza', category: 'education', icon: '🎓', lat: 38.1114, lng: 13.3519 },
+  { key: 'auchan-brancaccio',  label: 'Auchan Brancaccio',                category: 'retail',        icon: '🛒', lat: 38.0978, lng: 13.3765 },
+  { key: 'ikea-palermo',       label: 'IKEA Palermo',                     category: 'retail',        icon: '🛒', lat: 38.1024, lng: 13.2876 },
+  { key: 'teatro-massimo',     label: 'Teatro Massimo',                   category: 'culture',       icon: '🎭', lat: 38.1180, lng: 13.3568 },
+  { key: 'aeroporto-falcone',  label: 'Aeroporto Falcone-Borsellino',     category: 'transport',     icon: '✈️', lat: 38.1759, lng: 13.0910 },
+  { key: 'stazione-centrale',  label: 'Stazione Centrale Palermo',        category: 'transport',     icon: '🚉', lat: 38.1118, lng: 13.3666 },
+  { key: 'foro-italico',       label: 'Foro Italico',                     category: 'sport',         icon: '⚽', lat: 38.1127, lng: 13.3726 },
+  { key: 'policlinico-pa',     label: 'Policlinico di Palermo',           category: 'health',        icon: '🏥', lat: 38.0990, lng: 13.3393 },
+  { key: 'vucciria',           label: 'Mercato della Vucciria',           category: 'food',          icon: '🥩', lat: 38.1157, lng: 13.3665 },
+  { key: 'cc-conca-doro',      label: 'Centro Commerciale Conca d\'Oro',  category: 'retail',        icon: '🛍️', lat: 38.1382, lng: 13.3017 },
+  { key: 'palasport-florio',   label: 'PalaSport Fabrizio De André',      category: 'sport',         icon: '🏟️', lat: 38.1342, lng: 13.3658 },
+  { key: 'zoo-palermo',        label: 'Zoo di Palermo',                   category: 'entertainment', icon: '🦁', lat: 38.1267, lng: 13.3400 },
+  { key: 'orto-botanico',      label: 'Orto Botanico di Palermo',         category: 'culture',       icon: '🌿', lat: 38.1104, lng: 13.3755 },
+];
+
+const POI_CATEGORIES_FULL = [
+  { key: 'scuole',         label: 'Scuole e istituti',     icon: '🏫', mockCount: 24, lat: 38.1150, lng: 13.3600 },
+  { key: 'supermercati',   label: 'Supermercati',          icon: '🛒', mockCount: 18, lat: 38.1100, lng: 13.3500 },
+  { key: 'ospedali',       label: 'Ospedali e cliniche',   icon: '🏥', mockCount: 9,  lat: 38.0990, lng: 13.3393 },
+  { key: 'trasporti',      label: 'Stazioni e trasporti',  icon: '🚉', mockCount: 12, lat: 38.1118, lng: 13.3666 },
+  { key: 'ristorazione',   label: 'Ristoranti e bar',      icon: '🍽️', mockCount: 56, lat: 38.1180, lng: 13.3650 },
+  { key: 'farmacie',       label: 'Farmacie',              icon: '💊', mockCount: 31, lat: 38.1120, lng: 13.3580 },
+  { key: 'palestre',       label: 'Palestre e sport',      icon: '🏋️', mockCount: 14, lat: 38.1200, lng: 13.3520 },
+  { key: 'cc',             label: 'Centri commerciali',    icon: '🛍️', mockCount: 6,  lat: 38.1300, lng: 13.3100 },
+  { key: 'universita',     label: 'Università',            icon: '🎓', mockCount: 5,  lat: 38.1114, lng: 13.3519 },
+  { key: 'cinema',         label: 'Cinema e teatri',       icon: '🎬', mockCount: 8,  lat: 38.1180, lng: 13.3568 },
+  { key: 'parchi',         label: 'Parchi e aree verdi',   icon: '🌳', mockCount: 11, lat: 38.1260, lng: 13.3450 },
+];
+
+const RADIUS_STEPS = {
+  km:   [ {label:'200 m',meters:200}, {label:'500 m',meters:500}, {label:'1 km',meters:1000}, {label:'2 km',meters:2000}, {label:'5 km',meters:5000} ],
+  walk: [ {label:'5 min',meters:400}, {label:'10 min',meters:800}, {label:'15 min',meters:1200}, {label:'20 min',meters:1600} ],
+  bus:  [ {label:'5 min',meters:600}, {label:'10 min',meters:1200}, {label:'20 min',meters:2400}, {label:'30 min',meters:4000} ],
+};
+
+function haversineMeters(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const φ1 = lat1 * Math.PI / 180, φ2 = lat2 * Math.PI / 180;
+  const Δφ = (lat2 - lat1) * Math.PI / 180;
+  const Δλ = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(Δφ/2)**2 + Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// Proietta un punto (lat,lng) sul segmento più vicino di un path OSM.
+// Restituisce le coordinate snappate alla strada reale.
+function nearestPointOnPath(path, lat, lng) {
+  let best = [lat, lng], bestDist = Infinity;
+  for (let i = 0; i < path.length - 1; i++) {
+    const [lat1, lng1] = path[i];
+    const [lat2, lng2] = path[i + 1];
+    const dLat = lat2 - lat1, dLng = lng2 - lng1;
+    const len2 = dLat * dLat + dLng * dLng;
+    if (len2 === 0) continue;
+    const t = Math.max(0, Math.min(1, ((lat - lat1) * dLat + (lng - lng1) * dLng) / len2));
+    const pLat = lat1 + t * dLat, pLng = lng1 + t * dLng;
+    const d = haversineMeters(lat, lng, pLat, pLng);
+    if (d < bestDist) { bestDist = d; best = [pLat, pLng]; }
+  }
+  return best;
+}
+
+// Genera N punti dispersi attorno a un centroide in modo deterministico.
+// Spread: distanza massima dal centroide in metri (default 2500m).
+function generateMockPoints(centerLat, centerLng, count, seed, spreadMeters = 2500) {
+  const points = [];
+  let s = (seed * 1664525 + 1013904223) >>> 0;
+  const rand = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 0x100000000; };
+  for (let i = 0; i < count; i++) {
+    const angle = rand() * 2 * Math.PI;
+    const dist  = Math.sqrt(rand()) * spreadMeters; // distribuzione radiale uniforme
+    const dlat  = (dist * Math.cos(angle)) / 111320;
+    const dlng  = (dist * Math.sin(angle)) / (111320 * Math.cos(centerLat * Math.PI / 180));
+    points.push({ lat: centerLat + dlat, lng: centerLng + dlng });
+  }
+  return points;
+}
+
+// ── Geocoding utilities (Photon + Overpass) ──────────────────────────────────
+// Photon: OSM-based autocomplete, free, no API key, Italian support.
+// Bounded to Sicily + provinces: minLng,minLat,maxLng,maxLat
+const PHOTON_BBOX = '11.8,36.4,15.2,38.5';
+
+// Map a Photon GeoJSON feature to our internal zone shape.
+function photonFeatureToZone(feat) {
+  const p = feat.properties;
+  const [lng, lat] = feat.geometry.coordinates;
+  if (!p.name || !lat || !lng) return null;
+  const t = (p.osm_value || '').toLowerCase();
+  const isCity = ['city', 'town', 'village', 'municipality'].includes(t)
+              || p.type === 'city';
+  if (isCity) {
+    return { label: p.name, type: 'Città', lat, lng,
+             filterCity: p.name, mapRadius: 8000 };
+  }
+  // Street / square / district — filterStreet drives exact address matching
+  const cityPart = p.city || p.county || '';
+  const streetLabel = cityPart ? `${p.name}, ${cityPart}` : p.name;
+  return { label: streetLabel, type: 'Via', lat, lng,
+           filterStreet: p.name,
+           filterCity: cityPart || null,
+           mapRadius: 700 };
+}
+
+// Returns up to `limit` zone suggestions from Photon, or [] on error.
+async function photonSuggest(query, limit = 7) {
+  try {
+    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lang=it&limit=${limit}&bbox=${PHOTON_BBOX}`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const seen = new Set();
+    return (data.features || [])
+      .map(photonFeatureToZone)
+      .filter(z => { if (!z || seen.has(z.label)) return false; seen.add(z.label); return true; });
+  } catch { return []; }
+}
+
+// Overpass API: real OSM POI nodes within a bounding box.
+const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+
+const POI_OVERPASS_MAP = {
+  scuole:       '["amenity"~"^(school|kindergarten)$"]',
+  supermercati: '["shop"~"^(supermarket|convenience)$"]',
+  ospedali:     '["amenity"~"^(hospital|clinic|doctors)$"]',
+  trasporti:    '["public_transport"~"^(station|stop_position)$"]',
+  ristorazione: '["amenity"~"^(restaurant|bar|cafe|fast_food)$"]',
+  farmacie:     '["amenity"="pharmacy"]',
+  palestre:     '["leisure"~"^(fitness_centre|sports_centre)$"]',
+  cc:           '["shop"="mall"]',
+  universita:   '["amenity"~"^(university|college)$"]',
+  cinema:       '["amenity"~"^(cinema|theatre)$"]',
+  parchi:       '["leisure"~"^(park|garden)$"]',
+};
+
+// Fetches OSM nodes matching `tag` within `bounds` {south,west,north,east}.
+// Returns [{lat,lng}] or [] on error/timeout.
+async function overpassFetch(tag, bounds) {
+  const bbox = `${bounds.south},${bounds.west},${bounds.north},${bounds.east}`;
+  const body = `[out:json][timeout:15];(node${tag}(${bbox}););out body;`;
+  try {
+    const res = await fetch(OVERPASS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `data=${encodeURIComponent(body)}`,
+      signal: AbortSignal.timeout(15000),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.elements || []).map(el => ({ lat: el.lat, lng: el.lon }));
+  } catch { return []; }
+}
+
 // ══════════════════════════════════════════════════════
 // SMALL COMPONENTS
 // ══════════════════════════════════════════════════════
-
-function GravityLogo({ height = 28 }) {
-  return React.createElement('img', {
-    src: '../../brand/Gravity_mark.svg',
-    alt: 'Gravity',
-    style: { height, width: 'auto', display: 'block' },
-    onError: (e) => {
-      e.target.style.display = 'none';
-      e.target.parentElement.innerHTML += '<span style="color:#fff;font-weight:700;font-size:18px;letter-spacing:-1px">G</span>';
-    },
-  });
-}
 
 function CategoryTag({ category }) {
   const s = CAT_STYLE[category] || {};
@@ -2472,13 +2988,16 @@ function PlanningsList({ onSelect, onNew, stateOverrides }) {
     // 9. Spazi — ordinabile numericamente
     {
       title: 'Spazi',
-      dataIndex: 'faces',
+      key: 'faces',
       width: 72,
       align: 'center',
-      sorter: (a, b) => a.faces - b.faces,
-      render: v => v > 0
-        ? React.createElement(Tag, { style:{ background:'#F0EAFF', color:'#3E00FB', border:'1px solid #D3B8FF', fontWeight: 600, fontSize: 12, margin: 0 } }, v)
-        : React.createElement('span', { style:{ color:'rgba(0,0,0,0.2)', fontSize: 13 } }, '—'),
+      sorter: (a, b) => (a.faceObjs||[]).length - (b.faceObjs||[]).length,
+      render: (_, r) => {
+        const n = (r.faceObjs||[]).length;
+        return n > 0
+          ? React.createElement(Tag, { style:{ background:'#F0EAFF', color:'#3E00FB', border:'1px solid #D3B8FF', fontWeight: 600, fontSize: 12, margin: 0 } }, n)
+          : React.createElement('span', { style:{ color:'rgba(0,0,0,0.2)', fontSize: 13 } }, '—');
+      },
     },
     // 9. Azioni
     {
@@ -2880,11 +3399,11 @@ function DetailListView() {
               React.createElement(Text, { strong: true, style: { fontSize: 13 } }, s.name),
             ),
             React.createElement(Text, { type: 'secondary', style: { fontSize: 12, display: 'block', marginTop: 1 } },
-              `${s.address}, ${s.city}  ·  Cimasa: ${s.cimasa}  ·  Account N°: ${s.account}`
+              `${s.address}, ${s.city}  ·  Codice: ${s.code}`
             )
           ),
           React.createElement(Tag, { style: { background: '#F0EAFF', color: '#3E00FB', border: '1px solid #D3B8FF', fontSize: 12, flexShrink: 0 } },
-            `${s.faces} ${s.faces === 1 ? 'faccia' : 'facce'} selezionate`
+            `${(s.faceObjs||[]).length} ${(s.faceObjs||[]).length === 1 ? 'faccia' : 'facce'} selezionate`
           ),
         ),
         // Expanded detail
@@ -2898,7 +3417,7 @@ function DetailListView() {
               )
             ),
             React.createElement('tbody', null,
-              ...Array.from({ length: s.faces }, (_, fi) =>
+              ...Array.from({ length: (s.faceObjs||[]).length }, (_, fi) =>
                 React.createElement('tr', { key: fi },
                   React.createElement('td', null,
                     React.createElement(Tag, { style: { background: '#E6F7FF', color: '#1677FF', border: '1px solid #91D5FF', fontSize: 11, marginRight: 0 } }, 'Schermo front.')
@@ -3414,16 +3933,6 @@ const ZONE_TREE = [
   ]},
 ];
 
-// Controlla se un sistema soddisfa il filtro zone (OR: almeno un match)
-function sysMatchesZones(sys, selectedZones) {
-  if (selectedZones.length === 0) return true;
-  return selectedZones.some(z => {
-    if (z === sys.province) return true;           // codice provincia, es. 'PA'
-    if (z === sys.city) return true;               // nome città, es. 'Palermo'
-    const nhCity = ZONE_CITY_MAP[z];               // quartiere → città
-    return nhCity && nhCity === sys.city;
-  });
-}
 
 function FilterPanel({
   visibleStates, onVisibleStatesChange,
@@ -3630,134 +4139,11 @@ function FilterPanel({
 }
 
 // ══════════════════════════════════════════════════════
-// POI PANEL
-// ══════════════════════════════════════════════════════
-
-function POIPanel() {
-  const [poiQuery, setPoiQuery]             = useState('');
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [radius, setRadius]                 = useState(500);
-  const [selectedCollections, setSelectedCollections] = useState([]);
-
-  const toggleCat = (key) => setSelectedCategories(prev =>
-    prev.includes(key) ? prev.filter(x => x !== key) : [...prev, key]
-  );
-  const toggleCol = (id) => setSelectedCollections(prev =>
-    prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
-  );
-
-  return React.createElement(React.Fragment, null,
-
-    // Ricerca libera
-    React.createElement('div', { className: 'filter-section' },
-      React.createElement('div', { className: 'filter-section-label' }, 'Cerca un POI'),
-      React.createElement(Input, {
-        placeholder: 'Es. McDonald\'s, Università, Farmacia…',
-        prefix: React.createElement(SearchOutlined, { style: { color: 'rgba(0,0,0,0.35)' } }),
-        value: poiQuery,
-        onChange: e => setPoiQuery(e.target.value),
-        allowClear: true,
-      })
-    ),
-
-    // Categorie rapide
-    React.createElement('div', { className: 'filter-section' },
-      React.createElement('div', { className: 'filter-section-label' }, 'Categorie rapide'),
-      React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 4 } },
-        ...POI_CATEGORIES.map(cat =>
-          React.createElement('span', {
-            key: cat.key,
-            className: 'filter-chip' + (selectedCategories.includes(cat.key) ? ' selected' : ''),
-            onClick: () => toggleCat(cat.key),
-          }, cat.label)
-        )
-      )
-    ),
-
-    // Raggio
-    React.createElement('div', { className: 'filter-section' },
-      React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 } },
-        React.createElement('div', { className: 'filter-section-label', style: { marginBottom: 0 } }, 'Raggio di ricerca'),
-        React.createElement(Tag, { style: { fontSize: 12, fontWeight: 600 } }, `${radius} m`)
-      ),
-      React.createElement(Slider, {
-        min: 100, max: 2000, step: 100,
-        value: radius,
-        onChange: setRadius,
-        marks: { 100: '100m', 500: '500m', 1000: '1km', 2000: '2km' },
-        tooltip: { formatter: v => `${v} m` },
-      })
-    ),
-
-    // Collezioni
-    React.createElement('div', { className: 'filter-section' },
-      React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 } },
-        React.createElement('div', { className: 'filter-section-label', style: { marginBottom: 0 } }, 'Le mie collezioni'),
-        React.createElement(Button, {
-          type: 'link', size: 'small',
-          icon: React.createElement(PlusOutlined),
-          style: { padding: 0, fontSize: 12 },
-        }, 'Nuova collezione')
-      ),
-      ...POI_COLLECTIONS.map(col =>
-        React.createElement('div', {
-          key: col.id,
-          className: 'filter-checkbox-item',
-          onClick: () => toggleCol(col.id),
-        },
-          React.createElement('div', {
-            className: 'filter-checkbox' + (selectedCollections.includes(col.id) ? ' checked' : ''),
-          },
-            selectedCollections.includes(col.id) && React.createElement(CheckOutlined, { style: { fontSize: 9, color: '#fff' } })
-          ),
-          React.createElement('span', { style: { flex: 1 } }, col.name),
-          React.createElement(Tag, { style: { fontSize: 11, margin: 0 } }, `${col.count} punti`)
-        )
-      ),
-      React.createElement('div', {
-        style: { marginTop: 12, padding: '10px 12px', background: '#F9F0FF', borderRadius: 6, border: '1px dashed #D3ADF7' }
-      },
-        React.createElement(Text, { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)' } },
-          'Seleziona una o più categorie o collezioni, imposta il raggio e clicca "Applica POI" per vedere gli impianti nelle vicinanze.'
-        )
-      )
-    ),
-
-    // Zone — TreeSelect compatto
-    React.createElement('div', { className: 'filter-section' },
-      React.createElement('div', { className: 'filter-section-label' }, 'Zone'),
-      React.createElement(TreeSelect, {
-        style: { width: '100%' },
-        treeCheckable: true,
-        treeCheckStrictly: true,
-        showSearch: true,
-        allowClear: true,
-        placeholder: 'Province, città o quartieri…',
-        maxTagCount: 'responsive',
-        treeData: ZONE_TREE.map(prov => ({
-          title: `${prov.label} (${prov.code})`,
-          value: prov.code,
-          children: prov.cities.map(city => ({
-            title: city.label,
-            value: city.label,
-            children: city.neighborhoods.length > 0
-              ? city.neighborhoods.map(nh => ({ title: nh, value: nh }))
-              : undefined,
-          })),
-        })),
-        value: selectedZones,
-        onChange: (vals) => onSelectedZonesChange(vals || []),
-      })
-    )
-  );
-}
-
-// ══════════════════════════════════════════════════════
 // SELECT SYSTEMS
 // ══════════════════════════════════════════════════════
 
 // ── Brief Sidebar (Variant B) ────────────────────────────
-function PlanningHeaderNR({ planning, onBack, readOnly }) {
+function PlanningHeaderNR({ planning, onBack, readOnly, notMine }) {
   const { Popover, Divider: AntDivider } = antd;
   const { Text, Title } = Typography;
   const [allegata, setAllegata] = useState(planning.state === 'In trattativa');
@@ -3817,18 +4203,25 @@ function PlanningHeaderNR({ planning, onBack, readOnly }) {
         ),
         React.createElement(CategoryTag, { category: planning.category }),
       ),
-      React.createElement(Space, { size: 8 },
-        React.createElement(Button, { size: 'large', icon: React.createElement(ShareAltOutlined) }, 'Condividi'),
-        allegata
-          ? React.createElement(Popover, {
-              content: popoverContent,
-              trigger: 'click',
-              placement: 'bottomRight',
-              open: popoverOpen,
-              onOpenChange: setPopoverOpen,
-            }, alleataButton)
-          : alleataButton,
-      ),
+      notMine
+        ? React.createElement(Space, { size: 8 },
+            React.createElement(Button, {
+              size: 'large',
+              icon: React.createElement(CopyOutlined),
+            }, 'Duplica'),
+          )
+        : React.createElement(Space, { size: 8 },
+            React.createElement(Button, { size: 'large', icon: React.createElement(ShareAltOutlined) }, 'Condividi'),
+            allegata
+              ? React.createElement(Popover, {
+                  content: popoverContent,
+                  trigger: 'click',
+                  placement: 'bottomRight',
+                  open: popoverOpen,
+                  onOpenChange: setPopoverOpen,
+                }, alleataButton)
+              : alleataButton,
+          ),
     ),
   );
 }
@@ -4072,9 +4465,9 @@ function KpiModal({ goal, category, open, onClose, faceCount, budget }) {
   );
 }
 
-function BriefPanelNR({ planning, onToggle, selectedFaceIds }) {
+function BriefPanelNR({ planning, selectedFaceIds }) {
   const { Progress } = antd;
-  const { UserOutlined, EuroOutlined, AimOutlined, LeftOutlined, TeamOutlined } = icons;
+  const { UserOutlined, EuroOutlined, AimOutlined, TeamOutlined } = icons;
   const [kpiOpen, setKpiOpen] = useState(false);
   const [audienceOpen, setAudienceOpen] = useState(false);
 
@@ -4159,18 +4552,13 @@ function BriefPanelNR({ planning, onToggle, selectedFaceIds }) {
       body: React.createElement(MiniCalendar, { start: planning.start, end: planning.end, planning }),
     }),
 
-    // Pulsante chiudi
-    React.createElement('div', { className: 'bpn-footer' },
-      React.createElement('button', { className: 'bpn-toggle-btn', onClick: onToggle },
-        React.createElement(LeftOutlined, { style: { fontSize: 10 } }),
-        'Nascondi brief'
-      )
-    )
   );
 }
 
 function SelectSystems({ planning, onBack, onApply }) {
-  const readOnly = planning.state === 'Completata';
+  const notMine  = !!(planning.assignee && planning.assignee !== 'gloria');
+  const readOnly = planning.state === 'Completata' || notMine;
+  const [bannerDismissed, setBannerDismissed] = useState(false);
   const [searchQuery, setSearchQuery]           = useState('');
   const [showSuggestions, setShowSuggestions]   = useState(false);
   const [selectedFaceIds, setSelectedFaceIds]   = useState(() => new Set(planning.selectedFaces || []));
@@ -4181,12 +4569,11 @@ function SelectSystems({ planning, onBack, onApply }) {
   const [panelTab, setPanelTab]                 = useState(readOnly ? 'selected' : 'results');
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [poiDrawerOpen, setPoiDrawerOpen]       = useState(false);
-  const [visibleStates, setVisibleStates]       = useState(['Available']);
+  const [visibleStates, setVisibleStates]       = useState(['Available', 'In Option', 'Reserved']);
   const channelAllTypes = planning.category === 'DOOH' ? DOOH_ALL_TYPES : OOH_ALL_TYPES;
   const channelTypesFlat = Object.values(channelAllTypes).flat();
   const [selectedTypes, setSelectedTypes]       = useState(channelTypesFlat);
-  const defaultModels = planning.category === 'DOOH' ? [] : (parsePlanningDates(planning).days >= LONG_TERM_THRESHOLD ? ['Lungo termine'] : ['Standard']);
-  const [selectedModels, setSelectedModels]     = useState(defaultModels);
+  const [selectedModels, setSelectedModels]     = useState([]);
   const [selectedIllumination, setSelectedIllumination] = useState([]);
   const [minFacesEnabled, setMinFacesEnabled]   = useState(false);
   const [minFacesValue, setMinFacesValue]       = useState(2);
@@ -4194,39 +4581,115 @@ function SelectSystems({ planning, onBack, onApply }) {
   const [selectedFormats, setSelectedFormats]     = useState([]);
   const [maxPriceEnabled, setMaxPriceEnabled]     = useState(false);
   const [maxPriceValue, setMaxPriceValue]         = useState(300);
-  const [showOnlySelected, setShowOnlySelected]   = useState(!!(planning.selectedFaces && planning.selectedFaces.length > 0));
-  const [showBrief, setShowBrief]                 = useState(true);
+  const [showOnlySelected, setShowOnlySelected]   = useState(false);
+  const [fullscreen, setFullscreen]               = useState(false);
+  const [fsFlashing, setFsFlashing]               = useState(false);
+  const [searchMode, setSearchMode]               = useState('zona');
 
-  // Conteggio filtri attivi (esclude stato commerciale, gestito visivamente a parte)
-  const activeFilterCount = [
-    selectedTypes.length !== channelTypesFlat.length,
-    selectedIllumination.length > 0 && selectedIllumination.length < 2,
-    selectedModels.join() !== defaultModels.join(),
-    minFacesEnabled,
-    selectedFormats.length > 0,
-    maxPriceEnabled,
-  ].filter(Boolean).length;
+  const toggleFullscreen = () => {
+    setFsFlashing(true);
+    setTimeout(() => setFsFlashing(false), 500);
+    setFullscreen(v => !v);
+  };
+  const [poiQuery, setPoiQuery]                   = useState('');
+  const [showPoiSuggestions, setShowPoiSuggestions] = useState(false);
+  const [poiRadiusUnit, setPoiRadiusUnit]         = useState('km');
+  const [poiRadiusIdx, setPoiRadiusIdx]           = useState(1); // default 500m
+  const [poiRadiusVisible, setPoiRadiusVisible]   = useState(false);
+  const [activePois, setActivePois]               = useState([]);
+  const poiCirclesRef                             = React.useRef([]);
+  const zoneHighlightRef                          = React.useRef([]);
+
+  // ── POI helpers ───────────────────────────────────────────
+  const [poiSuggestions, setPoiSuggestions] = useState([]);
+
+  React.useEffect(() => {
+    if (searchMode !== 'poi') { setPoiSuggestions([]); return; }
+    const q = poiQuery.trim().toLowerCase();
+    // Categories: instant local filter
+    const cats = q.length === 0
+      ? POI_CATEGORIES_FULL.slice(0, 6)
+      : POI_CATEGORIES_FULL.filter(c => c.label.toLowerCase().includes(q));
+    const catItems = cats.map(c => ({ ...c, resultType: 'category' }));
+    // Places: show static immediately, then Photon
+    const staticPlaces = q.length >= 2
+      ? POI_MOCK_PLACES.filter(p => p.label.toLowerCase().includes(q)).map(p => ({ ...p, resultType: 'place' }))
+      : [];
+    setPoiSuggestions([...catItems, ...staticPlaces].slice(0, 9));
+    if (q.length < 2) return;
+    clearTimeout(poiSuggestRef.current);
+    poiSuggestRef.current = setTimeout(async () => {
+      const hits = await photonSuggest(q, 5);
+      const photonPlaces = hits.map(h => ({
+        key:        h.label,
+        label:      h.label,
+        icon:       '📍',
+        lat:        h.lat,
+        lng:        h.lng,
+        mockCount:  1,
+        resultType: 'place',
+      }));
+      setPoiSuggestions(prev => {
+        const keys = new Set(prev.map(x => x.key));
+        const fresh = photonPlaces.filter(x => !keys.has(x.key));
+        return [...prev, ...fresh].slice(0, 9);
+      });
+    }, 400);
+    return () => clearTimeout(poiSuggestRef.current);
+  }, [searchMode, poiQuery]);
+
+  const selectPoi = async (item) => {
+    const steps   = RADIUS_STEPS[poiRadiusUnit];
+    const safeIdx = Math.min(poiRadiusIdx, steps.length - 1);
+    let points;
+    if (item.resultType === 'category') {
+      // Try real OSM nodes from Overpass within current map bounds
+      const overpassTag = POI_OVERPASS_MAP[item.key];
+      if (overpassTag && leafletMapRef.current) {
+        const b = leafletMapRef.current.getBounds();
+        const realPoints = await overpassFetch(overpassTag, {
+          south: b.getSouth(), west: b.getWest(),
+          north: b.getNorth(), east: b.getEast(),
+        });
+        if (realPoints.length > 0) {
+          points = realPoints;
+        }
+      }
+      if (!points) {
+        // Fallback: deterministic mock points
+        const seed = item.key.split('').reduce((acc, c) => acc * 31 + c.charCodeAt(0), 0);
+        points = generateMockPoints(item.lat, item.lng, item.mockCount, seed);
+      }
+    } else {
+      // Specific place → single exact point
+      points = [{ lat: item.lat, lng: item.lng }];
+    }
+    setActivePois(prev => [...prev, {
+      id: `poi-${Date.now()}`,
+      label: item.label,
+      icon: item.icon,
+      lat: item.lat,   // centroide (per label e drawer)
+      lng: item.lng,
+      points,          // array di tutti i punti individuali
+      radiusLabel: steps[safeIdx].label,
+      meters: steps[safeIdx].meters,
+      isCategory: item.resultType === 'category',
+      mockCount: item.mockCount,
+    }]);
+    setPoiQuery(item.label);
+    setShowPoiSuggestions(false);
+  };
+
+  const removePoi = (id) => setActivePois(prev => prev.filter(p => p.id !== id));
 
   const resetFilters = () => {
     setSelectedTypes(channelTypesFlat);
-    setSelectedModels(defaultModels);
+    setSelectedModels([]);
     setSelectedIllumination([]);
     setMinFacesEnabled(false);
-    setVisibleStates(['Available']);
+    setVisibleStates(['Available', 'In Option', 'Reserved']);
     setSelectedFormats([]);
     setMaxPriceEnabled(false);
-  };
-
-  // Helper: sistema soddisfa filtro illuminazione
-  const sysMatchesIllumination = (r) => {
-    if (selectedIllumination.length === 0 || selectedIllumination.length >= 2) return true;
-    const wantIllum = selectedIllumination.includes('Illuminate');
-    return (r.faceObjs || []).some(f => f.illuminated === wantIllum);
-  };
-  // Helper: prezzo minimo faccia disponibile
-  const sysMinFacePrice = (r) => {
-    const prices = (r.faceObjs || []).filter(f => f.state !== 'Reserved').map(f => f.price);
-    return prices.length ? Math.min(...prices) : Infinity;
   };
 
   // ── Label system ─────────────────────────────────────────
@@ -4378,14 +4841,25 @@ function SelectSystems({ planning, onBack, onApply }) {
     return ids;
   }, [selectedFaceIds]);
 
-  const mapContainerRef = React.useRef(null);
-  const leafletMapRef   = React.useRef(null);
-  const clusterGroupRef = React.useRef(null);
+  const mapContainerRef    = React.useRef(null);
+  const leafletMapRef      = React.useRef(null);
+  const clusterGroupRef    = React.useRef(null);
+  const poiSuggestRef      = React.useRef(null); // debounce timer for POI autocomplete
 
+  // ── Zone autocomplete (statico, ricerca su GEO_SUGGESTIONS) ─────────────────
+  // Usiamo la lista statica perché i nomi delle strade devono corrispondere
+  // esattamente a quelli nel modello dati (sys.address). Photon restituisce
+  // nomi OSM che possono differire (es. "Via Giuseppe Notarbartolo" vs "Via Notarbartolo").
+  const [suggestions, setSuggestions] = useState([]);
 
-  const suggestions = searchQuery.length >= 2
-    ? GEO_SUGGESTIONS.filter(s => s.label.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 6)
-    : [];
+  React.useEffect(() => {
+    if (searchMode !== 'zona' || searchQuery.length < 2) { setSuggestions([]); return; }
+    setSuggestions(
+      GEO_SUGGESTIONS
+        .filter(s => s.label.toLowerCase().includes(searchQuery.toLowerCase()))
+        .slice(0, 8)
+    );
+  }, [searchQuery, searchMode]);
 
   const flyTo = (lat, lng, zoom) => {
     if (leafletMapRef.current) leafletMapRef.current.flyTo([lat, lng], zoom || 15, { duration: 0.8 });
@@ -4395,52 +4869,47 @@ function SelectSystems({ planning, onBack, onApply }) {
   const resetMapView = () => {
     const map = leafletMapRef.current;
     if (!map) return;
-    const zones = planning.briefZones || [];
     const PAD = 40;
-    const pan = () => map.panBy([210, 0], { animate: true });
-    if (zones.length === 0) {
-      map.flyToBounds(L.latLngBounds(PLANNER.areaBounds), { padding: [PAD, PAD], duration: 0.8 });
-      pan();
-    } else if (zones.length === 1) {
-      map.flyTo([zones[0].lat, zones[0].lng], zones[0].zoom || 14, { duration: 0.8 });
-      pan();
-    } else {
-      map.flyToBounds(L.latLngBounds(zones.map(z => [z.lat, z.lng])), { padding: [PAD, PAD], maxZoom: 15, duration: 0.8 });
-      pan();
+    const coords = SEARCH_RESULTS.filter(r => r.lat && r.lng).map(r => [r.lat, r.lng]);
+    if (coords.length > 0) {
+      map.flyToBounds(L.latLngBounds(coords), { padding: [PAD, PAD], maxZoom: 13, duration: 0.8 });
+      map.panBy([210, 0], { animate: true });
     }
   };
 
   const makeIcon = (sys, isSelected, isHovered, isFocused, hasFocus) => {
-    const zoom   = leafletMapRef.current ? leafletMapRef.current.getZoom() : 14;
-    let [w, h]   = getMarkerSize(zoom);
-    if (isFocused) { w = Math.round(w * 1.3); h = Math.round(h * 1.3); }
-    const opacity = isFocused ? 1
-      : hasFocus   ? 0.2
-      : isSelected ? 1
-      : isHovered  ? 0.95
-      : 0.85;
-    const filter = hasFocus && !isFocused
-      ? 'none'
-      : isSelected
-        ? 'drop-shadow(0 2px 6px rgba(62,0,251,0.45)) drop-shadow(0 1px 3px rgba(0,0,0,0.3))'
-        : isHovered
-          ? 'drop-shadow(0 2px 5px rgba(0,0,0,0.35))'
-          : 'drop-shadow(0 1px 3px rgba(0,0,0,0.22))';
-    const badge = isSelected
-      ? `<div style="position:absolute;top:-3px;right:-3px;width:10px;height:10px;background:#3E00FB;border-radius:50%;border:1.5px solid #fff;"></div>`
-      : '';
-    const ring = '';
+    const zoom = leafletMapRef.current ? leafletMapRef.current.getZoom() : 14;
+    let [w, h] = getMarkerSize(zoom);
+    if (isFocused)      { w = Math.round(w * 1.35); h = Math.round(h * 1.35); }
+    else if (isHovered) { w = Math.round(w * 1.12); h = Math.round(h * 1.12); }
+
+    const dimmed  = hasFocus && !isFocused && !isSelected;
+    const opacity = dimmed ? 0.18 : 1;
+
+    // Colore principale: stato commerciale > canale
+    const fill = isSelected
+      ? '#3E00FB'
+      : sys.state === 'Reserved'  ? '#BFBFBF'
+      : sys.state === 'In Option' ? '#FA8C16'
+      : sys.channel === 'DOOH'    ? '#1677FF'
+      : '#3E00FB';
+
+    const strokeColor = isSelected ? 'white' : 'rgba(255,255,255,0.75)';
+    const strokeW     = isSelected ? 2.5 : 1.5;
+
+    // Goccia: cerchio in cima + coda che converge in punta (y=32 = coordinata esatta)
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 32" width="${w}" height="${h}" style="display:block;overflow:visible">
+      <path d="M12 2 C6.8 2 2.5 6.4 2.5 11.5 C2.5 18.8 12 32 12 32 C12 32 21.5 18.8 21.5 11.5 C21.5 6.4 17.2 2 12 2 Z"
+            fill="${fill}" stroke="${strokeColor}" stroke-width="${strokeW}" opacity="${opacity}"/>
+      <circle cx="12" cy="11" r="4.2" fill="rgba(255,255,255,0.88)" opacity="${opacity}"/>
+    </svg>`;
+
     return L.divIcon({
-      html: `<div style="position:relative;width:${w}px;height:${h}px">
-        ${ring}
-        <img src="${markerSrc(sys.type, sys.state)}"
-             style="width:${w}px;height:${h}px;display:block;filter:${filter};opacity:${opacity}"/>
-        ${badge}
-      </div>`,
-      className: '',
+      html:          svg,
+      className:     '',
       iconSize:      [w, h],
       iconAnchor:    [w / 2, h],
-      tooltipAnchor: [0, -h],
+      tooltipAnchor: [0, -h + 4],
     });
   };
 
@@ -4503,23 +4972,12 @@ function SelectSystems({ planning, onBack, onApply }) {
 
     map.addLayer(cluster);
 
-    // Inquadratura iniziale basata sul brief.
-    // La sidebar (420px) copre la destra: dopo fitBounds spostiamo il contenuto
-    // a sinistra di metà sidebar con panBy([+210, 0]) così risulta centrato
-    // nella porzione visibile.
-    const zones = planning.briefZones || [];
+    // Inquadratura iniziale: mostra tutti gli impianti nel DB
     const PAD = 40;
-    const pan = () => map.panBy([210, 0], { animate: false });
-    if (zones.length === 0) {
-      map.fitBounds(L.latLngBounds(PLANNER.areaBounds), { padding: [PAD, PAD] });
-      pan();
-    } else if (zones.length === 1) {
-      map.setView([zones[0].lat, zones[0].lng], zones[0].zoom || 14);
-      pan();
-    } else {
-      const bounds = L.latLngBounds(zones.map(z => [z.lat, z.lng]));
-      map.fitBounds(bounds, { padding: [PAD, PAD], maxZoom: 15 });
-      pan();
+    const coords = SEARCH_RESULTS.filter(r => r.lat && r.lng).map(r => [r.lat, r.lng]);
+    if (coords.length > 0) {
+      map.fitBounds(L.latLngBounds(coords), { padding: [PAD, PAD], maxZoom: 13 });
+      map.panBy([210, 0], { animate: false });
     }
 
     map.on('click', () => setFocusedId(null));
@@ -4530,35 +4988,102 @@ function SelectSystems({ planning, onBack, onApply }) {
     return () => { map.remove(); leafletMapRef.current = null; clusterGroupRef.current = null; };
   }, []);
 
+  // ── POI circles ──────────────────────────────────────────
+  // Per ogni POI attivo: disegna 1 cerchio + 1 marker per ogni punto individuale.
+  // Disegna cerchi semitrasparenti sulle zone selezionate
+  React.useEffect(() => {
+    const map = leafletMapRef.current;
+    if (!map) return;
+    zoneHighlightRef.current.forEach(l => map.removeLayer(l));
+    zoneHighlightRef.current = [];
+    selectedZones.forEach(z => {
+      const r = z.mapRadius;
+      if (!r || !z.lat || !z.lng) return;
+      if (z.type !== 'Città' && z.type !== 'Provincia') return;
+      const circle = L.circle([z.lat, z.lng], {
+        radius: r,
+        color: 'rgba(0,0,0,0.3)', opacity: 1, weight: 1,
+        fill: false,
+      }).addTo(map);
+      zoneHighlightRef.current.push(circle);
+    });
+  }, [selectedZones]);
+
+  // Le categorie (es. "Supermercati") hanno N punti → N cerchi + N marker.
+  // I luoghi specifici hanno 1 punto → 1 cerchio + 1 marker.
+  React.useEffect(() => {
+    const map = leafletMapRef.current;
+    if (!map) return;
+    poiCirclesRef.current.forEach(layer => map.removeLayer(layer));
+    poiCirclesRef.current = [];
+
+    activePois.forEach(poi => {
+      const pts = poi.points || [{ lat: poi.lat, lng: poi.lng }];
+      const isMulti = pts.length > 1;
+
+      pts.forEach((pt, idx) => {
+        // 1. Cerchio centrato sul punto
+        const circle = L.circle([pt.lat, pt.lng], {
+          radius: poi.meters,
+          color: '#3E00FB',
+          opacity: 0.22,
+          fillColor: '#3E00FB',
+          fillOpacity: 0.04,
+          weight: 1,
+        }).addTo(map);
+
+        // 2. Marker sul punto
+        const size  = isMulti ? 18 : 26;
+        const fsize = isMulti ? 10 : 14;
+        const markerHtml = `
+          <div style="
+            width:${size}px; height:${size}px; border-radius:50%;
+            background:rgba(255,255,255,0.9); border:1.5px solid rgba(62,0,251,0.5);
+            display:flex; align-items:center; justify-content:center;
+            font-size:${fsize}px; line-height:1;
+            box-shadow:0 1px 3px rgba(0,0,0,0.12);
+          ">${poi.icon}</div>`;
+
+        const marker = L.marker([pt.lat, pt.lng], {
+          icon: L.divIcon({
+            html: markerHtml,
+            className: '',
+            iconSize:   [size, size],
+            iconAnchor: [size / 2, size / 2],
+          }),
+          zIndexOffset: 2000,
+        }).bindTooltip(
+          isMulti
+            ? `<b>${poi.label}</b> <span style="color:rgba(0,0,0,0.45)">#${idx + 1} / ${pts.length}</span><br><span style="opacity:0.65">Raggio: ${poi.radiusLabel}</span>`
+            : `<b>${poi.label}</b><br><span style="opacity:0.65">Raggio: ${poi.radiusLabel}</span>`,
+          { direction: 'top', className: 'ss-leaflet-tooltip', offset: [0, -(size / 2 + 2)] }
+        ).addTo(map);
+
+        poiCirclesRef.current.push(circle, marker);
+      });
+    });
+  }, [activePois]);
+
   // Update markers on state change
   React.useEffect(() => {
     const cluster = clusterGroupRef.current;
     if (!cluster) return;
     cluster.clearLayers();
 
-    const visible = SEARCH_RESULTS.filter(r => {
-      if (r.channel !== planning.category) return false;
-      if (showOnlySelected && !selectedSystemIds.has(r.id)) return false;
-      if (!visibleStates.includes(r.state)) return false;
-      if (selectedTypes.length !== channelTypesFlat.length && !selectedTypes.includes(r.type)) return false;
-      if (selectedModels.length > 0 && !selectedModels.map(m => MODEL_FILTER_MAP[m]).includes(r.saleModel)) return false;
-      if (minFacesEnabled && r.faces < minFacesValue) return false;
-      if (!sysMatchesIllumination(r)) return false;
-      if (maxPriceEnabled && sysMinFacePrice(r) > maxPriceValue) return false;
-      return true;
-    });
+    const visible = SEARCH_RESULTS.filter(r => r.channel === planning.category);
     const hasFocus = !!focusedId;
     visible.forEach(sys => {
       if (!sys.lat || !sys.lng) return;
       const isSel = selectedSystemIds.has(sys.id);
       const isHov = hoveredId === sys.id;
       const isFoc = focusedId === sys.id;
-      const marker = L.marker([sys.lat, sys.lng], {
+      const coords = [sys.lat, sys.lng];
+      const marker = L.marker(coords, {
         icon: makeIcon(sys, isSel, isHov, isFoc, hasFocus),
         zIndexOffset: isFoc ? 2000 : isSel ? 1000 : isHov ? 500 : 0,
       });
       const faceCount = (sys.faceObjs||[]).length;
-      const label     = sys.label ? `★ ${sys.label}` : `${sys.cimasa} · ${sys.type}`;
+      const label     = sys.label ? `★ ${sys.label}` : `${sys.code} · ${sys.type}`;
       marker.bindTooltip(
         `<b>${label}</b><br><span style="opacity:0.75">${sys.address} — ${faceCount} ${faceCount===1?'faccia':'facce'}</span>`,
         { direction: 'top', className: 'ss-leaflet-tooltip', offset: [0, -2] }
@@ -4568,23 +5093,14 @@ function SelectSystems({ planning, onBack, onApply }) {
       marker.on('mouseout',  () => setHoveredId(null));
       cluster.addLayer(marker);
     });
-  }, [selectedFaceIds, hoveredId, focusedId, visibleStates, selectedTypes, selectedModels, showOnlySelected, selectedSystemIds, minFacesEnabled, minFacesValue, selectedIllumination, maxPriceEnabled, maxPriceValue, selectedFormats]);
+  }, [selectedFaceIds, hoveredId, focusedId, selectedSystemIds, planning.category]);
 
-  const filteredSystems = SEARCH_RESULTS.filter(r => {
-    if (r.channel !== planning.category) return false;
-    if (!visibleStates.includes(r.state)) return false;
-    if (selectedTypes.length !== channelTypesFlat.length && !selectedTypes.includes(r.type)) return false;
-    if (selectedModels.length > 0 && !selectedModels.map(m => MODEL_FILTER_MAP[m]).includes(r.saleModel)) return false;
-    if (minFacesEnabled && r.faces < minFacesValue) return false;
-    if (!sysMatchesIllumination(r)) return false;
-    if (maxPriceEnabled && sysMinFacePrice(r) > maxPriceValue) return false;
-    if (selectedFormats.length > 0 && !(r.faceObjs || []).some(f => selectedFormats.includes(f.format))) return false;
-    return true;
-  });
+
+  const channelSystems = SEARCH_RESULTS.filter(r => r.channel === planning.category);
 
   const displayedItems = panelTab === 'selected'
-    ? SEARCH_RESULTS.filter(r => r.channel === planning.category && selectedSystemIds.has(r.id))
-    : filteredSystems;
+    ? SEARCH_RESULTS.filter(r => selectedSystemIds.has(r.id))
+    : channelSystems;
 
   // ── Select all / deselect all visible ──────────────────
   const allDisplayedAvailFaces = displayedItems.flatMap(s => getAvailFaces(s));
@@ -4631,9 +5147,10 @@ function SelectSystems({ planning, onBack, onApply }) {
 
     // "2/4 disp." if some reserved, else "3 facce"
     const faceBadgeText = availF < totalF ? `${availF}/${totalF} disp.` : `${totalF} ${totalF===1?'faccia':'facce'}`;
-    const faceBadgeCls  = cs === 'none' ? 'ss-face-badge ss-face-badge-none'
-                        : cs === 'all'  ? 'ss-face-badge ss-face-badge-all'
-                                        : 'ss-face-badge ss-face-badge-part';
+    const faceBadgeColor = availF === totalF ? '#52C41A'
+                         : availF === 0      ? '#FF4A1C'
+                                             : '#FA8C16';
+    const faceBadgeCls  = cs === 'none' ? 'ss-face-badge ss-face-badge-none' : 'ss-face-badge';
     const headCls = ['ss-sys-head', cs!=='none'?'ss-sys-selected':'', isHov?'ss-sys-hovered':''].filter(Boolean).join(' ');
     const TypeIconFn = TYPE_ICON[sys.type];
     const isLtOnly      = sys.saleModel === 'long_term_only';
@@ -4650,8 +5167,8 @@ function SelectSystems({ planning, onBack, onApply }) {
         onMouseLeave: () => setHoveredId(null),
         onClick: () => { if (sys.lat && sys.lng) { setFocusedId(sys.id); flyTo(sys.lat, sys.lng, 16); } },
       },
-        // Checkbox a sinistra
-        React.createElement(Checkbox, {
+        // Checkbox a sinistra (nascosto in sola lettura)
+        !readOnly && React.createElement(Checkbox, {
           checked: cs === 'all',
           indeterminate: cs === 'partial',
           onChange: () => toggleSys(sys),
@@ -4661,7 +5178,7 @@ function SelectSystems({ planning, onBack, onApply }) {
         React.createElement('div', { className: 'ss-sys-info' },
           // Nome + etichetta (se presente) o icona picker
           React.createElement('div', { className: `ss-sys-label${isPremium?' ss-sys-premium':''}`, style: { display: 'flex', alignItems: 'center', gap: 5 } },
-            sys.label || sys.cimasa,
+            sys.label || sys.code,
             (() => {
               const firstLbl = (systemLabels[sys.id] || [])
                 .map(id => availableLabels.find(l => l.id === id)).filter(Boolean)[0];
@@ -4700,7 +5217,7 @@ function SelectSystems({ planning, onBack, onApply }) {
             sysFmt && React.createElement('span', { className: 'ss-sys-meta-fmt' }, sysFmt),
           ),
         ),
-        React.createElement('span', { className: faceBadgeCls }, faceBadgeText),
+        React.createElement('span', { className: faceBadgeCls, style: cs !== 'none' ? { color: faceBadgeColor } : undefined }, faceBadgeText),
         // Badge long-term only
         isLtOnly && React.createElement(antd.Tooltip, {
           title: isIncompatible
@@ -4727,7 +5244,7 @@ function SelectSystems({ planning, onBack, onApply }) {
             className: rowCls,
             onClick: () => !isDisabled && toggleFace(face),
           },
-            React.createElement(Checkbox, {
+            !readOnly && React.createElement(Checkbox, {
               checked: isSel, disabled: isDisabled,
               onChange: () => toggleFace(face),
               onClick: e => e.stopPropagation(),
@@ -4783,90 +5300,219 @@ function SelectSystems({ planning, onBack, onApply }) {
     onClick: () => onApply(selectedFaceIds),
   }, totalSelFaces > 0 ? `Salva (${selectedSystemIds.size} imp. · ${totalSelFaces} facce)` : 'Salva e chiudi');
 
-  return React.createElement('div', { className: 'ss-root-nr' },
-    React.createElement('div', { className: 'ss-content-nr' },
+  return React.createElement('div', {
+    className: 'ss-root-nr' + (fsFlashing ? ' ss-root-nr--flashing' : ''),
+    style: fullscreen ? { position: 'fixed', inset: 0, zIndex: 200, background: '#F5F5F5', height: '100vh' } : {},
+  },
+    React.createElement('div', {
+      className: 'ss-content-nr',
+      style: fullscreen ? { padding: '0', gap: '0' } : {},
+    },
 
-    // ── Header card ──────────────────────────────────────────
-    React.createElement(PlanningHeaderNR, { planning, onBack }),
+    // ── Header card — animato in fullscreen ──────────────────
+    React.createElement('div', {
+      className: 'ss-fs-header ss-fs-header--' + (fullscreen ? 'hidden' : 'visible'),
+    },
+      React.createElement(PlanningHeaderNR, { planning, onBack, notMine })
+    ),
 
     // ── Workspace: sidebar + contenuto ───────────────────────
     React.createElement('div', { className: 'ss-workspace-nr' },
-      showBrief
-        ? React.createElement(BriefPanelNR, { planning, onToggle: () => setShowBrief(false), selectedFaceIds })
-        : React.createElement('div', { className: 'bpn-collapsed', onClick: () => setShowBrief(true), title: 'Mostra brief' },
-            React.createElement('span', { className: 'bpn-collapsed-label' }, 'Brief')
-          ),
-      React.createElement('div', { className: 'ss-main-nr' },
+
+      // Brief — si restringe verso sinistra
+      React.createElement('div', {
+        className: 'ss-fs-brief-wrap ss-fs-brief-wrap--' + (fullscreen ? 'hidden' : 'visible'),
+      },
+        React.createElement(BriefPanelNR, { planning, selectedFaceIds })
+      ),
+
+      React.createElement('div', {
+        className: 'ss-main-nr',
+        style: { paddingLeft: fullscreen ? 0 : undefined },
+      },
 
     // ── Banner readOnly ──────────────────────────────────────
-    readOnly && React.createElement(antd.Alert, {
+    notMine && !bannerDismissed && React.createElement(antd.Alert, {
+      type: 'warning',
+      showIcon: true,
+      closable: true,
+      onClose: () => setBannerDismissed(true),
+      icon: React.createElement(LockOutlined),
+      message: 'Pianificazione in sola lettura',
+      description: `Questa pianificazione è assegnata a ${AGENTS[planning.assignee]?.name || 'un altro planner'}. Puoi consultare gli impianti, ma non puoi modificare la selezione. Usa "Duplica" per lavorarne una copia.`,
+      style: { marginBottom: 0, borderRadius: 8 },
+    }),
+    !notMine && planning.state === 'Completata' && React.createElement(antd.Alert, {
       type: 'info',
       showIcon: true,
+      closable: true,
+      onClose: () => {},
       message: 'Pianificazione completata · Visualizzazione storica',
       description: 'Questa pianificazione è in espletamento. Puoi consultare gli impianti e usare ricerca e filtri, ma non puoi modificare la selezione.',
       style: { marginBottom: 0, borderRadius: 8 },
     }),
 
-    // ── Card 2: Search ───────────────────────────────────────
-    React.createElement('div', { className: 'ss-card ss-card-search' },
-      React.createElement('div', { className: 'ss-search-bar' },
-        React.createElement('div', { className: 'ss-search-unified' },
-          React.createElement(Input, {
-            size: 'large',
-            placeholder: 'Cerca via, quartiere, città, provincia…',
-            value: searchQuery,
-            prefix: React.createElement(SearchOutlined, { style: { color: 'rgba(0,0,0,0.35)' } }),
-            allowClear: true,
-            onChange: e => {
-              setSearchQuery(e.target.value);
-              setShowSuggestions(e.target.value.length >= 2);
+    // ── Card unica: mappa + ricerca ──────────────────────────
+    React.createElement('div', {
+      className: 'ss-card ss-card-map',
+      style: { borderRadius: fullscreen ? 0 : undefined, border: fullscreen ? 'none' : undefined },
+    },
+
+      // ── Area ricerca ─────────────────────────────────────────
+      React.createElement('div', { className: 'ss-search-area' },
+        React.createElement('div', { className: 'ss-search-bar' },
+
+        // ── Pill: switch + input integrati ──────────────────
+        React.createElement('div', { className: 'ss-search-pill' + (searchMode === 'poi' ? ' poi' : '') },
+          React.createElement('div', { className: 'ss-pill-tabs' },
+            React.createElement('button', {
+              type: 'button',
+              className: 'ss-pill-tab' + (searchMode === 'zona' ? ' active' : ''),
+              onClick: () => { setSearchMode('zona'); setPoiQuery(''); setPoiRadiusVisible(false); },
             },
-            onFocus: () => searchQuery.length >= 2 && setShowSuggestions(true),
-            onBlur: () => setTimeout(() => setShowSuggestions(false), 200),
-          }),
-          React.createElement(Button, {
-            className: 'ss-filter-inline',
-            size: 'large',
-            icon: React.createElement(SlidersOutlined),
-            onClick: () => setFilterDrawerOpen(true),
-            style: activeFilterCount > 0 ? { borderColor: '#3E00FB', color: '#3E00FB' } : {},
-          },
-            'Filtri avanzati',
-            activeFilterCount > 0 && React.createElement('span', {
-              style: {
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                width: 16, height: 16, borderRadius: 4,
-                background: '#3E00FB', color: '#fff',
-                fontSize: 10, fontWeight: 700, lineHeight: 1,
-                marginLeft: 6, flexShrink: 0,
-              }
-            }, activeFilterCount)
+              React.createElement(icons.EnvironmentOutlined),
+              'Zona',
+              (searchQuery || selectedZones.length > 0) && React.createElement('span', {
+                style: { width:6, height:6, borderRadius:'50%', background:'#3E00FB', display:'inline-block', flexShrink:0, marginLeft:4 }
+              })
+            ),
+            React.createElement('button', {
+              type: 'button',
+              className: 'ss-pill-tab' + (searchMode === 'poi' ? ' active' : ''),
+              onClick: () => {
+                if (searchMode === 'poi' && activePois.length > 0) {
+                  setPoiDrawerOpen(true);
+                } else {
+                  setSearchMode('poi');
+                }
+              },
+              title: searchMode === 'poi' && activePois.length > 0 ? `${activePois.length} POI attivi — clicca per gestirli` : undefined,
+            },
+              React.createElement(icons.AimOutlined),
+              'POI',
+              activePois.length > 0 && React.createElement('span', {
+                style: { width:6, height:6, borderRadius:'50%', background:'#3E00FB', display:'inline-block', flexShrink:0, marginLeft:4 }
+              })
+            ),
           ),
+          React.createElement('div', { className: 'ss-pill-sep' }),
+          React.createElement('div', { className: 'ss-pill-input', style: { position: 'relative' } },
+            searchMode === 'zona'
+              ? React.createElement(Input, {
+                  variant: 'borderless',
+                  placeholder: 'Cerca via, quartiere, città, provincia…',
+                  value: searchQuery,
+                  prefix: React.createElement(icons.SearchOutlined, { style: { color: 'rgba(0,0,0,0.3)', fontSize: 14 } }),
+                  allowClear: true,
+                  style: { height: '100%' },
+                  onChange: e => {
+                    const val = e.target.value;
+                    setSearchQuery(val);
+                    setShowSuggestions(val.length >= 2);
+                    if (val === '' && selectedZones.some(z => z.label === searchQuery)) {
+                      setSelectedZones(prev => prev.filter(z => z.label !== searchQuery));
+                      resetMapView();
+                    }
+                  },
+                  onFocus: () => searchQuery.length >= 2 && setShowSuggestions(true),
+                  onBlur: () => setTimeout(() => setShowSuggestions(false), 200),
+                  onPressEnter: () => {
+                    if (suggestions.length > 0) {
+                      const s = suggestions[0];
+                      setSearchQuery(s.label);
+                      setSelectedZones([s]);
+                      flyTo(s.lat, s.lng, s.type === 'Provincia' ? 9 : s.type === 'Città' ? 12 : 15);
+                      setShowSuggestions(false);
+                    }
+                  },
+                })
+              : React.createElement(Input, {
+                  variant: 'borderless',
+                  placeholder: 'Cerca luogo o categoria…',
+                  value: poiQuery,
+                  prefix: React.createElement(icons.SearchOutlined, { style: { color: 'rgba(0,0,0,0.3)', fontSize: 14 } }),
+                  allowClear: true,
+                  style: { height: '100%' },
+                  onChange: e => { setPoiQuery(e.target.value); setShowPoiSuggestions(true); },
+                  onFocus: () => setShowPoiSuggestions(true),
+                  onBlur: () => setTimeout(() => setShowPoiSuggestions(false), 200),
+                  onPressEnter: () => setPoiRadiusVisible(true),
+                }),
+            // Zona suggestions
+            searchMode === 'zona' && showSuggestions && suggestions.length > 0 && React.createElement('div', { className: 'ss-suggestions-wrap' },
+              ...suggestions.map(s =>
+                React.createElement('div', {
+                  key: s.label + s.type,
+                  className: 'ss-suggestion-item',
+                  onMouseDown: () => {
+                    setSearchQuery(s.label);
+                    setSelectedZones([s]);
+                    flyTo(s.lat, s.lng, s.type === 'Provincia' ? 9 : s.type === 'Città' ? 12 : 15);
+                  },
+                },
+                  React.createElement(icons.EnvironmentOutlined, { style: { color: '#3E00FB', fontSize: 13, flexShrink: 0 } }),
+                  React.createElement('span', { style: { flex: 1 } }, s.label),
+                  React.createElement('span', {
+                    style: { fontSize: 11, color: 'rgba(0,0,0,0.35)', background: 'rgba(0,0,0,0.05)', borderRadius: 4, padding: '1px 6px', flexShrink: 0 }
+                  }, s.type)
+                )
+              )
+            ),
+            // POI suggestions
+            searchMode === 'poi' && showPoiSuggestions && poiSuggestions.length > 0 && React.createElement('div', { className: 'ss-suggestions-wrap' },
+              poiSuggestions.map(item =>
+                React.createElement('div', {
+                  key: item.key,
+                  className: 'ss-poi-suggestion',
+                  onMouseDown: () => selectPoi(item),
+                },
+                  React.createElement('span', { className: 'ss-poi-suggestion-icon' }, item.icon),
+                  React.createElement('div', null,
+                    React.createElement('div', { className: 'ss-poi-suggestion-label' }, item.label),
+                    React.createElement('div', { className: 'ss-poi-suggestion-sub' },
+                      item.resultType === 'category'
+                        ? `Categoria · ${item.mockCount} punti nell'area`
+                        : 'Luogo specifico'
+                    )
+                  )
+                )
+              )
+            ),
+          ),
+
+          // Separatore + Filtri + Cerca dentro la pill
+          React.createElement('div', { className: 'ss-pill-sep' }),
           React.createElement(Button, {
             className: 'ss-filter-inline',
-            size: 'large',
-            icon: React.createElement(EnvironmentOutlined),
-            onClick: () => setPoiDrawerOpen(true),
-          }, 'POI'),
+            icon: React.createElement(icons.SlidersOutlined),
+            onClick: () => setFilterDrawerOpen(true),
+          }, 'Filtri'),
           React.createElement(Button, {
             className: 'ss-cerca-inline',
-            size: 'large',
             type: 'primary',
-            icon: React.createElement(SearchOutlined),
+            icon: React.createElement(icons.SearchOutlined),
+            onClick: () => { if (searchMode === 'poi') setPoiRadiusVisible(true); },
           }, 'Cerca'),
-          showSuggestions && suggestions.length > 0 && React.createElement('div', { className: 'ss-suggestions-wrap' },
-            ...suggestions.map(s =>
-              React.createElement('div', {
-                key: s.label,
-                className: 'ss-suggestion-item',
-                onMouseDown: () => { setSearchQuery(s.label); flyTo(s.lat, s.lng, 15); },
+        ),
+
+        // ── Toggle fullscreen ────────────────────────────────
+        React.createElement('div', { style: { alignSelf: 'stretch', display: 'flex', flexShrink: 0 } },
+          React.createElement(antd.Tooltip, { title: fullscreen ? 'Esci da schermo intero' : 'Schermo intero', placement: 'bottom' },
+            React.createElement(Button, {
+              icon: React.createElement(fullscreen ? FullscreenExitOutlined : FullscreenOutlined),
+              onClick: toggleFullscreen,
+              style: {
+                height: '100%',
+                width: 44,
+                borderRadius: 12,
+                border: fullscreen ? '1.5px solid #3E00FB' : undefined,
+                color: fullscreen ? '#3E00FB' : undefined,
+                background: fullscreen ? '#F0EAFF' : undefined,
               },
-                React.createElement(EnvironmentOutlined, { style: { color: '#3E00FB', fontSize: 13, flexShrink: 0 } }),
-                s.label
-              )
-            )
+            })
           )
-        )
+        ),
+
       ),
       // Chip filtro: Zone e Tipologie richieste dal brief
       React.createElement('div', { className: 'ss-brief-chips' },
@@ -4878,21 +5524,19 @@ function SelectSystems({ planning, onBack, onApply }) {
         planning.briefZones && planning.briefZones.length > 0
           ? React.createElement(React.Fragment, null,
               ...planning.briefZones.map(chip => {
-                const isActive = selectedZones.includes(chip.label);
+                const isActive = selectedZones.some(z => z.label === chip.label);
+                const zoneObj = { label: chip.label, type: 'Città', lat: chip.lat, lng: chip.lng, filterCity: chip.city, mapRadius: 8000 };
                 return React.createElement('span', {
                   key: chip.label,
                   className: 'ss-brief-chip' + (isActive ? ' ss-brief-chip-active' : ''),
                   onClick: () => {
-                    setSelectedZones(prev => {
-                      const next = isActive ? prev.filter(z => z !== chip.label) : [...prev, chip.label];
-                      if (isActive && next.length === 0) resetMapView();
-                      return next;
-                    });
+                    setSelectedZones(prev => isActive ? prev.filter(z => z.label !== chip.label) : [...prev, zoneObj]);
                     if (!isActive) {
                       setSearchQuery(chip.label);
                       flyTo(chip.lat, chip.lng, chip.zoom);
                     } else {
                       setSearchQuery('');
+                      resetMapView();
                     }
                   },
                 },
@@ -4946,14 +5590,49 @@ function SelectSystems({ planning, onBack, onApply }) {
               }, type);
             })
           )
-      )
-    ),
+      ),
 
-    // ── Card 3: Mappa con right panel ────────────────────────
-    React.createElement('div', { className: 'ss-card ss-card-map' },
+      ), // close ss-search-area
 
-      // Leaflet container
-      React.createElement('div', { ref: mapContainerRef, className: 'ss-leaflet-map' }),
+      // ── Area mappa ───────────────────────────────────────────
+      React.createElement('div', { className: 'ss-map-area' },
+
+        // Leaflet container
+        React.createElement('div', { ref: mapContainerRef, className: 'ss-leaflet-map' }),
+
+      // ── Radius control POI — overlay sulla mappa ─────────
+      searchMode === 'poi' && poiRadiusVisible && React.createElement('div', { className: 'ss-radius-map-ctrl' },
+        React.createElement('div', { className: 'ss-radius-map-label' }, 'Raggio POI'),
+        React.createElement('div', { className: 'ss-radius-map-inner' },
+          React.createElement('div', { className: 'ss-radius-units' },
+            [['km','km'],['walk','🚶'],['bus','🚌']].map(([unit, lbl]) =>
+              React.createElement('button', {
+                key: unit,
+                type: 'button',
+                className: 'ss-radius-unit-btn' + (poiRadiusUnit === unit ? ' active' : ''),
+                onClick: () => {
+                  setPoiRadiusUnit(unit);
+                  setPoiRadiusIdx(prev => Math.min(prev, RADIUS_STEPS[unit].length - 1));
+                },
+              }, lbl)
+            )
+          ),
+          React.createElement('div', { className: 'ss-radius-ctrl-sep' }),
+          React.createElement('div', { className: 'ss-radius-slider-wrap' },
+            React.createElement(Slider, {
+              min: 0,
+              max: RADIUS_STEPS[poiRadiusUnit].length - 1,
+              step: 1,
+              value: Math.min(poiRadiusIdx, RADIUS_STEPS[poiRadiusUnit].length - 1),
+              onChange: setPoiRadiusIdx,
+              tooltip: { formatter: v => RADIUS_STEPS[poiRadiusUnit][v]?.label },
+            })
+          ),
+          React.createElement('div', { className: 'ss-radius-val' },
+            RADIUS_STEPS[poiRadiusUnit][Math.min(poiRadiusIdx, RADIUS_STEPS[poiRadiusUnit].length - 1)].label
+          ),
+        ),
+      ),
 
       // Info box sulla mappa
       React.createElement('div', { className: 'ss-map-infobox' },
@@ -4962,10 +5641,10 @@ function SelectSystems({ planning, onBack, onApply }) {
           React.createElement('div', { className: 'ss-infobox-count' },
             showOnlySelected
               ? selectedSystemIds.size
-              : filteredSystems.filter(s => s.state !== 'Reserved').length
+              : channelSystems.length
           ),
           React.createElement('div', { className: 'ss-infobox-count-label' },
-            showOnlySelected ? 'selezionati' : 'spazi pertinenti al brief'
+            showOnlySelected ? 'selezionati' : `impianti ${planning.category}`
           )
         ),
         // Body — parametri del brief
@@ -5039,46 +5718,6 @@ function SelectSystems({ planning, onBack, onApply }) {
             })
           )
         ),
-        // Footer — filtri attivi
-        React.createElement('div', { className: 'ss-infobox-footer' },
-          React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: activeFilterCount > 0 ? 6 : 0 } },
-            React.createElement('span', {
-              style: {
-                fontSize: 11,
-                color: activeFilterCount > 0 ? '#3E00FB' : 'rgba(0,0,0,0.3)',
-                fontWeight: activeFilterCount > 0 ? 600 : 400,
-                display: 'inline-flex', alignItems: 'center', gap: 4,
-              }
-            },
-              activeFilterCount > 0 && React.createElement('span', {
-                style: {
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  width: 16, height: 16, borderRadius: 4,
-                  background: '#3E00FB', color: '#fff',
-                  fontSize: 10, fontWeight: 700, lineHeight: 1, flexShrink: 0,
-                }
-              }, activeFilterCount),
-              activeFilterCount > 0
-                ? `${activeFilterCount === 1 ? 'filtro attivo' : 'filtri attivi'}`
-                : 'Nessun filtro attivo'
-            ),
-            React.createElement('a', {
-              className: 'ss-infobox-link',
-              onClick: () => setFilterDrawerOpen(true),
-            }, 'Modifica →')
-          ),
-          activeFilterCount > 0 && React.createElement('div', { style: { display: 'flex', gap: 4, flexWrap: 'wrap' } },
-            selectedTypes.length !== channelTypesFlat.length && React.createElement('span', { className: 'ss-filter-tag' },
-              selectedTypes.length === 1 ? selectedTypes[0] : `${selectedTypes.length} tipi`
-            ),
-            selectedIllumination.length > 0 && selectedIllumination.length < 2 && React.createElement('span', { className: 'ss-filter-tag' },
-              selectedIllumination[0] === 'Illuminate' ? '☀ Illum.' : '○ No illum.'
-            ),
-            minFacesEnabled && React.createElement('span', { className: 'ss-filter-tag' }, `≥${minFacesValue} facce`),
-            maxPriceEnabled && React.createElement('span', { className: 'ss-filter-tag' }, `≤€${maxPriceValue}`),
-            selectedFormats.length > 0 && React.createElement('span', { className: 'ss-filter-tag' }, `${selectedFormats.length} formati`),
-          )
-        )
       ),
 
       // Right panel overlay
@@ -5097,7 +5736,7 @@ function SelectSystems({ planning, onBack, onApply }) {
           React.createElement('div', {
             className: `ss-panel-tab${panelTab === 'results' ? ' active' : ''}`,
             onClick: () => setPanelTab('results'),
-          }, `Risultati (${filteredSystems.length})`),
+          }, `Risultati (${channelSystems.length})`),
           React.createElement('div', {
             className: `ss-panel-tab${panelTab === 'selected' ? ' active' : ''}`,
             onClick: () => setPanelTab('selected'),
@@ -5126,20 +5765,9 @@ function SelectSystems({ planning, onBack, onApply }) {
               )
             : displayedItems.map(sys => renderSysRow(sys))
         ),
-        // Footer — totale stimato + salva
-        React.createElement('div', { className: 'ss-panel-footer' },
-          totalSelFaces > 0 && React.createElement(React.Fragment, null,
-            React.createElement('div', { className: 'ss-panel-total-row' },
-              React.createElement('span', { className: 'ss-panel-total-label' },
-                `${selectedSystemIds.size} imp. · ${totalSelFaces} facce`
-              ),
-              React.createElement('span', { className: 'ss-panel-total-amount' + (isOverBudget ? ' over-budget' : '') },
-                formatEuro(totalComputedCost)
-              ),
-            ),
-            React.createElement('div', { className: 'ss-panel-total-sub' }, durLabel),
-          ),
-          !readOnly && saveBtn,
+        // Footer — solo salva
+        !readOnly && React.createElement('div', { className: 'ss-panel-footer' },
+          saveBtn,
         ),
       )
     ),
@@ -5171,20 +5799,108 @@ function SelectSystems({ planning, onBack, onApply }) {
       })
     ),
 
-    // ── Drawer: POI ─────────────────────────────────────────
-    React.createElement(Drawer, {
-      title: 'Punti di interesse',
+    // ── Drawer POI ───────────────────────────────────────────
+    React.createElement(antd.Drawer, {
+      title: React.createElement('span', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+        React.createElement(icons.AimOutlined, { style: { color: '#3E00FB' } }),
+        activePois.length > 0 ? `POI attivi (${activePois.length})` : 'POI'
+      ),
       placement: 'right',
       width: 400,
       open: poiDrawerOpen,
       onClose: () => setPoiDrawerOpen(false),
-      footer: React.createElement('div', { style: { display: 'flex', justifyContent: 'flex-end', gap: 8 } },
-        React.createElement(Button, { onClick: () => setPoiDrawerOpen(false) }, 'Chiudi'),
-        React.createElement(Button, { type: 'primary', icon: React.createElement(EnvironmentOutlined) }, 'Applica POI')
-      ),
+      footer: activePois.length > 0
+        ? React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between' } },
+            React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)' } },
+              `${channelSystems.length} impianti ${planning.category} nell'area POI`
+            ),
+            React.createElement(Button, {
+              type: 'text', danger: true, size: 'small',
+              onClick: () => setActivePois([]),
+            }, 'Rimuovi tutti')
+          )
+        : null,
     },
-      React.createElement(POIPanel)
-    )
+
+      // Lista POI attivi
+      activePois.length > 0
+        ? React.createElement('div', { style: { marginBottom: 24 } },
+            activePois.map(poi =>
+              React.createElement('div', { key: poi.id, className: 'poi-drawer-item' },
+                React.createElement('div', { className: 'poi-drawer-icon' }, poi.icon),
+                React.createElement('div', { className: 'poi-drawer-info' },
+                  React.createElement('div', { className: 'poi-drawer-name' }, poi.label),
+                  React.createElement('div', { className: 'poi-drawer-meta' },
+                    React.createElement(icons.ExpandOutlined, { style: { fontSize: 11 } }),
+                    poi.radiusLabel,
+                    poi.isCategory && React.createElement('span', null, `· ~${poi.mockCount} punti`)
+                  )
+                ),
+                React.createElement(Button, {
+                  type: 'text', size: 'small',
+                  icon: React.createElement(icons.CloseOutlined),
+                  onClick: () => removePoi(poi.id),
+                  style: { color: 'rgba(0,0,0,0.35)', flexShrink: 0 },
+                })
+              )
+            )
+          )
+        : React.createElement('div', { className: 'poi-drawer-empty' },
+            React.createElement('span', { className: 'poi-drawer-empty-icon' }, '📍'),
+            React.createElement('div', { style: { fontSize: 13 } }, 'Nessun POI attivo'),
+            React.createElement('div', { style: { fontSize: 12, marginTop: 4, color: 'rgba(0,0,0,0.3)' } },
+              'Usa il selettore Zona / POI nella barra di ricerca per aggiungere punti di interesse'
+            )
+          ),
+
+      // Sezione aggiungi
+      React.createElement(antd.Divider, { orientation: 'left', style: { fontSize: 12 } }, 'Aggiungi un POI'),
+      React.createElement('div', { style: { position: 'relative' } },
+        React.createElement(antd.Input, {
+          placeholder: 'Cerca un luogo o una categoria…',
+          prefix: React.createElement(icons.SearchOutlined, { style: { color: 'rgba(0,0,0,0.35)' } }),
+          value: poiQuery,
+          onChange: e => { setPoiQuery(e.target.value); setShowPoiSuggestions(true); },
+          onFocus: () => setShowPoiSuggestions(true),
+          onBlur: () => setTimeout(() => setShowPoiSuggestions(false), 200),
+          allowClear: true,
+        }),
+        showPoiSuggestions && poiSuggestions.length > 0 && React.createElement('div', {
+          style: { position: 'absolute', top: 'calc(100% + 4px)', left: 0, right: 0, background: '#fff', border: '1px solid #E8E8E8', borderRadius: 8, boxShadow: '0 4px 20px rgba(0,0,0,0.12)', zIndex: 9999, overflow: 'hidden' }
+        },
+          poiSuggestions.map(item =>
+            React.createElement('div', {
+              key: item.key,
+              className: 'ss-poi-suggestion',
+              onMouseDown: () => selectPoi(item),
+            },
+              React.createElement('span', { className: 'ss-poi-suggestion-icon' }, item.icon),
+              React.createElement('div', null,
+                React.createElement('div', { className: 'ss-poi-suggestion-label' }, item.label),
+                React.createElement('div', { className: 'ss-poi-suggestion-sub' },
+                  item.resultType === 'category'
+                    ? `Categoria · ${item.mockCount} punti nell'area`
+                    : 'Luogo specifico'
+                )
+              )
+            )
+          )
+        )
+      ),
+      React.createElement('div', { style: { marginTop: 10, padding: '8px 10px', background: '#F9F7FF', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'rgba(0,0,0,0.55)' } },
+        React.createElement(icons.ExpandOutlined, { style: { color: '#3E00FB', fontSize: 13 } }),
+        'Raggio attivo: ',
+        React.createElement('strong', { style: { color: '#3E00FB' } },
+          RADIUS_STEPS[poiRadiusUnit][Math.min(poiRadiusIdx, RADIUS_STEPS[poiRadiusUnit].length - 1)].label,
+          ' (',
+          poiRadiusUnit === 'km' ? 'distanza' : poiRadiusUnit === 'walk' ? 'a piedi' : 'in bus',
+          ')'
+        ),
+        React.createElement('span', { style: { marginLeft: 'auto', color: 'rgba(0,0,0,0.35)' } }, 'Modifica dalla barra ricerca')
+      ),
+
+      ) // close ss-map-area
+    ), // close ss-card-map
       )    // close ss-main-nr
     )    // close ss-workspace-nr
     )    // close ss-content-nr
