@@ -527,7 +527,6 @@ const INITIAL_IMP_LABELS = {
 };
 
 const ZONE = [...new Set(IMPIANTI.map(i => i.zona))];
-const TIPI = Object.keys(TIPO_CONFIG);
 
 // ── Macro-categorie OOH ───────────────────────────────────
 const MACRO_TIPI = {
@@ -578,13 +577,6 @@ const LOCATION_SUGG = [
   { type: 'area',   text: 'Foro Italico',              detail: 'Lungomare · Palermo, PA · fronte porto',            lat: 38.1090, lng: 13.3730, zoom: 15 },
   { type: 'via',    text: 'Via Messina Marine',        detail: 'Via · Palermo, PA · litorale sud-est',              lat: 38.0935, lng: 13.3880, zoom: 15 },
   { type: 'via',    text: 'Via Brancaccio',            detail: 'Via · Palermo, PA · quartiere periferico est',      lat: 38.0882, lng: 13.3848, zoom: 15 },
-];
-
-const SUGG_GROUPS = [
-  { key: 'city',             label: 'Città e Comuni' },
-  { key: 'province',         label: 'Province' },
-  { key: 'zona',             label: 'Quartieri e Zone' },
-  { key: ['via','corso','viale','piazza','area'], label: 'Strade e Aree' },
 ];
 
 function getSuggestions(query) {
@@ -1410,7 +1402,6 @@ const COLUMN_GROUPS = [
     ],
   },
 ];
-const ALL_COLUMNS_DEF = COLUMN_GROUPS.flatMap(g => g.items);
 const DEFAULT_COLS = ['canale', 'tipologia', 'formato', 'faces', 'illuminato', 'fornitore', 'vendita', 'prezzo_totale', 'stato'];
 
 // ── Helpers e costanti per mock data — definiti una volta sola fuori dal componente ──
@@ -1547,7 +1538,7 @@ const ALL_COLUMNS = {
     },
   };
 
-function ListView({ impianti, viewMode, setViewMode }) {
+function ListView({ impianti }) {
   const [visibleCols, setVisibleCols] = useState(DEFAULT_COLS);
 
   const cascaderOptions = COLUMN_GROUPS.map(g => ({
