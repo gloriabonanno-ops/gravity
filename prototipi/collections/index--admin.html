@@ -550,6 +550,31 @@
   width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
 }
 
+/* ── Drawer nuova collezione ── */
+.new-coll-form { display: flex; flex-direction: column; gap: 24px; padding: 4px 0; }
+.new-coll-field { display: flex; flex-direction: column; gap: 8px; }
+.new-coll-label { font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.88); }
+.new-coll-icon-grid {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;
+}
+.new-coll-icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 8px;
+  border: 1.5px solid #E8E8E8; background: #FAFAFA;
+  cursor: pointer; transition: all 0.15s; font-size: 16px;
+  color: rgba(0,0,0,0.45);
+}
+.new-coll-icon-btn:hover { border-color: #3E00FB; color: #3E00FB; background: #F0EAFF; }
+.new-coll-icon-btn.selected { border-color: #3E00FB; background: #F0EAFF; color: #3E00FB; }
+.new-coll-color-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.new-coll-color-swatch {
+  width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; border: 2.5px solid transparent;
+  transition: transform 0.12s, border-color 0.12s;
+}
+.new-coll-color-swatch:hover { transform: scale(1.15); }
+.new-coll-color-swatch.selected { border-color: rgba(0,0,0,0.35); transform: scale(1.1); }
+
 /* ── Filter active chips (drawer filters) ── */
 .filter-active-chip {
   display: inline-flex; align-items: center; gap: 5px;
@@ -2299,6 +2324,35 @@ function App() {
     setCustomCollections(prev => prev.filter(c => c.id !== id));
   }, []);
 
+  // ── Drawer nuova collezione ─────────────────────────────
+  const [newCollDrawerOpen, setNewCollDrawerOpen] = useState(false);
+  const [newCollName,  setNewCollName]  = useState('');
+  const [newCollIcon,  setNewCollIcon]  = useState('StarOutlined');
+  const [newCollColor, setNewCollColor] = useState(COLL_COLORS[0]);
+
+  const handleCreateCollection = useCallback(() => {
+    if (!newCollName.trim()) return;
+    const d = new Date();
+    const dd   = String(d.getDate()).padStart(2, '0');
+    const mm   = String(d.getMonth() + 1).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    const coll = {
+      id: `col-cus-${Date.now()}`,
+      name: newCollName.trim(),
+      color: newCollColor,
+      icon: newCollIcon,
+      poisCount: 0,
+      isDefault: false,
+      createdBy: CURRENT_USER.name,
+      updatedAt: `${dd}-${mm}-${yyyy}`,
+    };
+    setCustomCollections(prev => [coll, ...prev]);
+    setNewCollDrawerOpen(false);
+    setNewCollName('');
+    setNewCollIcon('StarOutlined');
+    setNewCollColor(COLL_COLORS[0]);
+  }, [newCollName, newCollIcon, newCollColor]);
+
   const [highlightedId, setHighlightedId] = useState(null);
   const [selectedIds,   setSelectedIds]   = useState(new Set());
   const [expandedIds,   setExpandedIds]   = useState(new Set());
@@ -2771,11 +2825,77 @@ function App() {
 
     // ── Vista lista collezioni ────────────────────────────
     view === 'list' && React.createElement(CollectionsListView, {
-      onNewCollection:    () => setView('map'),
+      onNewCollection:    () => setNewCollDrawerOpen(true),
       onOpenCollection:   () => setView('map'),
       customCollections,
       onDeleteCollection: handleDeleteCollection,
     }),
+
+    // ── Drawer nuova collezione ─────────────────────────────
+    React.createElement(antd.Drawer, {
+      title: 'Nuova Collezione',
+      placement: 'right',
+      open: newCollDrawerOpen,
+      onClose: () => setNewCollDrawerOpen(false),
+      width: 400,
+      footer: React.createElement('div', { style: { display: 'flex', justifyContent: 'flex-end', gap: 8 } },
+        React.createElement(antd.Button, { onClick: () => setNewCollDrawerOpen(false) }, 'Annulla'),
+        React.createElement(antd.Button, {
+          type: 'primary',
+          disabled: !newCollName.trim(),
+          onClick: handleCreateCollection,
+        }, 'Crea Collezione'),
+      ),
+    },
+      React.createElement('div', { className: 'new-coll-form' },
+
+        // ── Nome ──
+        React.createElement('div', { className: 'new-coll-field' },
+          React.createElement('span', { className: 'new-coll-label' }, 'Nome'),
+          React.createElement(antd.Input, {
+            placeholder: 'Es. Scuole zona Noce',
+            value: newCollName,
+            onChange: e => setNewCollName(e.target.value),
+            onPressEnter: handleCreateCollection,
+            size: 'large',
+            autoFocus: true,
+          }),
+        ),
+
+        // ── Icona ──
+        React.createElement('div', { className: 'new-coll-field' },
+          React.createElement('span', { className: 'new-coll-label' }, 'Icona'),
+          React.createElement('div', { className: 'new-coll-icon-grid' },
+            Object.entries(COLL_ICON_MAP).map(([key, IconComp]) =>
+              React.createElement('div', {
+                key,
+                className: `new-coll-icon-btn${newCollIcon === key ? ' selected' : ''}`,
+                onClick: () => setNewCollIcon(key),
+                title: key.replace('Outlined', ''),
+              },
+                React.createElement(IconComp, { style: { fontSize: 16 } })
+              )
+            )
+          ),
+        ),
+
+        // ── Colore ──
+        React.createElement('div', { className: 'new-coll-field' },
+          React.createElement('span', { className: 'new-coll-label' }, 'Colore'),
+          React.createElement('div', { className: 'new-coll-color-row' },
+            COLL_COLORS.map(c =>
+              React.createElement('div', {
+                key: c,
+                className: `new-coll-color-swatch${newCollColor === c ? ' selected' : ''}`,
+                style: { background: c },
+                onClick: () => setNewCollColor(c),
+              })
+            )
+          ),
+        ),
+
+      )
+    ),
 
     // ── Vista mappa / ricerca ─────────────────────────────
     view === 'map' && React.createElement('div', { className: 'ooh-workspace' },
