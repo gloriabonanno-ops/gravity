@@ -100,10 +100,6 @@
   background: #fff; border-radius: 8px; border: 1px solid #F0F0F0;
   overflow: hidden; display: flex; flex-direction: column;
 }
-.coll-edit-footer {
-  padding: 12px 20px; border-top: 1px solid #F0F0F0;
-  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; background: #fff;
-}
 .coll-list-header {
   background: #fff;
   border-radius: 8px;
@@ -196,18 +192,6 @@
   width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
 }
 
-/* ── Drawer nuova collezione — layout ── */
-.new-coll-drawer-body {
-  display: flex; width: 100%; height: 100%; overflow: hidden;
-}
-.new-coll-left {
-  width: 340px; flex-shrink: 0;
-  display: flex; flex-direction: column;
-  border-right: 1px solid #F0F0F0;
-  overflow-y: auto;
-  padding: 8px 16px 16px;
-  gap: 16px;
-}
 .new-coll-map-side {
   flex: 1; min-width: 0; display: flex; flex-direction: column;
 }
@@ -297,16 +281,15 @@
 <div id="root"></div>
 <script>
 const { useState, useEffect, useRef, useCallback } = React;
-const { ConfigProvider, Input, Tag, Button, InputNumber, Switch, Typography, Popover, Menu, Divider, Slider, Tooltip, Empty, Dropdown, Space } = antd;
-const { Text, Title } = Typography;
+const { ConfigProvider, Input, Button, Typography, Popover, Menu, Divider, Tooltip, Empty, Dropdown, Space } = antd;
 const {
   SearchOutlined, BellOutlined, PlusOutlined, AppstoreOutlined, SendOutlined,
-  RightOutlined, LeftOutlined, ArrowLeftOutlined,
-  EnvironmentOutlined, AimOutlined, DownOutlined,
-  ColumnHeightOutlined, PictureOutlined, SyncOutlined, StarOutlined, StarFilled, PushpinOutlined,
-  BranchesOutlined, ShopOutlined, HomeOutlined, CarOutlined, BulbOutlined,
-  InboxOutlined, HeartOutlined, SlidersOutlined, TagOutlined, CheckOutlined,
-  EditOutlined, DeleteOutlined, MinusCircleOutlined, CopyOutlined, EyeOutlined, LockOutlined, EllipsisOutlined, SaveOutlined,
+  ArrowLeftOutlined,
+  EnvironmentOutlined,
+  StarOutlined, PushpinOutlined,
+  ShopOutlined, HomeOutlined, CarOutlined, BulbOutlined,
+  InboxOutlined, HeartOutlined, TagOutlined,
+  DeleteOutlined, MinusCircleOutlined, CopyOutlined, EyeOutlined, EllipsisOutlined, SaveOutlined,
   ShareAltOutlined, UserOutlined,
   ReadOutlined, ShoppingCartOutlined, MedicineBoxOutlined,
 } = icons;
@@ -481,7 +464,7 @@ const DEFAULT_COLL_POIS = {
 
 async function photonSuggestPOI(query, limit = 7) {
   try {
-    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lang=it&limit=${limit}&bbox=${PHOTON_BBOX_PA}`;
+    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&lang=it&limit=${limit}`;
     const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
     if (!res.ok) return [];
     const data = await res.json();
@@ -961,8 +944,6 @@ function CollectionsListView({ onNewCollection, onEditCollection, collections, o
 function CollectionMapPicker({ open, autocompleteService, placesService, collPois, onAddPin, onRemovePin, allCollections }) {
   const mapRef           = useRef(null);
   const mapInst          = useRef(null);
-  const circlesRef       = useRef([]);
-  const markersRef       = useRef([]);
   const pinMarkersRef    = useRef({});
   const pendingMarkerRef = useRef(null);
   const debounceRef      = useRef(null);
@@ -1668,7 +1649,6 @@ function App() {
                 onAddPin: handleAddCollPin,
                 onRemovePin: handleRemoveCollPin,
                 allCollections: collections,
-                readOnly: editReadOnly,
               }),
             ),
 
