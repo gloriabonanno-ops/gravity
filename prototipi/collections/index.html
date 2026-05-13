@@ -88,9 +88,6 @@
 .coll-shell {
   flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
 }
-.coll-edit-screen {
-  flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; background: #F5F5F5;
-}
 .coll-edit-body { flex: 1; min-height: 0; display: flex; gap: 16px; padding: 16px; overflow: hidden; background: #F5F5F5; }
 .coll-edit-sidebar {
   width: 300px; flex-shrink: 0;
@@ -294,23 +291,13 @@
 .new-coll-color-swatch:hover { transform: scale(1.15); }
 .new-coll-color-swatch.selected { border-color: rgba(0,0,0,0.35); transform: scale(1.1); }
 
-/* ── Filter active chips (drawer filters) ── */
-.filter-active-chip {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 4px 10px; border-radius: 6px;
-  background: #fff; border: 1px solid #D9D9D9;
-  font-size: 13px; color: rgba(0,0,0,0.65); cursor: default;
-}
-.filter-active-chip.mono { font-family: 'SF Mono','Fira Code',monospace; }
-.filter-active-chip .clear-btn { margin-left: 3px; cursor: pointer; font-size: 11px; color: rgba(0,0,0,0.35); opacity: 1; line-height: 1; }
-.filter-active-chip .clear-btn:hover { color: rgba(0,0,0,0.75); }
   </style>
 </head>
 <body>
 <div id="root"></div>
 <script>
-const { useState, useEffect, useRef, useCallback, useMemo } = React;
-const { ConfigProvider, Input, Tag, Button, Drawer, InputNumber, Switch, Typography, Popover, Menu, Divider, Slider, Tooltip, Empty, Dropdown, Space } = antd;
+const { useState, useEffect, useRef, useCallback } = React;
+const { ConfigProvider, Input, Tag, Button, InputNumber, Switch, Typography, Popover, Menu, Divider, Slider, Tooltip, Empty, Dropdown, Space } = antd;
 const { Text, Title } = Typography;
 const {
   SearchOutlined, BellOutlined, PlusOutlined, AppstoreOutlined, SendOutlined,
@@ -319,7 +306,7 @@ const {
   ColumnHeightOutlined, PictureOutlined, SyncOutlined, StarOutlined, StarFilled, PushpinOutlined,
   BranchesOutlined, ShopOutlined, HomeOutlined, CarOutlined, BulbOutlined,
   InboxOutlined, HeartOutlined, SlidersOutlined, TagOutlined, CheckOutlined,
-  EditOutlined, DeleteOutlined, CopyOutlined, EyeOutlined, LockOutlined, EllipsisOutlined, SaveOutlined,
+  EditOutlined, DeleteOutlined, MinusCircleOutlined, CopyOutlined, EyeOutlined, LockOutlined, EllipsisOutlined, SaveOutlined,
   ShareAltOutlined, UserOutlined,
   ReadOutlined, ShoppingCartOutlined, MedicineBoxOutlined,
 } = icons;
@@ -329,7 +316,6 @@ const {
 // ─────────────────────────────────────────────────────────
 const COLL_COLORS = ['#3E00FB','#1677FF','#52C41A','#FAAD14','#FF4A1C','#EB2F96','#13C2C2','#722ED1'];
 
-// Utente simulato corrente (non-admin)
 const CURRENT_USER = { id: 'u0', name: 'Gloria Bonanno', initials: 'GB', role: 'Media Planner', avatarColor: '#3E00FB' };
 
 const PLATFORM_USERS = [
@@ -492,20 +478,6 @@ const DEFAULT_COLL_POIS = {
 // ─────────────────────────────────────────────────────────
 // POI — dati, utilities, geocoding
 // ─────────────────────────────────────────────────────────
-const POI_CATEGORIES_FULL = [
-  { key: 'scuole',       label: 'Scuole',              antIcon: 'ReadOutlined',            color: '#1677FF', mockCount: 12 },
-  { key: 'supermercati', label: 'Supermercati',         antIcon: 'ShoppingCartOutlined',    color: '#F759AB', mockCount: 10 },
-  { key: 'ospedali',     label: 'Ospedali',             antIcon: 'MedicineBoxOutlined',     color: '#FF4A1C', mockCount: 5  },
-  { key: 'trasporti',    label: 'Trasporti',            antIcon: 'CarOutlined',             color: '#722ED1', mockCount: 8  },
-  { key: 'ristorazione', label: 'Ristorazione',         antIcon: 'CoffeeOutlined',          color: '#FA8C16', mockCount: 20 },
-  { key: 'farmacie',     label: 'Farmacie',             antIcon: 'HeartOutlined',           color: '#EB2F96', mockCount: 15 },
-  { key: 'palestre',     label: 'Palestre',             antIcon: 'ThunderboltOutlined',     color: '#13C2C2', mockCount: 7  },
-  { key: 'cc',           label: 'Centri commerciali',   antIcon: 'ShopOutlined',            color: '#531DAB', mockCount: 4  },
-  { key: 'universita',   label: 'Università',           antIcon: 'BankOutlined',            color: '#0958D9', mockCount: 3  },
-  { key: 'cinema',       label: 'Cinema e teatri',      antIcon: 'PlayCircleOutlined',      color: '#C41D7F', mockCount: 5  },
-  { key: 'parchi',       label: 'Parchi',               antIcon: 'EnvironmentOutlined',     color: '#237804', mockCount: 8  },
-];
-
 
 async function photonSuggestPOI(query, limit = 7) {
   try {
@@ -525,7 +497,7 @@ async function photonSuggestPOI(query, limit = 7) {
       if (p.name && streetFull) subParts.push(streetFull);
       if (p.city && p.city !== label) subParts.push(p.city);
       const sub = subParts.join(', ') || (p.osm_value || '').replace(/_/g, ' ');
-      return { id: `ph-${lat.toFixed(5)}-${lng.toFixed(5)}`, label, sub, lat, lng, type: 'single', color: '#FF4A1C', icon: '📍' };
+      return { id: `ph-${lat.toFixed(5)}-${lng.toFixed(5)}`, label, sub, lat, lng, color: '#FF4A1C', icon: '📍' };
     }).filter(x => { if (!x || seen.has(x.label)) return false; seen.add(x.label); return true; });
   } catch { return []; }
 }
@@ -550,7 +522,6 @@ async function googleAutocompletePOI(query, service, limit = 7) {
           lat:     null,
           lng:     null,
           placeId: p.place_id,
-          type:    'single',
           color:   '#FF4A1C',
           icon:    '📍',
         })));
@@ -727,118 +698,16 @@ const COLL_ICON_MAP = {
 };
 
 
-function CollectionsListView({ onNewCollection, onEditCollection, collections, onDeleteCollection, onDuplicateCollection, onViewCollection, highlightedCollId }) {
-  const [shareMode,        setShareMode]        = useState(false);
-  const [selectedKeys,     setSelectedKeys]     = useState([]);
-  const [shareModalOpen,   setShareModalOpen]   = useState(false);
-  const [shareTargetIds,   setShareTargetIds]   = useState([]); // collezioni aperte nel modal
-  const [userSearch,       setUserSearch]       = useState('');
-  const [pendingUsers,     setPendingUsers]     = useState([]); // [{ user, permission }]
-  const [pendingPerm,      setPendingPerm]      = useState('view');
-  const [collectionShares, setCollectionShares] = useState({}); // { collId: [{ user, permission }] }
-  const [showUserDrop,     setShowUserDrop]     = useState(false);
+function CollectionsListView({ onNewCollection, onEditCollection, collections, onDeleteCollection, onDuplicateCollection, highlightedCollId, onShare }) {
+  const [shareMode,    setShareMode]    = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState([]);
 
   const allCollections = collections;
 
   const exitShareMode = () => { setShareMode(false); setSelectedKeys([]); };
 
-  const openShareModal = (ids) => {
-    setShareTargetIds(ids);
-    setUserSearch('');
-    setPendingUsers([]);
-    setPendingPerm('view');
-    setShowUserDrop(false);
-    setShareModalOpen(true);
-  };
 
-  const suggestedUsers = PLATFORM_USERS.filter(u => {
-    if (!userSearch.trim()) return false;
-    const q = userSearch.toLowerCase();
-    const parts = u.name.toLowerCase().split(' ');
-    return parts.some(part => part.startsWith(q))
-      && !pendingUsers.find(p => p.user.id === u.id);
-  });
-
-  const addPendingUser = (user) => {
-    setPendingUsers(prev => [...prev, { user, permission: pendingPerm }]);
-    setUserSearch('');
-    setShowUserDrop(false);
-  };
-
-  const removePendingUser = (userId) => {
-    setPendingUsers(prev => prev.filter(p => p.user.id !== userId));
-  };
-
-  const updatePendingPerm = (userId, perm) => {
-    setPendingUsers(prev => prev.map(p => p.user.id === userId ? { ...p, permission: perm } : p));
-  };
-
-  const confirmUser = (userId) => {
-    const entry = pendingUsers.find(p => p.user.id === userId);
-    if (!entry) return;
-    setCollectionShares(prev => {
-      const next = { ...prev };
-      shareTargetIds.forEach(id => {
-        const existing = prev[id] || [];
-        const merged = [...existing];
-        const { user, permission } = entry;
-        if (!merged.find(e => e.user.id === user.id)) merged.push({ user, permission });
-        else merged.forEach(e => { if (e.user.id === user.id) e.permission = permission; });
-        next[id] = merged;
-      });
-      return next;
-    });
-    setPendingUsers(prev => prev.filter(p => p.user.id !== userId));
-    antd.message.success(`Accesso condiviso con ${entry.user.name.split(' ')[0]}`);
-  };
-
-  const updateSharedPermission = (userId, value) => {
-    setCollectionShares(prev => {
-      const next = { ...prev };
-      shareTargetIds.forEach(id => {
-        if (value === 'remove') {
-          next[id] = (prev[id] || []).filter(e => e.user.id !== userId);
-        } else {
-          next[id] = (prev[id] || []).map(e => e.user.id === userId ? { ...e, permission: value } : e);
-        }
-      });
-      return next;
-    });
-  };
-
-  const handleShare = () => {
-    if (pendingUsers.length === 0) { setShareModalOpen(false); return; }
-    setCollectionShares(prev => {
-      const next = { ...prev };
-      shareTargetIds.forEach(id => {
-        const existing = prev[id] || [];
-        const merged = [...existing];
-        pendingUsers.forEach(({ user, permission }) => {
-          if (!merged.find(e => e.user.id === user.id)) merged.push({ user, permission });
-          else merged.forEach(e => { if (e.user.id === user.id) e.permission = permission; });
-        });
-        next[id] = merged;
-      });
-      return next;
-    });
-    const names = pendingUsers.map(p => p.user.name.split(' ')[0]).join(', ');
-    setShareModalOpen(false);
-    if (shareMode) exitShareMode();
-    antd.message.success(`Accesso condiviso con ${names}`);
-  };
-
-  const sharedUsersForSelected = (() => {
-    if (shareTargetIds.length === 0) return [];
-    const maps = shareTargetIds.map(id => collectionShares[id] || []);
-    if (maps.length === 1) return maps[0];
-    const first = maps[0];
-    return first.filter(e => maps.every(m => m.find(x => x.user.id === e.user.id)));
-  })();
-
-  const selectedCollections = allCollections.filter(c => shareTargetIds.includes(c.id));
-
-  return React.createElement(React.Fragment, null,
-  React.createElement('div', { className: 'coll-shell' },
+  return React.createElement('div', { className: 'coll-shell' },
 
     // ── Header bar ─────────────────────────────────────────
     React.createElement('div', { className: 'coll-list-header' },
@@ -887,7 +756,7 @@ function CollectionsListView({ onNewCollection, onEditCollection, collections, o
                 React.createElement(Button, {
                   size: 'small', type: 'link',
                   icon: React.createElement(ShareAltOutlined),
-                  onClick: () => openShareModal([...selectedKeys]),
+                  onClick: () => onShare([...selectedKeys]),
                 }, 'Condividi'),
               )
             : React.createElement('span', { className: 'coll-toolbar-count' },
@@ -1037,24 +906,23 @@ function CollectionsListView({ onNewCollection, onEditCollection, collections, o
                 return React.createElement(Dropdown, {
                 menu: {
                   items: isOwn ? [
-                    { key: 'view',      label: 'Visualizza', icon: React.createElement(EyeOutlined) },
-                    { key: 'edit',      label: 'Modifica',   icon: React.createElement(EditOutlined) },
+                    { key: 'open',      label: 'Apri',       icon: React.createElement(EyeOutlined) },
                     { key: 'duplicate', label: 'Duplica',    icon: React.createElement(CopyOutlined) },
                     { key: 'share',     label: 'Condividi',  icon: React.createElement(ShareAltOutlined) },
                     { type: 'divider' },
                     { key: 'delete',    label: 'Elimina',    icon: React.createElement(DeleteOutlined), danger: true },
                   ] : [
-                    { key: 'view',      label: 'Visualizza', icon: React.createElement(EyeOutlined) },
+                    { key: 'open',      label: 'Apri',       icon: React.createElement(EyeOutlined) },
                     { key: 'duplicate', label: 'Duplica',    icon: React.createElement(CopyOutlined) },
+                    { key: 'share',     label: 'Condividi',  icon: React.createElement(ShareAltOutlined) },
                     { type: 'divider' },
-                    { key: 'delete',    label: 'Scollega', icon: React.createElement(DeleteOutlined), danger: true },
+                    { key: 'delete',    label: 'Rimuovi',    icon: React.createElement(MinusCircleOutlined), danger: true },
                   ],
                   onClick: ({ key, domEvent }) => {
                     domEvent.stopPropagation();
-                    if (key === 'view')      onViewCollection(record);
-                    if (key === 'edit')      onEditCollection(record);
+                    if (key === 'open')      onEditCollection(record);
                     if (key === 'duplicate') onDuplicateCollection(record);
-                    if (key === 'share')     openShareModal([record.id]);
+                    if (key === 'share')     onShare([record.id]);
                     if (key === 'delete') antd.Modal.confirm({
                       title: isOwn ? 'Elimina collezione' : 'Rimuovi dal tuo account',
                       icon: React.createElement(DeleteOutlined, { style: { color: '#ff4d4f' } }),
@@ -1084,169 +952,13 @@ function CollectionsListView({ onNewCollection, onEditCollection, collections, o
         }),
       ),
     ),   // ← chiude coll-view
-  ),   // ← chiude coll-shell
-
-  // ── Modal condivisione ────────────────────────────────
-  React.createElement(antd.Modal, {
-    title: React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
-      React.createElement('div', {
-        style: { width: 32, height: 32, borderRadius: 8, background: '#F0EAFF',
-          display: 'flex', alignItems: 'center', justifyContent: 'center' }
-      }, React.createElement(ShareAltOutlined, { style: { fontSize: 15, color: '#3E00FB' } })),
-      selectedCollections.length === 1
-        ? `Condividi "${selectedCollections[0]?.name}"`
-        : `Condividi ${selectedCollections.length} collezioni`,
-    ),
-    open: shareModalOpen,
-    onCancel: () => setShareModalOpen(false),
-    width: 520,
-    footer: null,
-  },
-    React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 0, paddingTop: 4 } },
-
-      // ── Cerca utente ─────────────────────────────────────
-      React.createElement('div', { style: { display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 } },
-        React.createElement('div', { style: { flex: 1, position: 'relative' } },
-          React.createElement(antd.Input, {
-            placeholder: 'Cerca utente…',
-            value: userSearch,
-            prefix: React.createElement(UserOutlined, { style: { color: 'rgba(0,0,0,0.25)' } }),
-            autoFocus: true,
-            autoComplete: 'off',
-            onChange: e => { setUserSearch(e.target.value); setShowUserDrop(true); },
-            onFocus: () => setShowUserDrop(true),
-          }),
-          // Dropdown suggerimenti
-          showUserDrop && suggestedUsers.length > 0 && React.createElement('div', {
-            style: { position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 100,
-              background: '#fff', border: '1px solid #D9D9D9', borderRadius: 6,
-              boxShadow: '0 6px 16px rgba(0,0,0,0.08)', marginTop: 2, overflow: 'hidden' }
-          },
-            suggestedUsers.map(u => React.createElement('div', {
-              key: u.id,
-              style: { display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px',
-                cursor: 'pointer', transition: 'background 0.15s' },
-              onMouseEnter: e => e.currentTarget.style.background = '#F5F5F5',
-              onMouseLeave: e => e.currentTarget.style.background = 'transparent',
-              onMouseDown: e => { e.preventDefault(); addPendingUser(u); },
-            },
-              React.createElement('div', {
-                style: { width: 30, height: 30, borderRadius: '50%', background: u.avatarColor,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#fff', fontSize: 11, fontWeight: 600, flexShrink: 0 }
-              }, u.initials),
-              React.createElement('span', { style: { fontSize: 13, fontWeight: 500, color: 'rgba(0,0,0,0.88)' } }, u.name),
-            ))
-          ),
-        ),
-        React.createElement(Button, {
-          type: 'primary',
-          disabled: pendingUsers.length === 0,
-          onClick: handleShare,
-        }, 'Condividi'),
-      ),
-
-      // ── Utenti in attesa ──────────────────────────────────
-      pendingUsers.length > 0 && React.createElement('div', {
-        style: { display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 12 }
-      },
-        pendingUsers.map(({ user: u, permission }) => React.createElement('div', {
-          key: u.id,
-          style: { display: 'flex', alignItems: 'center', gap: 10, padding: '6px 10px',
-            borderRadius: 6, background: '#F8F6FF', border: '1px solid #EDE9FF' }
-        },
-          React.createElement('div', {
-            style: { width: 28, height: 28, borderRadius: '50%', background: u.avatarColor,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#fff', fontSize: 11, fontWeight: 600, flexShrink: 0 }
-          }, u.initials),
-          React.createElement('div', { style: { flex: 1, display: 'flex', flexDirection: 'column', lineHeight: 1.3 } },
-            React.createElement('span', { style: { fontSize: 13, fontWeight: 500, color: 'rgba(0,0,0,0.88)' } }, u.name),
-            React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)' } }, u.role),
-          ),
-          React.createElement(antd.Select, {
-            value: permission,
-            size: 'small',
-            variant: 'borderless',
-            popupMatchSelectWidth: false,
-            dropdownStyle: { minWidth: 160 },
-            onChange: v => updatePendingPerm(u.id, v),
-            style: { fontSize: 12 },
-            options: [
-              { value: 'view', label: 'Può visualizzare' },
-              { value: 'edit', label: 'Può modificare' },
-            ],
-          }),
-          React.createElement('div', {
-            style: { cursor: 'pointer', color: 'rgba(0,0,0,0.35)', padding: 2, lineHeight: 1,
-              display: 'flex', alignItems: 'center' },
-            onClick: () => removePendingUser(u.id),
-          }, React.createElement(icons.CloseOutlined, { style: { fontSize: 12 } })),
-        ))
-      ),
-
-      React.createElement(Divider, { style: { margin: '4px 0 12px' } }),
-
-      // ── Chi ha accesso ────────────────────────────────────
-      React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 10 } },
-        React.createElement('span', { style: { fontSize: 13, fontWeight: 600, color: 'rgba(0,0,0,0.88)' } }, 'Chi ha accesso'),
-
-        // Proprietario
-        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
-          React.createElement('div', {
-            style: { width: 30, height: 30, borderRadius: '50%', background: CURRENT_USER.avatarColor,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#fff', fontSize: 11, fontWeight: 600, flexShrink: 0 }
-          }, CURRENT_USER.initials),
-          React.createElement('div', { style: { flex: 1, display: 'flex', flexDirection: 'column', lineHeight: 1.3 } },
-            React.createElement('span', { style: { fontSize: 13, fontWeight: 500, color: 'rgba(0,0,0,0.88)' } },
-              `${CURRENT_USER.name} (tu)`),
-            React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)' } }, CURRENT_USER.role),
-          ),
-          React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)', paddingRight: 4 } }, 'Proprietario'),
-        ),
-
-        // Utenti già condivisi
-        sharedUsersForSelected.map(({ user: u, permission }) => React.createElement('div', {
-              key: u.id,
-              style: { display: 'flex', alignItems: 'center', gap: 10 }
-            },
-              React.createElement('div', {
-                style: { width: 30, height: 30, borderRadius: '50%', background: u.avatarColor,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#fff', fontSize: 11, fontWeight: 600, flexShrink: 0 }
-              }, u.initials),
-              React.createElement('div', { style: { flex: 1, display: 'flex', flexDirection: 'column', lineHeight: 1.3 } },
-                React.createElement('span', { style: { fontSize: 13, fontWeight: 500, color: 'rgba(0,0,0,0.88)' } }, u.name),
-                React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)' } }, u.role),
-              ),
-              React.createElement(antd.Select, {
-                value: permission,
-                size: 'small',
-                variant: 'borderless',
-                popupMatchSelectWidth: false,
-                dropdownStyle: { minWidth: 160 },
-                style: { fontSize: 12 },
-                onChange: v => updateSharedPermission(u.id, v),
-                options: [
-                  { value: 'view',   label: 'Può visualizzare' },
-                  { value: 'edit',   label: 'Può modificare' },
-                  { value: 'remove', label: React.createElement('span', { style: { color: '#FF4A1C' } }, 'Rimuovi') },
-                ],
-              }),
-            )),
-      ),
-
-    )
-  ),
-
-  ); // ← chiude Fragment
+  );   // ← chiude coll-shell
 }
 
 // ─────────────────────────────────────────────────────────
 // COLLECTION MAP PICKER
 // ─────────────────────────────────────────────────────────
-function CollectionMapPicker({ open, activePois, poiRadius, autocompleteService, placesService, collPois, onAddPin, onRemovePin, allCollections }) {
+function CollectionMapPicker({ open, autocompleteService, placesService, collPois, onAddPin, onRemovePin, allCollections }) {
   const mapRef           = useRef(null);
   const mapInst          = useRef(null);
   const circlesRef       = useRef([]);
@@ -1288,31 +1000,6 @@ function CollectionMapPicker({ open, activePois, poiRadius, autocompleteService,
     const result = await photonReverse(lat, lng);
     dropPin(result || { id: `click-${lat.toFixed(5)}-${lng.toFixed(5)}`, label: `${lat.toFixed(5)}, ${lng.toFixed(5)}`, sub: '', lat, lng });
   };
-
-  // ── Marker POI attivi (dalla vista mappa principale) ───
-  useEffect(() => {
-    if (!mapInst.current) return;
-    circlesRef.current.forEach(c => c.setMap(null));
-    markersRef.current.forEach(m => m.setMap(null));
-    circlesRef.current = [];
-    markersRef.current = [];
-    activePois.forEach(poi => {
-      const color = poi.color || '#3E00FB';
-      circlesRef.current.push(new google.maps.Circle({
-        map: mapInst.current, center: { lat: poi.lat, lng: poi.lng }, radius: poiRadius,
-        fillColor: color, fillOpacity: 0.12, strokeColor: color, strokeOpacity: 0.75, strokeWeight: 2,
-      }));
-      markersRef.current.push(new google.maps.Marker({
-        map: mapInst.current, position: { lat: poi.lat, lng: poi.lng }, title: poi.label,
-        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 7, fillColor: '#3E00FB', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
-      }));
-    });
-    if (activePois.length > 0) {
-      const bounds = new google.maps.LatLngBounds();
-      activePois.forEach(p => bounds.extend({ lat: p.lat, lng: p.lng }));
-      mapInst.current.fitBounds(bounds, 80);
-    }
-  }, [activePois, poiRadius]);
 
   // ── Sincronizza marker mappa con collPois ─────────────
   useEffect(() => {
@@ -1388,12 +1075,10 @@ function CollectionMapPicker({ open, activePois, poiRadius, autocompleteService,
     }
   };
 
-  // Reset ad ogni apertura
   useEffect(() => {
     if (!open) return;
     setPendingPin(null);
     if (pendingMarkerRef.current) { pendingMarkerRef.current.setMap(null); pendingMarkerRef.current = null; }
-    // Aspetta l'animazione del drawer prima di fare resize
     setTimeout(() => {
       if (mapInst.current) google.maps.event.trigger(mapInst.current, 'resize');
     }, 300);
@@ -1473,7 +1158,7 @@ function CollectionMapPicker({ open, activePois, poiRadius, autocompleteService,
           React.createElement(Input, {
             ref: inputRef,
             prefix: React.createElement(icons.SearchOutlined, { style: { color: 'rgba(0,0,0,0.3)' } }),
-            placeholder: 'Via, civico, supermercato, ospedale…',
+            placeholder: 'Es. Via Roma 14, Lidl, supermercati…',
             value: addrQuery,
             onChange: e => handleAddrChange(e.target.value),
             onFocus: () => setShowSugg(true),
@@ -1623,57 +1308,6 @@ function CollectionMapPicker({ open, activePois, poiRadius, autocompleteService,
   );
 }
 
-// ─────────────────────────────────────────────────────────
-// COLLECTION VIEW MAP — mappa read-only per il drawer visualizza
-// ─────────────────────────────────────────────────────────
-function CollectionViewMap({ pois, color, open }) {
-  const mapRef     = useRef(null);
-  const mapInst    = useRef(null);
-  const markersRef = useRef([]);
-
-  useEffect(() => {
-    if (!mapRef.current || mapInst.current) return;
-    try {
-      mapInst.current = new google.maps.Map(mapRef.current, {
-        center: { lat: 38.115, lng: 13.362 },
-        zoom: 12,
-        disableDefaultUI: true,
-        zoomControl: true,
-        zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_BOTTOM },
-        styles: [{ featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] }],
-      });
-    } catch(err) { console.warn('CollectionViewMap init:', err); }
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    setTimeout(() => {
-      if (mapInst.current) google.maps.event.trigger(mapInst.current, 'resize');
-    }, 300);
-  }, [open]);
-
-  useEffect(() => {
-    if (!mapInst.current) return;
-    markersRef.current.forEach(m => m.setMap(null));
-    markersRef.current = [];
-    const pinColor = color || '#3E00FB';
-    (pois || []).forEach(poi => {
-      markersRef.current.push(new google.maps.Marker({
-        map: mapInst.current,
-        position: { lat: poi.lat, lng: poi.lng },
-        title: poi.label,
-        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: pinColor, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 },
-      }));
-    });
-    if ((pois || []).length > 0) {
-      const bounds = new google.maps.LatLngBounds();
-      pois.forEach(p => bounds.extend({ lat: p.lat, lng: p.lng }));
-      mapInst.current.fitBounds(bounds, 60);
-    }
-  }, [pois, color]);
-
-  return React.createElement('div', { ref: mapRef, style: { width: '100%', height: '100%' } });
-}
 
 // ─────────────────────────────────────────────────────────
 // APP
@@ -1712,10 +1346,12 @@ function App() {
 
   // ── Schermata creazione/modifica ────────────────────────
   const [appView, setAppView] = useState('list'); // 'list' | 'edit'
-  const [newCollName,  setNewCollName]  = useState('');
-  const [newCollIcon,  setNewCollIcon]  = useState('StarOutlined');
-  const [newCollColor, setNewCollColor] = useState(COLL_COLORS[0]);
-  const [collPois,     setCollPois]     = useState([]);
+  const [newCollName,        setNewCollName]        = useState('');
+  const [newCollDescription, setNewCollDescription] = useState('');
+  const [newCollArea,        setNewCollArea]        = useState('');
+  const [newCollIcon,        setNewCollIcon]        = useState('StarOutlined');
+  const [newCollColor,       setNewCollColor]       = useState(COLL_COLORS[0]);
+  const [collPois,           setCollPois]           = useState([]);
   const [editingColl,  setEditingColl]  = useState(null);
 
   const handleAddCollPin    = useCallback((poi) => setCollPois(prev => prev.some(p => p.id === poi.id) ? prev : [...prev, poi]), []);
@@ -1725,7 +1361,6 @@ function App() {
   const closeNewCollDrawer = useCallback(() => {
     setAppView('list');
     setEditingColl(null);
-    setActivePois([]);
     setCollPois([]);
   }, []);
 
@@ -1738,9 +1373,15 @@ function App() {
     if (editingColl) {
       setCollections(prev => prev.map(c =>
         c.id === editingColl.id
-          ? { ...c, name: newCollName.trim(), icon: newCollIcon, color: newCollColor, pois: collPois, poisCount: collPois.length, updatedAt: `${dd}-${mm}-${yyyy}` }
+          ? { ...c, name: newCollName.trim(), description: newCollDescription.trim(), area: newCollArea.trim(), icon: newCollIcon, color: newCollColor, pois: collPois, poisCount: collPois.length, updatedAt: `${dd}-${mm}-${yyyy}` }
           : c
       ));
+      closeNewCollDrawer();
+      setNewCollName('');
+      setNewCollDescription('');
+      setNewCollArea('');
+      setNewCollIcon('StarOutlined');
+      setNewCollColor(COLL_COLORS[0]);
     } else {
       const coll = {
         id: `col-cus-${Date.now()}`,
@@ -1752,23 +1393,107 @@ function App() {
         createdBy: CURRENT_USER.name,
         createdAt: `${dd}-${mm}-${yyyy}`,
         updatedAt: `${dd}-${mm}-${yyyy}`,
-        description: '',
-        area: '',
+        description: newCollDescription.trim(),
+        area: newCollArea.trim(),
       };
       setCollections(prev => [coll, ...prev]);
+      setEditingColl(coll);
+      setEditReadOnly(false);
+      antd.message.success(`Collezione "${coll.name}" creata`);
     }
-    closeNewCollDrawer();
-    setNewCollName('');
-    setNewCollIcon('StarOutlined');
-    setNewCollColor(COLL_COLORS[0]);
-  }, [newCollName, newCollIcon, newCollColor, collPois, editingColl, closeNewCollDrawer]);
+  }, [newCollName, newCollDescription, newCollArea, newCollIcon, newCollColor, collPois, editingColl, closeNewCollDrawer]);
 
   // ── Modifica collezione (riusa drawer creazione) ────────
   const [editReadOnly, setEditReadOnly] = useState(false);
 
+  // ── Share modal ──────────────────────────────────────────
+  const [shareModalOpen,   setShareModalOpen]   = useState(false);
+  const [shareTargetIds,   setShareTargetIds]   = useState([]);
+  const [userSearch,       setUserSearch]       = useState('');
+  const [pendingUsers,     setPendingUsers]     = useState([]);
+  const [pendingPerm,      setPendingPerm]      = useState('view');
+  const [collectionShares, setCollectionShares] = useState({});
+  const [showUserDrop,     setShowUserDrop]     = useState(false);
+
+  const openShareModal = (ids) => {
+    setShareTargetIds(ids);
+    setUserSearch('');
+    setPendingUsers([]);
+    setPendingPerm('view');
+    setShowUserDrop(false);
+    setShareModalOpen(true);
+  };
+
+  const suggestedUsers = PLATFORM_USERS.filter(u => {
+    if (!userSearch.trim()) return false;
+    const q = userSearch.toLowerCase();
+    const parts = u.name.toLowerCase().split(' ');
+    return parts.some(part => part.startsWith(q))
+      && !pendingUsers.find(p => p.user.id === u.id);
+  });
+
+  const addPendingUser = (user) => {
+    setPendingUsers(prev => [...prev, { user, permission: pendingPerm }]);
+    setUserSearch('');
+    setShowUserDrop(false);
+  };
+
+  const removePendingUser = (userId) => {
+    setPendingUsers(prev => prev.filter(p => p.user.id !== userId));
+  };
+
+  const updatePendingPerm = (userId, perm) => {
+    setPendingUsers(prev => prev.map(p => p.user.id === userId ? { ...p, permission: perm } : p));
+  };
+
+  const updateSharedPermission = (userId, value) => {
+    setCollectionShares(prev => {
+      const next = { ...prev };
+      shareTargetIds.forEach(id => {
+        if (value === 'remove') {
+          next[id] = (prev[id] || []).filter(e => e.user.id !== userId);
+        } else {
+          next[id] = (prev[id] || []).map(e => e.user.id === userId ? { ...e, permission: value } : e);
+        }
+      });
+      return next;
+    });
+  };
+
+  const handleShare = () => {
+    if (pendingUsers.length === 0) { setShareModalOpen(false); return; }
+    setCollectionShares(prev => {
+      const next = { ...prev };
+      shareTargetIds.forEach(id => {
+        const existing = prev[id] || [];
+        const merged = [...existing];
+        pendingUsers.forEach(({ user, permission }) => {
+          if (!merged.find(e => e.user.id === user.id)) merged.push({ user, permission });
+          else merged.forEach(e => { if (e.user.id === user.id) e.permission = permission; });
+        });
+        next[id] = merged;
+      });
+      return next;
+    });
+    setShareModalOpen(false);
+    antd.message.success('Collezione condivisa correttamente');
+  };
+
+  const sharedUsersForSelected = (() => {
+    if (shareTargetIds.length === 0) return [];
+    const maps = shareTargetIds.map(id => collectionShares[id] || []);
+    if (maps.length === 1) return maps[0];
+    const first = maps[0];
+    return first.filter(e => maps.every(m => m.find(x => x.user.id === e.user.id)));
+  })();
+
+  const selectedCollectionsForModal = collections.filter(c => shareTargetIds.includes(c.id));
+
   const handleOpenEdit = useCallback((record) => {
     setEditingColl(record);
     setNewCollName(record.name);
+    setNewCollDescription(record.description || '');
+    setNewCollArea(record.area || '');
     setNewCollIcon(record.icon || 'StarOutlined');
     setNewCollColor(record.color || COLL_COLORS[0]);
     setCollPois(record.pois || []);
@@ -1777,16 +1502,16 @@ function App() {
   }, []);
 
   const hasChanges = editingColl ? (
-    newCollName.trim() !== editingColl.name ||
-    newCollIcon !== (editingColl.icon || 'StarOutlined') ||
-    newCollColor !== (editingColl.color || COLL_COLORS[0]) ||
-    collPois.length !== (editingColl.pois || []).length ||
+    newCollName.trim()        !== editingColl.name ||
+    newCollDescription.trim() !== (editingColl.description || '') ||
+    newCollArea.trim()        !== (editingColl.area || '') ||
+    newCollIcon               !== (editingColl.icon || 'StarOutlined') ||
+    newCollColor              !== (editingColl.color || COLL_COLORS[0]) ||
+    collPois.length           !== (editingColl.pois || []).length ||
     !collPois.every((p, i) => p.id === (editingColl.pois || [])[i]?.id)
   ) : true;
 
   // ── POI ────────────────────────────────────────────────
-  const [activePois,   setActivePois]   = useState([]);
-  const [poiRadius,    setPoiRadius]    = useState(500);
   const placesServiceRef       = useRef(null);   // google.maps.places.PlacesService
   const autocompleteServiceRef = useRef(null);   // google.maps.places.AutocompleteService
 
@@ -1807,11 +1532,11 @@ function App() {
     // ── Vista lista / vista modifica ─────────────────────
     appView === 'list'
       ? React.createElement(CollectionsListView, {
-          onNewCollection:       () => { setNewCollName(''); setNewCollIcon('StarOutlined'); setNewCollColor(COLL_COLORS[0]); setCollPois([]); setEditReadOnly(false); setAppView('edit'); },
-          onViewCollection:      handleOpenEdit,
+          onNewCollection:       () => { setNewCollName(''); setNewCollDescription(''); setNewCollArea(''); setNewCollIcon('StarOutlined'); setNewCollColor(COLL_COLORS[0]); setCollPois([]); setEditReadOnly(false); setAppView('edit'); },
           onEditCollection:      handleOpenEdit,
           onDuplicateCollection: handleDuplicateCollection,
           onDeleteCollection:    handleDeleteCollection,
+          onShare:               openShareModal,
           collections,
           highlightedCollId,
         })
@@ -1819,7 +1544,7 @@ function App() {
 
           // ── Header ───────────────────────────────────────
           React.createElement('div', { className: 'coll-list-header' },
-            React.createElement('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 } },
+            React.createElement('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2 } },
               React.createElement(antd.Button, {
                 type: 'link',
                 icon: React.createElement(ArrowLeftOutlined),
@@ -1833,13 +1558,37 @@ function App() {
                   editingColl ? editingColl.name : 'Nuova Collezione POI',
                 ),
               ),
+              editingColl && React.createElement('div', {
+                style: { display: 'flex', alignItems: 'center', gap: 16, fontSize: 13, lineHeight: '22px' }
+              },
+                React.createElement('span', null,
+                  React.createElement('span', { style: { color: 'rgba(0,0,0,0.45)' } }, 'Creato da: '),
+                  React.createElement('span', { style: { color: 'rgba(0,0,0,0.88)' } }, editingColl.createdBy),
+                ),
+                React.createElement('span', null,
+                  React.createElement('span', { style: { color: 'rgba(0,0,0,0.45)' } }, 'Creato il: '),
+                  React.createElement('span', { style: { color: 'rgba(0,0,0,0.88)' } }, editingColl.createdAt),
+                ),
+                React.createElement('span', null,
+                  React.createElement('span', { style: { color: 'rgba(0,0,0,0.45)' } }, 'Aggiornato il: '),
+                  React.createElement('span', { style: { color: 'rgba(0,0,0,0.88)' } }, editingColl.updatedAt),
+                ),
+              ),
             ),
-            !editReadOnly && React.createElement(antd.Button, {
-              type: 'primary',
-              icon: React.createElement(editingColl ? SaveOutlined : PlusOutlined),
-              disabled: editingColl ? (!hasChanges || !newCollName.trim()) : !newCollName.trim(),
-              onClick: handleCreateCollection,
-            }, editingColl ? 'Salva' : 'Crea'),
+            React.createElement('div', { style: { display: 'flex', gap: 8, alignItems: 'center' } },
+              React.createElement(antd.Button, {
+                type: 'default',
+                icon: React.createElement(ShareAltOutlined),
+                disabled: !editingColl,
+                onClick: () => editingColl && openShareModal([editingColl.id]),
+              }, 'Condividi'),
+              !editReadOnly && React.createElement(antd.Button, {
+                type: 'primary',
+                icon: React.createElement(SaveOutlined),
+                disabled: editingColl ? (!hasChanges || !newCollName.trim()) : !newCollName.trim(),
+                onClick: handleCreateCollection,
+              }, 'Salva'),
+            ),
           ),
 
           // ── Body: sidebar form + mappa ────────────────────
@@ -1855,6 +1604,27 @@ function App() {
                   onPressEnter: !editReadOnly ? handleCreateCollection : undefined,
                   size: 'large',
                   autoFocus: true,
+                  disabled: editReadOnly,
+                }),
+              ),
+              React.createElement('div', { className: 'new-coll-field' },
+                React.createElement('span', { className: 'new-coll-label' }, 'Descrizione breve'),
+                React.createElement(antd.Input.TextArea, {
+                  placeholder: 'Es. Istituti scolastici nel quartiere Politeama',
+                  value: newCollDescription,
+                  onChange: e => !editReadOnly && setNewCollDescription(e.target.value),
+                  disabled: editReadOnly,
+                  maxLength: 120,
+                  showCount: true,
+                  autoSize: { minRows: 2, maxRows: 3 },
+                }),
+              ),
+              React.createElement('div', { className: 'new-coll-field' },
+                React.createElement('span', { className: 'new-coll-label' }, 'Area di riferimento'),
+                React.createElement(antd.Input, {
+                  placeholder: 'Es. Palermo PA',
+                  value: newCollArea,
+                  onChange: e => !editReadOnly && setNewCollArea(e.target.value),
                   disabled: editReadOnly,
                 }),
               ),
@@ -1892,8 +1662,6 @@ function App() {
             React.createElement('div', { className: 'coll-edit-main' },
               React.createElement(CollectionMapPicker, {
                 open: appView === 'edit',
-                activePois,
-                poiRadius,
                 autocompleteService: autocompleteServiceRef.current,
                 placesService: placesServiceRef.current,
                 collPois,
@@ -1906,6 +1674,157 @@ function App() {
 
           ),
         ),
+
+    // ── Modal condivisione ──────────────────────────────
+    React.createElement(antd.Modal, {
+      title: React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+        React.createElement('div', {
+          style: { width: 32, height: 32, borderRadius: 8, background: '#F0EAFF',
+            display: 'flex', alignItems: 'center', justifyContent: 'center' }
+        }, React.createElement(ShareAltOutlined, { style: { fontSize: 15, color: '#3E00FB' } })),
+        selectedCollectionsForModal.length === 1
+          ? `Condividi "${selectedCollectionsForModal[0]?.name}"`
+          : `Condividi ${selectedCollectionsForModal.length} collezioni`,
+      ),
+      open: shareModalOpen,
+      onCancel: () => setShareModalOpen(false),
+      width: 520,
+      footer: null,
+    },
+      React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 0, paddingTop: 4 } },
+
+        // ── Cerca utente ────────────────────────────────
+        React.createElement('div', { style: { display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 } },
+          React.createElement('div', { style: { flex: 1, position: 'relative' } },
+            React.createElement(antd.Input, {
+              placeholder: 'Cerca utente…',
+              value: userSearch,
+              prefix: React.createElement(UserOutlined, { style: { color: 'rgba(0,0,0,0.25)' } }),
+              autoFocus: true,
+              autoComplete: 'off',
+              onChange: e => { setUserSearch(e.target.value); setShowUserDrop(true); },
+              onFocus: () => setShowUserDrop(true),
+            }),
+            showUserDrop && suggestedUsers.length > 0 && React.createElement('div', {
+              style: { position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 100,
+                background: '#fff', border: '1px solid #D9D9D9', borderRadius: 6,
+                boxShadow: '0 6px 16px rgba(0,0,0,0.08)', marginTop: 2, overflow: 'hidden' }
+            },
+              suggestedUsers.map(u => React.createElement('div', {
+                key: u.id,
+                style: { display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px',
+                  cursor: 'pointer', transition: 'background 0.15s' },
+                onMouseEnter: e => e.currentTarget.style.background = '#F5F5F5',
+                onMouseLeave: e => e.currentTarget.style.background = 'transparent',
+                onMouseDown: e => { e.preventDefault(); addPendingUser(u); },
+              },
+                React.createElement('div', {
+                  style: { width: 30, height: 30, borderRadius: '50%', background: u.avatarColor,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: '#fff', fontSize: 11, fontWeight: 600, flexShrink: 0 }
+                }, u.initials),
+                React.createElement('span', { style: { fontSize: 13, fontWeight: 500, color: 'rgba(0,0,0,0.88)' } }, u.name),
+              ))
+            ),
+          ),
+          React.createElement(Button, {
+            type: 'primary',
+            disabled: pendingUsers.length === 0,
+            onClick: handleShare,
+          }, 'Condividi'),
+        ),
+
+        // ── Utenti in attesa ────────────────────────────
+        pendingUsers.length > 0 && React.createElement('div', {
+          style: { display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 12 }
+        },
+          pendingUsers.map(({ user: u, permission }) => React.createElement('div', {
+            key: u.id,
+            style: { display: 'flex', alignItems: 'center', gap: 10, padding: '6px 10px',
+              borderRadius: 6, background: '#F8F6FF', border: '1px solid #EDE9FF' }
+          },
+            React.createElement('div', {
+              style: { width: 28, height: 28, borderRadius: '50%', background: u.avatarColor,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff', fontSize: 11, fontWeight: 600, flexShrink: 0 }
+            }, u.initials),
+            React.createElement('div', { style: { flex: 1, display: 'flex', flexDirection: 'column', lineHeight: 1.3 } },
+              React.createElement('span', { style: { fontSize: 13, fontWeight: 500, color: 'rgba(0,0,0,0.88)' } }, u.name),
+              React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)' } }, u.role),
+            ),
+            React.createElement(antd.Select, {
+              value: permission,
+              size: 'small',
+              variant: 'borderless',
+              popupMatchSelectWidth: false,
+              dropdownStyle: { minWidth: 160 },
+              onChange: v => updatePendingPerm(u.id, v),
+              style: { fontSize: 12 },
+              options: [
+                { value: 'view', label: 'Può visualizzare' },
+                { value: 'edit', label: 'Può modificare' },
+              ],
+            }),
+            React.createElement('div', {
+              style: { cursor: 'pointer', color: 'rgba(0,0,0,0.35)', padding: 2, lineHeight: 1,
+                display: 'flex', alignItems: 'center' },
+              onClick: () => removePendingUser(u.id),
+            }, React.createElement(icons.CloseOutlined, { style: { fontSize: 12 } })),
+          ))
+        ),
+
+        React.createElement(Divider, { style: { margin: '4px 0 12px' } }),
+
+        // ── Chi ha accesso ──────────────────────────────
+        React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 10 } },
+          React.createElement('span', { style: { fontSize: 13, fontWeight: 600, color: 'rgba(0,0,0,0.88)' } }, 'Chi ha accesso'),
+
+          React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+            React.createElement('div', {
+              style: { width: 30, height: 30, borderRadius: '50%', background: CURRENT_USER.avatarColor,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff', fontSize: 11, fontWeight: 600, flexShrink: 0 }
+            }, CURRENT_USER.initials),
+            React.createElement('div', { style: { flex: 1, display: 'flex', flexDirection: 'column', lineHeight: 1.3 } },
+              React.createElement('span', { style: { fontSize: 13, fontWeight: 500, color: 'rgba(0,0,0,0.88)' } },
+                `${CURRENT_USER.name} (tu)`),
+              React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)' } }, CURRENT_USER.role),
+            ),
+            React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)', paddingRight: 4 } }, 'Proprietario'),
+          ),
+
+          sharedUsersForSelected.map(({ user: u, permission }) => React.createElement('div', {
+            key: u.id,
+            style: { display: 'flex', alignItems: 'center', gap: 10 }
+          },
+            React.createElement('div', {
+              style: { width: 30, height: 30, borderRadius: '50%', background: u.avatarColor,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff', fontSize: 11, fontWeight: 600, flexShrink: 0 }
+            }, u.initials),
+            React.createElement('div', { style: { flex: 1, display: 'flex', flexDirection: 'column', lineHeight: 1.3 } },
+              React.createElement('span', { style: { fontSize: 13, fontWeight: 500, color: 'rgba(0,0,0,0.88)' } }, u.name),
+              React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)' } }, u.role),
+            ),
+            React.createElement(antd.Select, {
+              value: permission,
+              size: 'small',
+              variant: 'borderless',
+              popupMatchSelectWidth: false,
+              dropdownStyle: { minWidth: 160 },
+              style: { fontSize: 12 },
+              onChange: v => updateSharedPermission(u.id, v),
+              options: [
+                { value: 'view',   label: 'Può visualizzare' },
+                { value: 'edit',   label: 'Può modificare' },
+                { value: 'remove', label: React.createElement('span', { style: { color: '#FF4A1C' } }, 'Rimuovi') },
+              ],
+            }),
+          )),
+        ),
+
+      )
+    ),
 
   );
 }
