@@ -363,6 +363,20 @@ INITIAL_OWN_COLLECTIONS.forEach(c => { c.poisCount = c.pois.length; });
 
 const INITIAL_COLLECTIONS = [...INITIAL_OWN_COLLECTIONS, ...SHARED_COLLECTIONS];
 
+const INITIAL_COLLECTION_SHARES = {
+  'col-cus-1': [
+    { user: { id: 'u1', name: 'Marco Ricci',    initials: 'MR', avatarColor: '#722ED1' }, permission: 'edit' },
+    { user: { id: 'u2', name: 'Sofia Catalano', initials: 'SC', avatarColor: '#EB2F96' }, permission: 'view' },
+  ],
+  'col-cus-3': [
+    { user: { id: 'u3', name: 'Luca Ferrara',   initials: 'LF', avatarColor: '#FA8C16' }, permission: 'view' },
+  ],
+  'col-cus-4': [
+    { user: { id: 'u1', name: 'Marco Ricci',    initials: 'MR', avatarColor: '#722ED1' }, permission: 'view' },
+    { user: { id: 'u5', name: 'Andrea Conti',   initials: 'AC', avatarColor: '#52C41A' }, permission: 'view' },
+  ],
+};
+
 // ─────────────────────────────────────────────────────────
 // POI delle collezioni di default (mock)
 // ─────────────────────────────────────────────────────────
@@ -681,7 +695,7 @@ const COLL_ICON_MAP = {
 };
 
 
-function CollectionsListView({ onNewCollection, onEditCollection, collections, onDeleteCollection, onDuplicateCollection, highlightedCollId, onShare }) {
+function CollectionsListView({ onNewCollection, onEditCollection, collections, onDeleteCollection, onDuplicateCollection, highlightedCollId, onShare, collectionShares }) {
   const [shareMode,    setShareMode]    = useState(false);
   const [selectedKeys, setSelectedKeys] = useState([]);
 
@@ -831,7 +845,7 @@ function CollectionsListView({ onNewCollection, onEditCollection, collections, o
                 : React.createElement('span', { style: { color: 'rgba(0,0,0,0.2)', fontSize: 13 } }, '—'),
             },
             {
-              title: "POI's",
+              title: "POI",
               dataIndex: 'poisCount',
               width: 80,
               align: 'center',
@@ -881,6 +895,46 @@ function CollectionsListView({ onNewCollection, onEditCollection, collections, o
               },
             },
             {
+              title: 'Condivisa con',
+              width: 130,
+              render: (_, record) => {
+                const shares = collectionShares[record.id] || [];
+                if (shares.length === 0) return React.createElement('span', { style: { color: 'rgba(0,0,0,0.2)', fontSize: 13 } }, '—');
+                const visible  = shares.slice(0, 3);
+                const overflow = shares.length - 3;
+                return React.createElement(Tooltip, {
+                  title: shares.map(s => s.user.name).join(', '),
+                  placement: 'top',
+                },
+                  React.createElement('div', {
+                    style: { display: 'inline-flex', alignItems: 'center', cursor: 'pointer' },
+                    onClick: e => { e.stopPropagation(); onShare([record.id]); },
+                  },
+                    visible.map((s, i) => React.createElement('span', {
+                      key: s.user.id,
+                      style: {
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        width: 22, height: 22, borderRadius: '50%',
+                        background: s.user.avatarColor, fontSize: 9, fontWeight: 700, color: '#fff',
+                        border: '2px solid #fff',
+                        marginLeft: i === 0 ? 0 : -6,
+                        position: 'relative', zIndex: visible.length - i,
+                      }
+                    }, s.user.initials)),
+                    overflow > 0 && React.createElement('span', {
+                      style: {
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        width: 22, height: 22, borderRadius: '50%',
+                        background: '#F0F0F0', fontSize: 9, fontWeight: 600, color: 'rgba(0,0,0,0.45)',
+                        border: '2px solid #fff',
+                        marginLeft: -6, position: 'relative',
+                      }
+                    }, `+${overflow}`),
+                  )
+                );
+              },
+            },
+            {
               title: '',
               width: 48,
               fixed: 'right',
@@ -907,12 +961,12 @@ function CollectionsListView({ onNewCollection, onEditCollection, collections, o
                     if (key === 'duplicate') onDuplicateCollection(record);
                     if (key === 'share')     onShare([record.id]);
                     if (key === 'delete') antd.Modal.confirm({
-                      title: isOwn ? 'Elimina collezione' : 'Rimuovi dal tuo account',
+                      title: isOwn ? 'Elimina collezione' : 'Rimuovi accesso',
                       icon: React.createElement(DeleteOutlined, { style: { color: '#ff4d4f' } }),
                       content: isOwn
                         ? `Sei sicuro di voler eliminare "${record.name}"? L'operazione non può essere annullata.`
-                        : `Rimuoverai "${record.name}" dal tuo account. Gli altri utenti che la usano non saranno coinvolti.`,
-                      okText: isOwn ? 'Elimina' : 'Rimuovi',
+                        : `Rimuoverai il tuo accesso a "${record.name}". Per riottenere l'accesso dovrai essere ricondiviso.`,
+                      okText: isOwn ? 'Elimina' : 'Rimuovi accesso',
                       okButtonProps: { danger: true },
                       cancelText: 'Annulla',
                       onOk: () => onDeleteCollection(record.id),
@@ -1240,14 +1294,18 @@ function CollectionMapPicker({ open, autocompleteService, placesService, collPoi
               React.createElement(icons.CloseOutlined, { style: { fontSize: 13 } }),
             ),
           ),
-          React.createElement('div', { style: { display: 'flex', gap: 8 } },
-            React.createElement(antd.Button, { onClick: dismissPin }, 'Ignora'),
-            React.createElement(antd.Button, {
-              type: 'primary',
-              icon: React.createElement(icons.PlusOutlined),
-              onClick: confirmPin,
-            }, 'Aggiungi alla collezione'),
-          ),
+          (() => {
+            const alreadyIn = collPois.some(p => p.id === pendingPin.id);
+            return React.createElement('div', { style: { display: 'flex', gap: 8 } },
+              React.createElement(antd.Button, { onClick: dismissPin }, 'Ignora'),
+              React.createElement(antd.Button, {
+                type: 'primary',
+                icon: React.createElement(alreadyIn ? icons.CheckOutlined : icons.PlusOutlined),
+                onClick: confirmPin,
+                disabled: alreadyIn,
+              }, alreadyIn ? 'Aggiunto alla collezione' : 'Aggiungi alla collezione'),
+            );
+          })(),
         ),
       ),
     ),
@@ -1335,7 +1393,12 @@ function App() {
   const [collPois,           setCollPois]           = useState([]);
   const [editingColl,  setEditingColl]  = useState(null);
 
-  const handleAddCollPin    = useCallback((poi) => setCollPois(prev => prev.some(p => p.id === poi.id) ? prev : [...prev, poi]), []);
+  const handleAddCollPin    = useCallback((poi) => {
+    setCollPois(prev => {
+      if (prev.some(p => p.id === poi.id)) return prev;
+      return [...prev, poi];
+    });
+  }, []);
   const handleRemoveCollPin = useCallback((id)  => setCollPois(prev => prev.filter(p => p.id !== id)), []);
 
 
@@ -1352,17 +1415,10 @@ function App() {
     const mm   = String(d.getMonth() + 1).padStart(2, '0');
     const yyyy = d.getFullYear();
     if (editingColl) {
-      setCollections(prev => prev.map(c =>
-        c.id === editingColl.id
-          ? { ...c, name: newCollName.trim(), description: newCollDescription.trim(), area: newCollArea.trim(), icon: newCollIcon, color: newCollColor, pois: collPois, poisCount: collPois.length, updatedAt: `${dd}-${mm}-${yyyy}` }
-          : c
-      ));
-      closeNewCollDrawer();
-      setNewCollName('');
-      setNewCollDescription('');
-      setNewCollArea('');
-      setNewCollIcon('StarOutlined');
-      setNewCollColor(COLL_COLORS[0]);
+      const updated = { ...editingColl, name: newCollName.trim(), description: newCollDescription.trim(), area: newCollArea.trim(), icon: newCollIcon, color: newCollColor, pois: collPois, poisCount: collPois.length, updatedAt: `${dd}-${mm}-${yyyy}` };
+      setCollections(prev => prev.map(c => c.id === editingColl.id ? updated : c));
+      setEditingColl(updated);
+      antd.message.success(`Collezione "${updated.name}" aggiornata`);
     } else {
       const coll = {
         id: `col-cus-${Date.now()}`,
@@ -1382,7 +1438,7 @@ function App() {
       setEditReadOnly(false);
       antd.message.success(`Collezione "${coll.name}" creata`);
     }
-  }, [newCollName, newCollDescription, newCollArea, newCollIcon, newCollColor, collPois, editingColl, closeNewCollDrawer]);
+  }, [newCollName, newCollDescription, newCollArea, newCollIcon, newCollColor, collPois, editingColl]);
 
   // ── Modifica collezione (riusa drawer creazione) ────────
   const [editReadOnly, setEditReadOnly] = useState(false);
@@ -1393,7 +1449,7 @@ function App() {
   const [userSearch,       setUserSearch]       = useState('');
   const [pendingUsers,     setPendingUsers]     = useState([]);
   const [pendingPerm,      setPendingPerm]      = useState('view');
-  const [collectionShares, setCollectionShares] = useState({});
+  const [collectionShares, setCollectionShares] = useState(INITIAL_COLLECTION_SHARES);
   const [showUserDrop,     setShowUserDrop]     = useState(false);
 
   const openShareModal = (ids) => {
@@ -1517,7 +1573,8 @@ function App() {
           onEditCollection:      handleOpenEdit,
           onDuplicateCollection: handleDuplicateCollection,
           onDeleteCollection:    handleDeleteCollection,
-          onShare:               openShareModal,
+          onShare:           openShareModal,
+          collectionShares,
           collections,
           highlightedCollId,
         })
@@ -1529,14 +1586,28 @@ function App() {
               React.createElement(antd.Button, {
                 type: 'link',
                 icon: React.createElement(ArrowLeftOutlined),
-                onClick: closeNewCollDrawer,
+                onClick: () => {
+                  const shouldConfirm = hasChanges && (editingColl || newCollName.trim());
+                  if (shouldConfirm) {
+                    antd.Modal.confirm({
+                      title: 'Modifiche non salvate',
+                      content: 'Hai modifiche non salvate. Se esci le perderai.',
+                      okText: 'Esci senza salvare',
+                      cancelText: 'Rimani',
+                      okButtonProps: { danger: true },
+                      onOk: closeNewCollDrawer,
+                    });
+                  } else {
+                    closeNewCollDrawer();
+                  }
+                },
                 style: { padding: 0, height: 'auto', fontSize: 13 },
               }, 'Lista Collezioni POI'),
               React.createElement('span', { className: 'coll-list-header-title' },
-                'Collezione POI',
+                'Collezione',
                 React.createElement('span', { style: { color: 'rgba(0,0,0,0.25)', fontWeight: 300, margin: '0 10px' } }, '|'),
                 React.createElement('span', { style: { fontWeight: 400, fontSize: 20 } },
-                  editingColl ? editingColl.name : 'Nuova Collezione POI',
+                  editingColl ? editingColl.name : 'Nuova Collezione',
                 ),
               ),
               editingColl && React.createElement('div', {
@@ -1554,6 +1625,41 @@ function App() {
                   React.createElement('span', { style: { color: 'rgba(0,0,0,0.45)' } }, 'Aggiornato il: '),
                   React.createElement('span', { style: { color: 'rgba(0,0,0,0.88)' } }, editingColl.updatedAt),
                 ),
+                (() => {
+                  const shares  = collectionShares[editingColl.id] || [];
+                  if (shares.length === 0) return null;
+                  const visible  = shares.slice(0, 3);
+                  const overflow = shares.length - 3;
+                  return React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', gap: 8 } },
+                    React.createElement('span', { style: { color: 'rgba(0,0,0,0.45)' } }, 'Condivisa con:'),
+                    React.createElement(Tooltip, { title: shares.map(s => s.user.name).join(', '), placement: 'top' },
+                      React.createElement('div', {
+                        style: { display: 'inline-flex', alignItems: 'center', cursor: 'pointer' },
+                        onClick: () => openShareModal([editingColl.id]),
+                      },
+                        visible.map((s, i) => React.createElement('span', {
+                          key: s.user.id,
+                          style: {
+                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                            width: 20, height: 20, borderRadius: '50%',
+                            background: s.user.avatarColor, fontSize: 8, fontWeight: 700, color: '#fff',
+                            border: '2px solid #fff',
+                            marginLeft: i === 0 ? 0 : -5,
+                            position: 'relative', zIndex: visible.length - i,
+                          }
+                        }, s.user.initials)),
+                        overflow > 0 && React.createElement('span', {
+                          style: {
+                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                            width: 20, height: 20, borderRadius: '50%',
+                            background: '#F0F0F0', fontSize: 8, fontWeight: 600, color: 'rgba(0,0,0,0.45)',
+                            border: '2px solid #fff', marginLeft: -5, position: 'relative',
+                          }
+                        }, `+${overflow}`),
+                      )
+                    ),
+                  );
+                })(),
               ),
             ),
             React.createElement('div', { style: { display: 'flex', gap: 8, alignItems: 'center' } },
@@ -1741,8 +1847,8 @@ function App() {
               onChange: v => updatePendingPerm(u.id, v),
               style: { fontSize: 12 },
               options: [
-                { value: 'view', label: 'Può visualizzare' },
-                { value: 'edit', label: 'Può modificare' },
+                { value: 'view', label: 'Visualizza' },
+                { value: 'edit', label: 'Modifica' },
               ],
             }),
             React.createElement('div', {
@@ -1795,8 +1901,8 @@ function App() {
               style: { fontSize: 12 },
               onChange: v => updateSharedPermission(u.id, v),
               options: [
-                { value: 'view',   label: 'Può visualizzare' },
-                { value: 'edit',   label: 'Può modificare' },
+                { value: 'view',   label: 'Visualizza' },
+                { value: 'edit',   label: 'Modifica' },
                 { value: 'remove', label: React.createElement('span', { style: { color: '#FF4A1C' } }, 'Rimuovi') },
               ],
             }),
