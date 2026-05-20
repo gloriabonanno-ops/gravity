@@ -70,14 +70,14 @@
       flex-shrink: 0;
       align-self: stretch;
       display: flex;
-      align-items: flex-start;
+      flex-direction: column;
     }
     .ooh-search-area {
       padding: 14px 20px 12px;
       display: flex; flex-direction: column; gap: 10px;
       flex: 1;
     }
-    .ss-search-bar { display: flex; gap: 8px; align-items: center; justify-content: center; position: relative; }
+    .ss-search-bar { display: flex; gap: 12px; align-items: center; position: relative; }
 
 
     /* Brief chips */
@@ -294,17 +294,95 @@
   height: 100%; background: #fff; border-radius: 2px; transition: width 0.25s;
 }
 
+
+    /* ── Nuovo Impianto (drawer) ──────────────────────────── */
+    .ni-section { padding: 10px 0; }
+    .ni-section:first-child { padding-top: 4px; }
+    .ni-section:last-child { padding-bottom: 0; }
+    .ni-section-title { font-size: 11px; font-weight: 600; color: rgba(0,0,0,0.35); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 16px; }
+    .ni-grid { display: grid; gap: 0 12px; }
+    .ni-grid-2 { grid-template-columns: 1fr 1fr; }
+    .ni-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .ni-field { margin-bottom: 14px; }
+    .ni-field:last-child { margin-bottom: 0; }
+    .ni-label { font-size: 13px; color: rgba(0,0,0,0.65); margin-bottom: 5px; }
+    .ni-label .req { color: #FF4D4F; margin-left: 2px; }
+    .ni-switch-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
+    .ni-switch-label { font-size: 14px; color: rgba(0,0,0,0.85); }
+    .ni-switch-sub   { font-size: 12px; color: rgba(0,0,0,0.45); margin-top: 1px; }
+    .ni-entity-tag { display: inline-flex; align-items: center; gap: 6px; background: #F5F5F5; border: 1px solid #D9D9D9; border-radius: 4px; padding: 3px 8px; font-size: 12px; color: rgba(0,0,0,0.75); margin: 3px 4px 3px 0; }
+    .ni-entity-tag-remove { cursor: pointer; color: rgba(0,0,0,0.35); font-size: 10px; }
+
+    /* ── Impianto Detail Page ─────────────────────────────── */
+    /* ── Detail Page ─────────────────────────────────────── */
+    .imp-detail-page { flex: 1; min-height: 0; display: flex; flex-direction: column; background: #F5F5F5; overflow: hidden; }
+    .imp-detail-topbar { display: flex; align-items: center; gap: 4px; height: 48px; padding: 0 24px; background: #fff; border-bottom: 1px solid #F0F0F0; flex-shrink: 0; }
+
+    /* Gallery */
+    .imp-detail-gallery { position: relative; height: 180px; flex-shrink: 0; display: flex; gap: 3px; overflow: hidden; background: #1a1a1a; }
+    .imp-detail-gallery-main { flex: 2.2; background: #2a2a2a; overflow: hidden; position: relative; }
+    .imp-detail-gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+    .imp-detail-gallery-grid { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 3px; }
+    .imp-detail-gallery-thumb { background: #3a3a3a; overflow: hidden; position: relative; }
+    .imp-detail-gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .imp-detail-gallery-btn { position: absolute; bottom: 12px; right: 12px; }
+
+    /* Title bar */
+    .imp-detail-title-bar { height: 44px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #F0F0F0; display: flex; align-items: center; gap: 12px; padding: 0 24px; }
+    .imp-detail-name { font-size: 15px; font-weight: 600; color: rgba(0,0,0,0.88); }
+
+    /* Body */
+    .imp-detail-body { flex: 1; min-height: 0; display: flex; overflow: hidden; }
+
+    /* Sidebar */
+    .imp-detail-sidebar { width: 240px; flex-shrink: 0; background: #fff; border-right: 1px solid #F0F0F0; overflow-y: auto; display: flex; flex-direction: column; }
+    .imp-detail-map-mini { height: 140px; background: #E8EEF4; overflow: hidden; position: relative; flex-shrink: 0; }
+    .imp-detail-map-mini svg { width: 100%; height: 100%; }
+    .imp-detail-addr { padding: 10px 16px 0; font-size: 12px; color: rgba(0,0,0,0.55); display: flex; align-items: flex-start; gap: 6px; }
+    .imp-detail-sidebar-section { padding: 16px 16px 8px; }
+    .imp-detail-sidebar-label { font-size: 11px; font-weight: 600; color: rgba(0,0,0,0.35); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+
+    /* Main */
+    .imp-detail-main { flex: 1; min-width: 0; overflow-y: auto; display: flex; flex-direction: column; }
+
+    /* Info cards */
+    .imp-detail-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-bottom: 1px solid #F0F0F0; background: #fff; flex-shrink: 0; }
+    .imp-detail-card { padding: 14px 20px; border-right: 1px solid #F0F0F0; }
+    .imp-detail-card:last-child { border-right: none; }
+    .imp-detail-card-label { font-size: 11px; color: rgba(0,0,0,0.40); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .imp-detail-card-value { font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.88); display: flex; align-items: center; gap: 6px; }
+    .imp-detail-card-sub { font-size: 12px; color: rgba(0,0,0,0.45); margin-top: 2px; }
+
+    /* Tabs & content */
+    .imp-detail-tabs-wrap { padding: 0 24px; background: #fff; border-bottom: 1px solid #F0F0F0; flex-shrink: 0; }
+    .imp-detail-tabs-wrap .ant-tabs-nav { margin-bottom: 0 !important; }
+    .imp-detail-tab-content { flex: 1; padding: 0 24px 24px; overflow-y: auto; }
+
+    /* Event log */
+    .imp-detail-event-filters { display: flex; align-items: center; gap: 8px; padding: 16px 0 12px; flex-wrap: wrap; }
+    .imp-detail-timeline { display: flex; flex-direction: column; gap: 0; }
+    .imp-detail-tl-item { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid #F5F5F5; }
+    .imp-detail-tl-item:last-child { border-bottom: none; }
+    .imp-detail-tl-date { width: 76px; flex-shrink: 0; }
+    .imp-detail-tl-date-d { font-size: 12px; color: rgba(0,0,0,0.55); font-weight: 500; }
+    .imp-detail-tl-date-t { font-size: 11px; color: rgba(0,0,0,0.35); margin-top: 1px; display: flex; align-items: center; gap: 3px; }
+    .imp-detail-tl-dot { width: 8px; height: 8px; border-radius: 50%; background: #3E00FB; margin-top: 5px; flex-shrink: 0; }
+    .imp-detail-tl-body { flex: 1; min-width: 0; }
+    .imp-detail-tl-title { font-size: 13px; font-weight: 600; color: rgba(0,0,0,0.88); margin-bottom: 3px; }
+    .imp-detail-tl-desc { font-size: 12px; color: rgba(0,0,0,0.55); line-height: 1.5; }
+    .imp-detail-tl-user { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; color: rgba(0,0,0,0.45); }
+    .imp-detail-sub-label { font-size: 11px; font-weight: 600; color: rgba(0,0,0,0.35); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; margin-top: 4px; }
   </style>
 </head>
 <body>
 <div id="root"></div>
 <script>
 const { useState, useEffect, useRef, useCallback, useMemo } = React;
-const { ConfigProvider, Input, Tag, Badge, Avatar, Button, Empty, Drawer, InputNumber, Switch, Typography, Popover, Menu, Divider, Segmented, Table, Space, Cascader, Select } = antd;
+const { ConfigProvider, Input, Tag, Badge, Avatar, Button, Empty, Drawer, InputNumber, Switch, Typography, Popover, Menu, Divider, Segmented, Table, Space, Cascader, Select, Dropdown, Form, AutoComplete, Tabs, Descriptions, DatePicker, Tooltip } = antd;
 const { Text } = Typography;
 const {
   SearchOutlined, BellOutlined, PlusOutlined, AppstoreOutlined, SendOutlined,
-  RightOutlined, DownOutlined,
+  RightOutlined, DownOutlined, ArrowLeftOutlined, EditOutlined,
   EnvironmentOutlined, CloseOutlined, BarsOutlined,
   BulbOutlined, InboxOutlined, SlidersOutlined, TagOutlined, EllipsisOutlined,
 } = icons;
@@ -371,126 +449,133 @@ const STATO_CONFIG = {
   'Riservato':   { color: 'purple',   dot: '#722ED1' },
 };
 
+const STATO_AMM_CONFIG = {
+  'Attivo':          { color: 'blue',    dot: '#1677FF', file: 'active'       },
+  'In Manutenzione': { color: 'orange',  dot: '#FA8C16', file: 'maintenance'  },
+  'Rimosso':         { color: 'default', dot: '#8C8C8C', file: 'removed'      },
+  'Inizializzato':   { color: 'gold',    dot: '#D48806', file: 'initialized'  },
+};
+
 // ─────────────────────────────────────────────────────────
 // DATABASE — 100 impianti Palermo con coordinate precise
 // ─────────────────────────────────────────────────────────
 const IMPIANTI = [
   // ── CENTRO STORICO ──────────────────────────────────
   // Via Maqueda corre N-S: #32 ~ 38.1100, #78 ~ 38.1140, #148 ~ 38.1180
-  { id:'I001', tipo:'Pensilina',        indirizzo:'Via Maqueda, 148',               zona:'Centro Storico', lat:38.11820, lng:13.36080, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I002', tipo:'Poster',           indirizzo:'Corso Vittorio Emanuele, 102',   zona:'Centro Storico', lat:38.11480, lng:13.36620, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I003', tipo:'Palina',           indirizzo:'Via Roma, 310',                  zona:'Centro Storico', lat:38.11650, lng:13.36700, faces:1, formato:'100×140cm', stato:'In Opzione',   illuminato:false },
-  { id:'I004', tipo:'Fermata bus',      indirizzo:'Via Roma, 228',                  zona:'Centro Storico', lat:38.11480, lng:13.36720, faces:2, formato:'120×180cm', stato:'Riservato',    illuminato:true  },
-  { id:'I005', tipo:'Cassonetto',       indirizzo:'Via Maqueda, 32',                zona:'Centro Storico', lat:38.10980, lng:13.36200, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false },
-  { id:'I006', tipo:'Palo luce',        indirizzo:'Corso Vittorio Emanuele, 55',    zona:'Centro Storico', lat:38.11490, lng:13.36540, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true  },
-  { id:'I007', tipo:'Speciale',         indirizzo:'Piazza Pretoria',                zona:'Centro Storico', lat:38.11560, lng:13.36180, faces:4, formato:'Varie',     stato:'Disponibile',  illuminato:true  },
-  { id:'I008', tipo:'Palina butterfly', indirizzo:'Via Roma, 390',                  zona:'Centro Storico', lat:38.11870, lng:13.36650, faces:2, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I009', tipo:'Fermata bus',      indirizzo:'Via Lincoln, 45',                zona:'Centro Storico', lat:38.10980, lng:13.36550, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I010', tipo:'Fioriera',         indirizzo:'Piazza San Domenico',            zona:'Centro Storico', lat:38.11870, lng:13.36480, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I011', tipo:'Telo',             indirizzo:'Via Bandiera, 20',               zona:'Centro Storico', lat:38.11420, lng:13.35810, faces:1, formato:'600×300cm', stato:'In Opzione',   illuminato:false },
-  { id:'I012', tipo:'Stendardo',        indirizzo:"Via Bara all'Olivella, 5",       zona:'Centro Storico', lat:38.11880, lng:13.36090, faces:2, formato:'80×200cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I013', tipo:'Parapedonale',     indirizzo:'Via Divisi, 15',                 zona:'Centro Storico', lat:38.11430, lng:13.36050, faces:2, formato:'120×80cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I014', tipo:'Rotor',            indirizzo:'Via Alloro, 30',                 zona:'Centro Storico', lat:38.11350, lng:13.36920, faces:3, formato:'200×300cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I015', tipo:'Plancia',           indirizzo:'Via Butera, 10',                 zona:'Centro Storico', lat:38.11290, lng:13.36930, faces:2, formato:'100×50cm',  stato:'In Opzione',   illuminato:false },
-  { id:'I016', tipo:'Insegna',          indirizzo:'Via V. E. Orlando, 3',           zona:'Centro Storico', lat:38.11570, lng:13.36980, faces:1, formato:'400×200cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I017', tipo:'Palina',           indirizzo:'Corso Vittorio Emanuele, 170',   zona:'Centro Storico', lat:38.11430, lng:13.36760, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I018', tipo:'Poster',           indirizzo:'Via Maqueda, 78',                zona:'Centro Storico', lat:38.11380, lng:13.36130, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I019', tipo:'Fermata bus',      indirizzo:'Piazza Giulio Cesare',           zona:'Centro Storico', lat:38.10880, lng:13.37020, faces:2, formato:'120×180cm', stato:'Riservato',    illuminato:true  },
-  { id:'I020', tipo:'Cassonetto',       indirizzo:'Via Roma, 130',                  zona:'Centro Storico', lat:38.11200, lng:13.36720, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false },
+  { id:'I001', tipo:'Pensilina',        indirizzo:'Via Maqueda, 148',               zona:'Centro Storico', lat:38.11820, lng:13.36080, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I002', tipo:'Poster',           indirizzo:'Corso Vittorio Emanuele, 102',   zona:'Centro Storico', lat:38.11480, lng:13.36620, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I003', tipo:'Palina',           indirizzo:'Via Roma, 310',                  zona:'Centro Storico', lat:38.11650, lng:13.36700, faces:1, formato:'100×140cm', stato:'In Opzione',   illuminato:false, stato_amm:'In Manutenzione' },
+  { id:'I004', tipo:'Fermata bus',      indirizzo:'Via Roma, 228',                  zona:'Centro Storico', lat:38.11480, lng:13.36720, faces:2, formato:'120×180cm', stato:'Riservato',    illuminato:true,  stato_amm:'Attivo' },
+  { id:'I005', tipo:'Cassonetto',       indirizzo:'Via Maqueda, 32',                zona:'Centro Storico', lat:38.10980, lng:13.36200, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false, stato_amm:'Inizializzato' },
+  { id:'I006', tipo:'Palo luce',        indirizzo:'Corso Vittorio Emanuele, 55',    zona:'Centro Storico', lat:38.11490, lng:13.36540, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I007', tipo:'Speciale',         indirizzo:'Piazza Pretoria',                zona:'Centro Storico', lat:38.11560, lng:13.36180, faces:4, formato:'Varie',     stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I008', tipo:'Palina butterfly', indirizzo:'Via Roma, 390',                  zona:'Centro Storico', lat:38.11870, lng:13.36650, faces:2, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Inizializzato' },
+  { id:'I009', tipo:'Fermata bus',      indirizzo:'Via Lincoln, 45',                zona:'Centro Storico', lat:38.10980, lng:13.36550, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I010', tipo:'Fioriera',         indirizzo:'Piazza San Domenico',            zona:'Centro Storico', lat:38.11870, lng:13.36480, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false, stato_amm:'In Manutenzione' },
+  { id:'I011', tipo:'Telo',             indirizzo:'Via Bandiera, 20',               zona:'Centro Storico', lat:38.11420, lng:13.35810, faces:1, formato:'600×300cm', stato:'In Opzione',   illuminato:false, stato_amm:'Inizializzato' },
+  { id:'I012', tipo:'Stendardo',        indirizzo:"Via Bara all'Olivella, 5",       zona:'Centro Storico', lat:38.11880, lng:13.36090, faces:2, formato:'80×200cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I013', tipo:'Parapedonale',     indirizzo:'Via Divisi, 15',                 zona:'Centro Storico', lat:38.11430, lng:13.36050, faces:2, formato:'120×80cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Inizializzato' },
+  { id:'I014', tipo:'Rotor',            indirizzo:'Via Alloro, 30',                 zona:'Centro Storico', lat:38.11350, lng:13.36920, faces:3, formato:'200×300cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Inizializzato' },
+  { id:'I015', tipo:'Plancia',           indirizzo:'Via Butera, 10',                 zona:'Centro Storico', lat:38.11290, lng:13.36930, faces:2, formato:'100×50cm',  stato:'In Opzione',   illuminato:false, stato_amm:'Inizializzato' },
+  { id:'I016', tipo:'Insegna',          indirizzo:'Via V. E. Orlando, 3',           zona:'Centro Storico', lat:38.11570, lng:13.36980, faces:1, formato:'400×200cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I017', tipo:'Palina',           indirizzo:'Corso Vittorio Emanuele, 170',   zona:'Centro Storico', lat:38.11430, lng:13.36760, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I018', tipo:'Poster',           indirizzo:'Via Maqueda, 78',                zona:'Centro Storico', lat:38.11380, lng:13.36130, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'In Manutenzione' },
+  { id:'I019', tipo:'Fermata bus',      indirizzo:'Piazza Giulio Cesare',           zona:'Centro Storico', lat:38.10880, lng:13.37020, faces:2, formato:'120×180cm', stato:'Riservato',    illuminato:true,  stato_amm:'In Manutenzione' },
+  { id:'I020', tipo:'Cassonetto',       indirizzo:'Via Roma, 130',                  zona:'Centro Storico', lat:38.11200, lng:13.36720, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
   // ── POLITEAMA / RUGGERO SETTIMO ──────────────────────
-  { id:'I021', tipo:'Pensilina',        indirizzo:'Piazza Politeama',               zona:'Politeama',      lat:38.12228, lng:13.35158, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I022', tipo:'Speciale',         indirizzo:'Piazza Verdi (Teatro Massimo)',  zona:'Politeama',      lat:38.11975, lng:13.35908, faces:4, formato:'Varie',     stato:'Disponibile',  illuminato:true  },
-  { id:'I023', tipo:'Telo',             indirizzo:'Via Ruggero Settimo, 15',        zona:'Politeama',      lat:38.12068, lng:13.35240, faces:1, formato:'600×300cm', stato:'In Opzione',   illuminato:false },
-  { id:'I024', tipo:'Fioriera',         indirizzo:'Via XX Settembre, 8',            zona:'Politeama',      lat:38.11960, lng:13.35280, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I025', tipo:'Parapedonale',     indirizzo:'Via Principe di Belmonte, 12',   zona:'Politeama',      lat:38.11920, lng:13.35480, faces:2, formato:'120×80cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I026', tipo:'Palina',           indirizzo:'Via Emerico Amari, 12',          zona:'Politeama',      lat:38.11810, lng:13.35200, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I027', tipo:'Plancia',           indirizzo:'Via Emerico Amari, 56',          zona:'Politeama',      lat:38.11750, lng:13.34980, faces:2, formato:'100×50cm',  stato:'In Opzione',   illuminato:false },
-  { id:'I028', tipo:'Rotor',            indirizzo:'Via Isidoro La Lumia, 3',        zona:'Politeama',      lat:38.12180, lng:13.35050, faces:3, formato:'200×300cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I029', tipo:'Insegna',          indirizzo:'Via Dante, 8',                   zona:'Politeama',      lat:38.11880, lng:13.35720, faces:1, formato:'400×200cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I030', tipo:'Poster',           indirizzo:'Via Mariano Stabile, 50',        zona:'Politeama',      lat:38.12110, lng:13.35520, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false },
+  { id:'I021', tipo:'Pensilina',        indirizzo:'Piazza Politeama',               zona:'Politeama',      lat:38.12228, lng:13.35158, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I022', tipo:'Speciale',         indirizzo:'Piazza Verdi (Teatro Massimo)',  zona:'Politeama',      lat:38.11975, lng:13.35908, faces:4, formato:'Varie',     stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I023', tipo:'Telo',             indirizzo:'Via Ruggero Settimo, 15',        zona:'Politeama',      lat:38.12068, lng:13.35240, faces:1, formato:'600×300cm', stato:'In Opzione',   illuminato:false, stato_amm:'Attivo' },
+  { id:'I024', tipo:'Fioriera',         indirizzo:'Via XX Settembre, 8',            zona:'Politeama',      lat:38.11960, lng:13.35280, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Rimosso' },
+  { id:'I025', tipo:'Parapedonale',     indirizzo:'Via Principe di Belmonte, 12',   zona:'Politeama',      lat:38.11920, lng:13.35480, faces:2, formato:'120×80cm',  stato:'Disponibile',  illuminato:false, stato_amm:'In Manutenzione' },
+  { id:'I026', tipo:'Palina',           indirizzo:'Via Emerico Amari, 12',          zona:'Politeama',      lat:38.11810, lng:13.35200, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I027', tipo:'Plancia',           indirizzo:'Via Emerico Amari, 56',          zona:'Politeama',      lat:38.11750, lng:13.34980, faces:2, formato:'100×50cm',  stato:'In Opzione',   illuminato:false, stato_amm:'In Manutenzione' },
+  { id:'I028', tipo:'Rotor',            indirizzo:'Via Isidoro La Lumia, 3',        zona:'Politeama',      lat:38.12180, lng:13.35050, faces:3, formato:'200×300cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I029', tipo:'Insegna',          indirizzo:'Via Dante, 8',                   zona:'Politeama',      lat:38.11880, lng:13.35720, faces:1, formato:'400×200cm', stato:'Disponibile',  illuminato:true,  stato_amm:'In Manutenzione' },
+  { id:'I030', tipo:'Poster',           indirizzo:'Via Mariano Stabile, 50',        zona:'Politeama',      lat:38.12110, lng:13.35520, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
   // ── VIA LIBERTÀ ──────────────────────────────────────
   // Coord interpolate lungo Via della Libertà: inizio a Piazza Politeama (38.1222, 13.3516),
   // fine a Piazza Croci (38.1400, 13.3465). ~300 numeri civici, 0.0000593° lat / 0.0000170° lng per unità.
-  { id:'I031', tipo:'Poster',           indirizzo:'Via della Libertà, 5',           zona:'Via Libertà',    lat:38.12250, lng:13.35151, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I032', tipo:'Palina butterfly', indirizzo:'Via della Libertà, 35',          zona:'Via Libertà',    lat:38.12428, lng:13.35100, faces:2, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I033', tipo:'Palo luce',        indirizzo:'Via della Libertà, 68',          zona:'Via Libertà',    lat:38.12624, lng:13.35043, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true  },
-  { id:'I034', tipo:'Fermata bus',      indirizzo:'Via della Libertà, 90',          zona:'Via Libertà',    lat:38.12754, lng:13.35005, faces:2, formato:'120×180cm', stato:'Riservato',    illuminato:true  },
-  { id:'I035', tipo:'Pensilina',        indirizzo:'Via della Libertà, 120',         zona:'Via Libertà',    lat:38.12932, lng:13.34954, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I036', tipo:'Poster',           indirizzo:'Via della Libertà, 145',         zona:'Via Libertà',    lat:38.13080, lng:13.34910, faces:1, formato:'200×140cm', stato:'In Opzione',   illuminato:false },
-  { id:'I037', tipo:'Cassonetto',       indirizzo:'Via della Libertà, 175',         zona:'Via Libertà',    lat:38.13258, lng:13.34858, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false },
-  { id:'I038', tipo:'Stendardo',        indirizzo:'Via della Libertà, 200',         zona:'Via Libertà',    lat:38.13406, lng:13.34813, faces:2, formato:'80×200cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I039', tipo:'Pensilina',        indirizzo:'Piazza Croci',                   zona:'Via Libertà',    lat:38.14008, lng:13.34650, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I040', tipo:'Palina',           indirizzo:'Via della Libertà, 240',         zona:'Via Libertà',    lat:38.13643, lng:13.34723, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I041', tipo:'Palo luce',        indirizzo:'Via della Libertà, 280',         zona:'Via Libertà',    lat:38.13880, lng:13.34660, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true  },
-  { id:'I042', tipo:'Fioriera',         indirizzo:'Via Marchese Ugo, 15',           zona:'Via Libertà',    lat:38.12750, lng:13.34870, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I043', tipo:'Stendardo',        indirizzo:'Via Marchese Ugo, 65',           zona:'Via Libertà',    lat:38.13080, lng:13.34920, faces:2, formato:'80×200cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I044', tipo:'Palina butterfly', indirizzo:'Via Filippo Turati, 5',          zona:'Via Libertà',    lat:38.12410, lng:13.34880, faces:2, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I045', tipo:'Rotor',            indirizzo:'Via Mariano Stabile, 90',        zona:'Via Libertà',    lat:38.12260, lng:13.35600, faces:3, formato:'200×300cm', stato:'In Opzione',   illuminato:true  },
+  { id:'I031', tipo:'Poster',           indirizzo:'Via della Libertà, 5',           zona:'Via Libertà',    lat:38.12250, lng:13.35151, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I032', tipo:'Palina butterfly', indirizzo:'Via della Libertà, 35',          zona:'Via Libertà',    lat:38.12428, lng:13.35100, faces:2, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I033', tipo:'Palo luce',        indirizzo:'Via della Libertà, 68',          zona:'Via Libertà',    lat:38.12624, lng:13.35043, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true,  stato_amm:'Inizializzato' },
+  { id:'I034', tipo:'Fermata bus',      indirizzo:'Via della Libertà, 90',          zona:'Via Libertà',    lat:38.12754, lng:13.35005, faces:2, formato:'120×180cm', stato:'Riservato',    illuminato:true,  stato_amm:'Inizializzato' },
+  { id:'I035', tipo:'Pensilina',        indirizzo:'Via della Libertà, 120',         zona:'Via Libertà',    lat:38.12932, lng:13.34954, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Inizializzato' },
+  { id:'I036', tipo:'Poster',           indirizzo:'Via della Libertà, 145',         zona:'Via Libertà',    lat:38.13080, lng:13.34910, faces:1, formato:'200×140cm', stato:'In Opzione',   illuminato:false, stato_amm:'Attivo' },
+  { id:'I037', tipo:'Cassonetto',       indirizzo:'Via della Libertà, 175',         zona:'Via Libertà',    lat:38.13258, lng:13.34858, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false, stato_amm:'Rimosso' },
+  { id:'I038', tipo:'Stendardo',        indirizzo:'Via della Libertà, 200',         zona:'Via Libertà',    lat:38.13406, lng:13.34813, faces:2, formato:'80×200cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I039', tipo:'Pensilina',        indirizzo:'Piazza Croci',                   zona:'Via Libertà',    lat:38.14008, lng:13.34650, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'In Manutenzione' },
+  { id:'I040', tipo:'Palina',           indirizzo:'Via della Libertà, 240',         zona:'Via Libertà',    lat:38.13643, lng:13.34723, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I041', tipo:'Palo luce',        indirizzo:'Via della Libertà, 280',         zona:'Via Libertà',    lat:38.13880, lng:13.34660, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I042', tipo:'Fioriera',         indirizzo:'Via Marchese Ugo, 15',           zona:'Via Libertà',    lat:38.12750, lng:13.34870, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I043', tipo:'Stendardo',        indirizzo:'Via Marchese Ugo, 65',           zona:'Via Libertà',    lat:38.13080, lng:13.34920, faces:2, formato:'80×200cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I044', tipo:'Palina butterfly', indirizzo:'Via Filippo Turati, 5',          zona:'Via Libertà',    lat:38.12410, lng:13.34880, faces:2, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I045', tipo:'Rotor',            indirizzo:'Via Mariano Stabile, 90',        zona:'Via Libertà',    lat:38.12260, lng:13.35600, faces:3, formato:'200×300cm', stato:'In Opzione',   illuminato:true,  stato_amm:'Attivo' },
   // ── NOTARBARTOLO / RESUTTANA ─────────────────────────
   // Via Notarbartolo corre N dal Policlinico verso Resuttana, parallela a Via della Libertà
-  { id:'I046', tipo:'Pensilina',        indirizzo:'Via Notarbartolo, 10',           zona:'Notarbartolo',   lat:38.12540, lng:13.34620, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I047', tipo:'Poster',           indirizzo:'Via Notarbartolo, 55',           zona:'Notarbartolo',   lat:38.12880, lng:13.34560, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I048', tipo:'Fermata bus',      indirizzo:'Via Notarbartolo, 100',          zona:'Notarbartolo',   lat:38.13180, lng:13.34500, faces:2, formato:'120×180cm', stato:'Riservato',    illuminato:true  },
-  { id:'I049', tipo:'Fioriera',         indirizzo:'Piazza Ungheria',                zona:'Notarbartolo',   lat:38.12620, lng:13.35720, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I050', tipo:'Cassonetto',       indirizzo:'Via Marchese Ugo, 100',          zona:'Notarbartolo',   lat:38.13280, lng:13.34960, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false },
-  { id:'I051', tipo:'Palo luce',        indirizzo:'Via Autonomia Siciliana, 5',     zona:'Notarbartolo',   lat:38.13800, lng:13.34250, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true  },
-  { id:'I052', tipo:'Fermata bus',      indirizzo:'Viale Strasburgo, 10',           zona:'Notarbartolo',   lat:38.14080, lng:13.33400, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I053', tipo:'Plancia',           indirizzo:'Via Ammiraglio Rizzo, 12',       zona:'Notarbartolo',   lat:38.13520, lng:13.35380, faces:2, formato:'100×50cm',  stato:'In Opzione',   illuminato:false },
-  { id:'I054', tipo:'Parapedonale',     indirizzo:'Via Serradifalco, 15',           zona:'Notarbartolo',   lat:38.14450, lng:13.34500, faces:2, formato:'120×80cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I055', tipo:'Telo',             indirizzo:'Via Giuseppe Giusti, 8',         zona:'Notarbartolo',   lat:38.13430, lng:13.35080, faces:1, formato:'600×300cm', stato:'In Opzione',   illuminato:false },
-  { id:'I056', tipo:'Insegna',          indirizzo:'Via Imperatore Federico, 5',     zona:'Notarbartolo',   lat:38.12230, lng:13.33720, faces:1, formato:'400×200cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I057', tipo:'Palina',           indirizzo:'Via Imperatore Federico, 80',    zona:'Notarbartolo',   lat:38.12360, lng:13.33260, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
+  { id:'I046', tipo:'Pensilina',        indirizzo:'Via Notarbartolo, 10',           zona:'Notarbartolo',   lat:38.12540, lng:13.34620, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Inizializzato' },
+  { id:'I047', tipo:'Poster',           indirizzo:'Via Notarbartolo, 55',           zona:'Notarbartolo',   lat:38.12880, lng:13.34560, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Inizializzato' },
+  { id:'I048', tipo:'Fermata bus',      indirizzo:'Via Notarbartolo, 100',          zona:'Notarbartolo',   lat:38.13180, lng:13.34500, faces:2, formato:'120×180cm', stato:'Riservato',    illuminato:true,  stato_amm:'Inizializzato' },
+  { id:'I049', tipo:'Fioriera',         indirizzo:'Piazza Ungheria',                zona:'Notarbartolo',   lat:38.12620, lng:13.35720, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I050', tipo:'Cassonetto',       indirizzo:'Via Marchese Ugo, 100',          zona:'Notarbartolo',   lat:38.13280, lng:13.34960, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I051', tipo:'Palo luce',        indirizzo:'Via Autonomia Siciliana, 5',     zona:'Notarbartolo',   lat:38.13800, lng:13.34250, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true,  stato_amm:'Rimosso' },
+  { id:'I052', tipo:'Fermata bus',      indirizzo:'Viale Strasburgo, 10',           zona:'Notarbartolo',   lat:38.14080, lng:13.33400, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I053', tipo:'Plancia',           indirizzo:'Via Ammiraglio Rizzo, 12',       zona:'Notarbartolo',   lat:38.13520, lng:13.35380, faces:2, formato:'100×50cm',  stato:'In Opzione',   illuminato:false, stato_amm:'Attivo' },
+  { id:'I054', tipo:'Parapedonale',     indirizzo:'Via Serradifalco, 15',           zona:'Notarbartolo',   lat:38.14450, lng:13.34500, faces:2, formato:'120×80cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I055', tipo:'Telo',             indirizzo:'Via Giuseppe Giusti, 8',         zona:'Notarbartolo',   lat:38.13430, lng:13.35080, faces:1, formato:'600×300cm', stato:'In Opzione',   illuminato:false, stato_amm:'Attivo' },
+  { id:'I056', tipo:'Insegna',          indirizzo:'Via Imperatore Federico, 5',     zona:'Notarbartolo',   lat:38.12230, lng:13.33720, faces:1, formato:'400×200cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I057', tipo:'Palina',           indirizzo:'Via Imperatore Federico, 80',    zona:'Notarbartolo',   lat:38.12360, lng:13.33260, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Inizializzato' },
   // ── FORO ITALICO / PORTO ─────────────────────────────
   // Foro Italico = lungomare a E del centro storico
-  { id:'I058', tipo:'Telo',             indirizzo:'Foro Italico, 10',               zona:'Foro Italico',   lat:38.10820, lng:13.37240, faces:1, formato:'600×300cm', stato:'In Opzione',   illuminato:false },
-  { id:'I059', tipo:'Stendardo',        indirizzo:'Foro Italico, 50',               zona:'Foro Italico',   lat:38.10900, lng:13.37420, faces:2, formato:'80×200cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I060', tipo:'Fermata bus',      indirizzo:'Via Francesco Crispi, 10',       zona:'Foro Italico',   lat:38.11140, lng:13.37180, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I061', tipo:'Palo luce',        indirizzo:'Via Francesco Crispi, 80',       zona:'Foro Italico',   lat:38.11300, lng:13.37060, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true  },
-  { id:'I062', tipo:'Fioriera',         indirizzo:'Piazza Marina',                  zona:'Foro Italico',   lat:38.11440, lng:13.36940, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I063', tipo:'Palina',           indirizzo:'Via Cala, 5',                    zona:'Foro Italico',   lat:38.11310, lng:13.37080, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I064', tipo:'Poster',           indirizzo:'Via della Zecca, 8',             zona:'Foro Italico',   lat:38.11520, lng:13.37440, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I065', tipo:'Rotor',            indirizzo:'Piazza Giachery',                zona:'Foro Italico',   lat:38.11420, lng:13.37560, faces:3, formato:'200×300cm', stato:'Disponibile',  illuminato:true  },
+  { id:'I058', tipo:'Telo',             indirizzo:'Foro Italico, 10',               zona:'Foro Italico',   lat:38.10820, lng:13.37240, faces:1, formato:'600×300cm', stato:'In Opzione',   illuminato:false, stato_amm:'Inizializzato' },
+  { id:'I059', tipo:'Stendardo',        indirizzo:'Foro Italico, 50',               zona:'Foro Italico',   lat:38.10900, lng:13.37420, faces:2, formato:'80×200cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I060', tipo:'Fermata bus',      indirizzo:'Via Francesco Crispi, 10',       zona:'Foro Italico',   lat:38.11140, lng:13.37180, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Inizializzato' },
+  { id:'I061', tipo:'Palo luce',        indirizzo:'Via Francesco Crispi, 80',       zona:'Foro Italico',   lat:38.11300, lng:13.37060, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I062', tipo:'Fioriera',         indirizzo:'Piazza Marina',                  zona:'Foro Italico',   lat:38.11440, lng:13.36940, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I063', tipo:'Palina',           indirizzo:'Via Cala, 5',                    zona:'Foro Italico',   lat:38.11310, lng:13.37080, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I064', tipo:'Poster',           indirizzo:'Via della Zecca, 8',             zona:'Foro Italico',   lat:38.11520, lng:13.37440, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Inizializzato' },
+  { id:'I065', tipo:'Rotor',            indirizzo:'Piazza Giachery',                zona:'Foro Italico',   lat:38.11420, lng:13.37560, faces:3, formato:'200×300cm', stato:'Disponibile',  illuminato:true,  stato_amm:'In Manutenzione' },
   // ── CALATAFIMI / ZISA ────────────────────────────────
   // Corso Calatafimi corre W dal centro: #100~38.1048, #250~38.1030, #400~38.1015
-  { id:'I066', tipo:'Pensilina',        indirizzo:'Corso Calatafimi, 100',          zona:'Calatafimi',     lat:38.10500, lng:13.34910, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I067', tipo:'Poster',           indirizzo:'Corso Calatafimi, 250',          zona:'Calatafimi',     lat:38.10280, lng:13.33810, faces:1, formato:'200×140cm', stato:'In Opzione',   illuminato:false },
-  { id:'I068', tipo:'Fermata bus',      indirizzo:'Corso Calatafimi, 400',          zona:'Calatafimi',     lat:38.10120, lng:13.32680, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I069', tipo:'Speciale',         indirizzo:'Piazza Indipendenza',            zona:'Calatafimi',     lat:38.11130, lng:13.34830, faces:4, formato:'Varie',     stato:'In Opzione',   illuminato:true  },
-  { id:'I070', tipo:'Palina',           indirizzo:'Via Cappuccini, 8',              zona:'Calatafimi',     lat:38.11980, lng:13.34300, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I071', tipo:'Cassonetto',       indirizzo:'Via Papireto, 5',                zona:'Calatafimi',     lat:38.11770, lng:13.34600, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false },
-  { id:'I072', tipo:'Palo luce',        indirizzo:'Via Dante, 65',                  zona:'Calatafimi',     lat:38.11820, lng:13.34320, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true  },
-  { id:'I073', tipo:'Pensilina',        indirizzo:'Piazza Zisa',                    zona:'Calatafimi',     lat:38.11010, lng:13.33020, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I074', tipo:'Telo',             indirizzo:'Via Boccadifalco, 10',           zona:'Calatafimi',     lat:38.12810, lng:13.32780, faces:1, formato:'600×300cm', stato:'In Opzione',   illuminato:false },
-  { id:'I075', tipo:'Insegna',          indirizzo:'Via Ugo La Malfa, 8',            zona:'Calatafimi',     lat:38.10840, lng:13.31500, faces:1, formato:'400×200cm', stato:'Disponibile',  illuminato:true  },
+  { id:'I066', tipo:'Pensilina',        indirizzo:'Corso Calatafimi, 100',          zona:'Calatafimi',     lat:38.10500, lng:13.34910, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I067', tipo:'Poster',           indirizzo:'Corso Calatafimi, 250',          zona:'Calatafimi',     lat:38.10280, lng:13.33810, faces:1, formato:'200×140cm', stato:'In Opzione',   illuminato:false, stato_amm:'In Manutenzione' },
+  { id:'I068', tipo:'Fermata bus',      indirizzo:'Corso Calatafimi, 400',          zona:'Calatafimi',     lat:38.10120, lng:13.32680, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I069', tipo:'Speciale',         indirizzo:'Piazza Indipendenza',            zona:'Calatafimi',     lat:38.11130, lng:13.34830, faces:4, formato:'Varie',     stato:'In Opzione',   illuminato:true,  stato_amm:'In Manutenzione' },
+  { id:'I070', tipo:'Palina',           indirizzo:'Via Cappuccini, 8',              zona:'Calatafimi',     lat:38.11980, lng:13.34300, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I071', tipo:'Cassonetto',       indirizzo:'Via Papireto, 5',                zona:'Calatafimi',     lat:38.11770, lng:13.34600, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I072', tipo:'Palo luce',        indirizzo:'Via Dante, 65',                  zona:'Calatafimi',     lat:38.11820, lng:13.34320, faces:1, formato:'70×100cm',  stato:'Disponibile',  illuminato:true,  stato_amm:'Rimosso' },
+  { id:'I073', tipo:'Pensilina',        indirizzo:'Piazza Zisa',                    zona:'Calatafimi',     lat:38.11010, lng:13.33020, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Inizializzato' },
+  { id:'I074', tipo:'Telo',             indirizzo:'Via Boccadifalco, 10',           zona:'Calatafimi',     lat:38.12810, lng:13.32780, faces:1, formato:'600×300cm', stato:'In Opzione',   illuminato:false, stato_amm:'Rimosso' },
+  { id:'I075', tipo:'Insegna',          indirizzo:'Via Ugo La Malfa, 8',            zona:'Calatafimi',     lat:38.10840, lng:13.31500, faces:1, formato:'400×200cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
   // ── VIALE REGIONE SICILIANA ──────────────────────────
   // Tangenziale: corre E-O a S di Palermo, circa lat 38.102–38.108
-  { id:'I076', tipo:'Cassonetto',       indirizzo:'Viale Regione Siciliana, 500',   zona:'Viale Regione',  lat:38.10400, lng:13.31520, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false },
-  { id:'I077', tipo:'Fermata bus',      indirizzo:'Viale Regione Siciliana, 1000',  zona:'Viale Regione',  lat:38.10350, lng:13.33520, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I078', tipo:'Poster',           indirizzo:'Viale Regione Siciliana, 1500',  zona:'Viale Regione',  lat:38.10440, lng:13.35530, faces:1, formato:'200×140cm', stato:'In Opzione',   illuminato:false },
-  { id:'I079', tipo:'Pensilina',        indirizzo:'Viale Regione Siciliana, 2000',  zona:'Viale Regione',  lat:38.10520, lng:13.37520, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I080', tipo:'Palina',           indirizzo:'Via Oreto, 10',                  zona:'Viale Regione',  lat:38.09880, lng:13.34600, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I081', tipo:'Stendardo',        indirizzo:'Via Oreto, 80',                  zona:'Viale Regione',  lat:38.09620, lng:13.33960, faces:2, formato:'80×200cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I082', tipo:'Parapedonale',     indirizzo:'Via Ernesto Basile, 5',          zona:'Viale Regione',  lat:38.10520, lng:13.32800, faces:2, formato:'120×80cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I083', tipo:'Palina butterfly', indirizzo:'Via delle Magnolie, 3',          zona:'Viale Regione',  lat:38.09340, lng:13.33560, faces:2, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I084', tipo:'Poster',           indirizzo:'Via Villagrazia, 25',            zona:'Viale Regione',  lat:38.09000, lng:13.35000, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I085', tipo:'Plancia',           indirizzo:'Piazza Scaffa',                  zona:'Viale Regione',  lat:38.10000, lng:13.35960, faces:2, formato:'100×50cm',  stato:'Disponibile',  illuminato:false },
+  { id:'I076', tipo:'Cassonetto',       indirizzo:'Viale Regione Siciliana, 500',   zona:'Viale Regione',  lat:38.10400, lng:13.31520, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false, stato_amm:'In Manutenzione' },
+  { id:'I077', tipo:'Fermata bus',      indirizzo:'Viale Regione Siciliana, 1000',  zona:'Viale Regione',  lat:38.10350, lng:13.33520, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I078', tipo:'Poster',           indirizzo:'Viale Regione Siciliana, 1500',  zona:'Viale Regione',  lat:38.10440, lng:13.35530, faces:1, formato:'200×140cm', stato:'In Opzione',   illuminato:false, stato_amm:'Inizializzato' },
+  { id:'I079', tipo:'Pensilina',        indirizzo:'Viale Regione Siciliana, 2000',  zona:'Viale Regione',  lat:38.10520, lng:13.37520, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'In Manutenzione' },
+  { id:'I080', tipo:'Palina',           indirizzo:'Via Oreto, 10',                  zona:'Viale Regione',  lat:38.09880, lng:13.34600, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'In Manutenzione' },
+  { id:'I081', tipo:'Stendardo',        indirizzo:'Via Oreto, 80',                  zona:'Viale Regione',  lat:38.09620, lng:13.33960, faces:2, formato:'80×200cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Inizializzato' },
+  { id:'I082', tipo:'Parapedonale',     indirizzo:'Via Ernesto Basile, 5',          zona:'Viale Regione',  lat:38.10520, lng:13.32800, faces:2, formato:'120×80cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I083', tipo:'Palina butterfly', indirizzo:'Via delle Magnolie, 3',          zona:'Viale Regione',  lat:38.09340, lng:13.33560, faces:2, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I084', tipo:'Poster',           indirizzo:'Via Villagrazia, 25',            zona:'Viale Regione',  lat:38.09000, lng:13.35000, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'In Manutenzione' },
+  { id:'I085', tipo:'Plancia',           indirizzo:'Piazza Scaffa',                  zona:'Viale Regione',  lat:38.10000, lng:13.35960, faces:2, formato:'100×50cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Rimosso' },
   // ── MONDELLO / ADDAURA ───────────────────────────────
-  { id:'I086', tipo:'Speciale',         indirizzo:'Piazza di Mondello',             zona:'Mondello',       lat:38.21958, lng:13.33108, faces:4, formato:'Varie',     stato:'Disponibile',  illuminato:true  },
-  { id:'I087', tipo:'Fioriera',         indirizzo:'Viale Regina Elena, 15',         zona:'Mondello',       lat:38.21800, lng:13.32940, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I088', tipo:'Stendardo',        indirizzo:'Via Piano di Gallo, 5',          zona:'Mondello',       lat:38.20860, lng:13.32800, faces:2, formato:'80×200cm',  stato:'In Opzione',   illuminato:false },
-  { id:'I089', tipo:'Poster',           indirizzo:'Via Mondello, 45',               zona:'Mondello',       lat:38.20420, lng:13.32860, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I090', tipo:'Palina',           indirizzo:'Via Vergine Maria, 3',           zona:'Mondello',       lat:38.15580, lng:13.36120, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I091', tipo:'Telo',             indirizzo:'Lungomare Vergine Maria, 10',    zona:'Mondello',       lat:38.15730, lng:13.36360, faces:1, formato:'600×300cm', stato:'Disponibile',  illuminato:false },
-  { id:'I092', tipo:'Fermata bus',      indirizzo:'Via Pallavicino, 8',             zona:'Mondello',       lat:38.16820, lng:13.34880, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I093', tipo:'Cassonetto',       indirizzo:'Via Partanna Mondello, 10',      zona:'Mondello',       lat:38.21180, lng:13.33200, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false },
+  { id:'I086', tipo:'Speciale',         indirizzo:'Piazza di Mondello',             zona:'Mondello',       lat:38.21958, lng:13.33108, faces:4, formato:'Varie',     stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I087', tipo:'Fioriera',         indirizzo:'Viale Regina Elena, 15',         zona:'Mondello',       lat:38.21800, lng:13.32940, faces:2, formato:'70×100cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I088', tipo:'Stendardo',        indirizzo:'Via Piano di Gallo, 5',          zona:'Mondello',       lat:38.20860, lng:13.32800, faces:2, formato:'80×200cm',  stato:'In Opzione',   illuminato:false, stato_amm:'In Manutenzione' },
+  { id:'I089', tipo:'Poster',           indirizzo:'Via Mondello, 45',               zona:'Mondello',       lat:38.20420, lng:13.32860, faces:1, formato:'200×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I090', tipo:'Palina',           indirizzo:'Via Vergine Maria, 3',           zona:'Mondello',       lat:38.15580, lng:13.36120, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Inizializzato' },
+  { id:'I091', tipo:'Telo',             indirizzo:'Lungomare Vergine Maria, 10',    zona:'Mondello',       lat:38.15730, lng:13.36360, faces:1, formato:'600×300cm', stato:'Disponibile',  illuminato:false, stato_amm:'In Manutenzione' },
+  { id:'I092', tipo:'Fermata bus',      indirizzo:'Via Pallavicino, 8',             zona:'Mondello',       lat:38.16820, lng:13.34880, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I093', tipo:'Cassonetto',       indirizzo:'Via Partanna Mondello, 10',      zona:'Mondello',       lat:38.21180, lng:13.33200, faces:2, formato:'300×200cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
   // ── BRANCACCIO / SUD-EST ─────────────────────────────
-  { id:'I094', tipo:'Palina',           indirizzo:'Via Brancaccio, 5',              zona:'Brancaccio',     lat:38.08820, lng:13.38480, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false },
-  { id:'I095', tipo:'Fermata bus',      indirizzo:'Via Messina Marine, 120',        zona:'Brancaccio',     lat:38.09220, lng:13.38960, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I096', tipo:'Poster',           indirizzo:'Via Messina Marine, 5',          zona:'Brancaccio',     lat:38.09540, lng:13.37960, faces:1, formato:'200×140cm', stato:'In Opzione',   illuminato:false },
-  { id:'I097', tipo:'Rotor',            indirizzo:'Via Vincenzo Di Marco, 5',       zona:'Brancaccio',     lat:38.09510, lng:13.36480, faces:3, formato:'200×300cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I098', tipo:'Insegna',          indirizzo:'Via Ciaculli, 8',                zona:'Brancaccio',     lat:38.08660, lng:13.40160, faces:1, formato:'400×200cm', stato:'Disponibile',  illuminato:true  },
-  { id:'I099', tipo:'Parapedonale',     indirizzo:'Via Ughetti, 3',                 zona:'Brancaccio',     lat:38.09720, lng:13.37220, faces:2, formato:'120×80cm',  stato:'Disponibile',  illuminato:false },
-  { id:'I100', tipo:'Palina butterfly', indirizzo:'Via Messina Marine, 250',        zona:'Brancaccio',     lat:38.09120, lng:13.39740, faces:2, formato:'100×140cm', stato:'In Opzione',   illuminato:false },
+  { id:'I094', tipo:'Palina',           indirizzo:'Via Brancaccio, 5',              zona:'Brancaccio',     lat:38.08820, lng:13.38480, faces:1, formato:'100×140cm', stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I095', tipo:'Fermata bus',      indirizzo:'Via Messina Marine, 120',        zona:'Brancaccio',     lat:38.09220, lng:13.38960, faces:2, formato:'120×180cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I096', tipo:'Poster',           indirizzo:'Via Messina Marine, 5',          zona:'Brancaccio',     lat:38.09540, lng:13.37960, faces:1, formato:'200×140cm', stato:'In Opzione',   illuminato:false, stato_amm:'Attivo' },
+  { id:'I097', tipo:'Rotor',            indirizzo:'Via Vincenzo Di Marco, 5',       zona:'Brancaccio',     lat:38.09510, lng:13.36480, faces:3, formato:'200×300cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Rimosso' },
+  { id:'I098', tipo:'Insegna',          indirizzo:'Via Ciaculli, 8',                zona:'Brancaccio',     lat:38.08660, lng:13.40160, faces:1, formato:'400×200cm', stato:'Disponibile',  illuminato:true,  stato_amm:'Attivo' },
+  { id:'I099', tipo:'Parapedonale',     indirizzo:'Via Ughetti, 3',                 zona:'Brancaccio',     lat:38.09720, lng:13.37220, faces:2, formato:'120×80cm',  stato:'Disponibile',  illuminato:false, stato_amm:'Attivo' },
+  { id:'I100', tipo:'Palina butterfly', indirizzo:'Via Messina Marine, 250',        zona:'Brancaccio',     lat:38.09120, lng:13.39740, faces:2, formato:'100×140cm', stato:'In Opzione',   illuminato:false, stato_amm:'In Manutenzione' },
 ];
 
 // ── Codici e nomi personalizzati ─────────────────────────
@@ -751,16 +836,37 @@ function Navbar() {
 // ─────────────────────────────────────────────────────────
 // GOOGLE MAP
 // ─────────────────────────────────────────────────────────
-const MARKER_GREEN     = '#52C41A';
-const MARKER_GREEN_SEL = '#389E0D';
+const TIPO_TO_FOLDER = {
+  'Pensilina':        'OOH/pensilina',
+  'Palina':           'OOH/palina',
+  'Palina butterfly': 'OOH/palina_butterfly',
+  'Fermata bus':      'OOH/fermata_bus',
+  'Cassonetto':       'OOH/cassonetto',
+  'Palo luce':        'OOH/palo_luce',
+  'Speciale':         'OOH/speciale',
+  'Telo':             'OOH/telo',
+  'Stendardo':        'OOH/stendardo',
+  'Parapedonale':     'OOH/parapedonale',
+  'Rotor':            'OOH/rotor',
+  'Plancia':          'OOH/plancia',
+  'Insegna':          'OOH/insegna',
+  'Fioriera':         'OOH/fioriera',
+  'Cartello':         'OOH/cartello',
+  'Poster':           'OOH/plancia',
+};
+const STATO_TO_FILE = {
+  'Disponibile': 'available',
+  'In Opzione':  'inOption',
+  'Riservato':   'reserved',
+};
 
 const clusterColor = (n) => {
-  if (n <= 2)  return { bg: '#D9F7BE', fg: '#135200' };
-  if (n <= 5)  return { bg: '#B7EB8F', fg: '#135200' };
-  if (n <= 10) return { bg: '#73D13D', fg: '#135200' };
-  if (n <= 20) return { bg: '#52C41A', fg: '#fff' };
-  if (n <= 50) return { bg: '#389E0D', fg: '#fff' };
-  return               { bg: '#237804', fg: '#fff' };
+  if (n <= 2)  return { bg: '#F0E6FF', fg: '#3E00FB' };
+  if (n <= 5)  return { bg: '#D3B8FF', fg: '#3E00FB' };
+  if (n <= 10) return { bg: '#9B6EFB', fg: '#fff' };
+  if (n <= 20) return { bg: '#6B2EF7', fg: '#fff' };
+  if (n <= 50) return { bg: '#3E00FB', fg: '#fff' };
+  return               { bg: '#2600B0', fg: '#fff' };
 };
 
 const MAP_STYLES = [
@@ -779,21 +885,31 @@ const MAP_STYLES = [
   { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#555' }] },
 ];
 
-const makeMarkerIcon = (isHighlighted, isSelected) => ({
-  path: google.maps.SymbolPath.CIRCLE,
-  scale:        isHighlighted ? 11 : (isSelected ? 9 : 7),
-  fillColor:    isSelected ? MARKER_GREEN_SEL : MARKER_GREEN,
-  fillOpacity:  0.9,
-  strokeColor:  isHighlighted ? '#3E00FB' : '#ffffff',
-  strokeWeight: isHighlighted ? 3 : 2,
-});
+const makeMarkerIcon = (tipo, stato_amm, isHighlighted, isSelected) => {
+  const folder = TIPO_TO_FOLDER[tipo] || 'OOH/palina';
+  const file   = (STATO_AMM_CONFIG[stato_amm] || STATO_AMM_CONFIG['Attivo']).file;
+  const scale  = isHighlighted ? 0.62 : isSelected ? 0.55 : 0.46;
+  const w = Math.round(78 * scale);
+  const h = Math.round(119 * scale);
+  return {
+    url:        `../assets/${folder}/${file}.svg`,
+    scaledSize: new google.maps.Size(w, h),
+    anchor:     new google.maps.Point(w / 2, h),
+  };
+};
 
 const makeClusterSvg = (count) => {
-  const { bg, fg } = clusterColor(count);
-  const s = count <= 5 ? 32 : count <= 20 ? 36 : 40;
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}">
-    <circle cx="${s/2}" cy="${s/2}" r="${s/2-1}" fill="${bg}" stroke="rgba(255,255,255,0.85)" stroke-width="2"/>
-    <text x="${s/2}" y="${s/2+4.5}" text-anchor="middle" fill="${fg}" font-size="12" font-weight="700" font-family="sans-serif">${count}</text>
+  const s = count <= 5 ? 32 : count <= 20 ? 38 : 44;
+  const fs = count <= 5 ? 11 : count <= 20 ? 12 : 13;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${s}" height="${s}" viewBox="0 0 78 78" fill="none">
+    <path d="M39 70.5C56.397 70.5 70.5 56.397 70.5 39C70.5 21.603 56.397 7.5 39 7.5C21.603 7.5 7.5 21.603 7.5 39C7.5 56.397 21.603 70.5 39 70.5Z" fill="url(#cg)" stroke="white" stroke-width="1.5" stroke-miterlimit="10"/>
+    <defs>
+      <linearGradient id="cg" x1="39" y1="70.5" x2="39" y2="7.5" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#006FFF"/>
+        <stop offset="1" stop-color="#093F7E"/>
+      </linearGradient>
+    </defs>
+    <text x="39" y="44" text-anchor="middle" fill="white" font-size="${fs * (78/s)}" font-weight="700" font-family="-apple-system,BlinkMacSystemFont,sans-serif">${count}</text>
   </svg>`;
   return { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), size: s };
 };
@@ -822,7 +938,7 @@ function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect
     const allMarkers = impianti.map(imp => {
       const marker = new google.maps.Marker({
         position: { lat: imp.lat, lng: imp.lng },
-        icon: makeMarkerIcon(false, false),
+        icon: makeMarkerIcon(imp.tipo, imp.stato_amm, false, false),
       });
 
       const infoWindow = new google.maps.InfoWindow({
@@ -900,13 +1016,13 @@ function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect
     if (!clustererRef.current) return;
 
     const visibleMarkers = [];
-    Object.entries(markersRef.current).forEach(([id, { marker }]) => {
+    Object.entries(markersRef.current).forEach(([id, { marker, imp }]) => {
       const isHighlighted = id === highlightedId;
       const isSelected    = selectedIds.has(id);
       const inFilter      = !filteredIds || filteredIds.has(id);
       const visible       = inFilter;
 
-      marker.setIcon(makeMarkerIcon(isHighlighted, isSelected));
+      marker.setIcon(makeMarkerIcon(imp.tipo, imp.stato_amm, isHighlighted, isSelected));
       marker.setZIndex(isHighlighted ? 9999 : isSelected ? 500 : 1);
 
       if (visible) visibleMarkers.push(marker);
@@ -947,16 +1063,15 @@ function MapInfobox({ total, filteredImpianti }) {
 
   const STATI_AMM = [
     { label: 'Attivo',          color: '#1677FF', bg: '#E6F4FF' },
-    { label: 'In manutenzione', color: '#FA8C16', bg: '#FFF7E6' },
-    { label: 'Inizializzato',   color: '#FAAD14', bg: '#FFFBE6' },
-    { label: 'Rimosso',         color: 'rgba(0,0,0,0.45)', bg: '#F5F5F5' },
+    { label: 'In Manutenzione', color: '#FA8C16', bg: '#FFF7E6' },
+    { label: 'Inizializzato',   color: '#D48806', bg: '#FFFBE6' },
+    { label: 'Rimosso',         color: '#8C8C8C', bg: '#F5F5F5' },
   ];
 
   const statiAmmCount = React.useMemo(() => {
     if (!filteredImpianti) return {};
     return filteredImpianti.reduce((acc, imp) => {
-      const idx = parseInt(imp.id.slice(1)) % 4;
-      const label = STATI_AMM[idx].label;
+      const label = imp.stato_amm || 'Attivo';
       acc[label] = (acc[label] || 0) + 1;
       return acc;
     }, {});
@@ -1606,9 +1721,9 @@ function ListView({ impianti, viewMode, setViewMode }) {
       ),
 
       React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 12 } },
-        // Mostra colonne — label + cascader
+        // Mostra dati: — label + cascader
         React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
-          React.createElement('span', { style: { fontWeight: 700, fontSize: 13, color: 'rgba(0,0,0,0.88)', whiteSpace: 'nowrap' } }, 'Mostra colonne:'),
+          React.createElement('span', { style: { fontWeight: 700, fontSize: 13, color: 'rgba(0,0,0,0.88)', whiteSpace: 'nowrap' } }, 'Mostra dati::'),
           React.createElement(Cascader, {
             options: cascaderOptions,
             value: cascaderValue,
@@ -1654,9 +1769,545 @@ function ListView({ impianti, viewMode, setViewMode }) {
 }
 
 // ─────────────────────────────────────────────────────────
+// NUOVO IMPIANTO — drawer
+// ─────────────────────────────────────────────────────────
+const CANALI_OPTS  = [{ value: 'OOH', label: 'OOH' }, { value: 'DOOH', label: 'DOOH' }];
+const VENDITA_OPTS = ['Standard','Long Term'].map(v => ({ value: v, label: v }));
+const STATO_COLORS = { 'Attivo': '#1677FF', 'Inizializzato': '#D48806', 'In Manutenzione': '#FA8C16', 'Rimosso': '#8C8C8C' };
+const STATI_AMM_OPTS = Object.entries(STATO_COLORS).map(([v, color]) => ({
+  value: v,
+  label: React.createElement('span', { style: { display: 'inline-flex', alignItems: 'center', gap: 6 } },
+    React.createElement('span', { style: { width: 8, height: 8, borderRadius: '50%', background: color, flexShrink: 0, display: 'inline-block' } }),
+    v
+  ),
+}));
+const TITOLARE_OPTS = ['Proprietario','IGPDecaux','Clear Channel','Pubbliemma','Urban Vision','Posterscope'].map(v => ({ value: v, label: v }));
+const MOCK_AUTORIZZAZIONI = [
+  { value: 'aut-001', label: 'AUT-2024-001 · Comune di Palermo · scad. 31/12/2025' },
+  { value: 'aut-002', label: 'AUT-2024-002 · Comune di Palermo · scad. 15/06/2026' },
+  { value: 'aut-003', label: 'AUT-2023-087 · Città Metropolitana · scad. 30/09/2025' },
+  { value: 'aut-004', label: 'AUT-2024-015 · Comune di Palermo · scad. 28/02/2026' },
+];
+const MOCK_CONCESSIONI = [
+  { value: 'con-001', label: 'CONC-2022-003 · Suolo pubblico · scad. 31/12/2027' },
+  { value: 'con-002', label: 'CONC-2023-011 · Proprietà privata · scad. 01/01/2026' },
+  { value: 'con-003', label: 'CONC-2024-007 · Suolo comunale · scad. 15/03/2028' },
+];
+
+async function fetchAddrSuggestions(q) {
+  if (!q || q.length < 3) return [];
+  try {
+    const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=12&lang=default&lat=41.9&lon=12.4&zoom=12&bbox=6.6,35.5,18.5,47.1`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const seen = new Set();
+    const qHasNum = /\d/.test(q);
+    return (data.features || [])
+      .filter(f => f.properties.street || f.properties.name)
+      .flatMap(f => {
+        const p = f.properties;
+        const [lng, lat] = f.geometry.coordinates;
+        if (!lat || !lng) return [];
+        const via    = p.street || p.name || '';
+        const civico = p.housenumber || '';
+        const citta  = p.city || p.town || p.village || '';
+        const label  = [via, civico].filter(Boolean).join(' ') || citta;
+        if (!label || seen.has(label)) return [];
+        seen.add(label);
+        const subParts = [];
+        if (citta && citta !== label) subParts.push(citta);
+        if (p.state) subParts.push(p.state);
+        return [{
+          id: `${lng.toFixed(5)}-${lat.toFixed(5)}`,
+          display: [[via, civico].filter(Boolean).join(' '), citta, p.country].filter(Boolean).join(', '),
+          sub: subParts.join(', ') || p.country || '',
+          via,
+          civico,
+          cap: p.postcode || '',
+          citta,
+          provincia: p.county || '',
+          regione: p.state || '',
+          nazione: p.country || '',
+          lat,
+          lng,
+          _hasNum: !!p.housenumber,
+        }];
+      })
+      .sort((a, b) => qHasNum && a._hasNum !== b._hasNum ? (a._hasNum ? -1 : 1) : 0)
+      .slice(0, 8);
+  } catch { return []; }
+}
+
+function nif(label, required, children) {
+  return React.createElement('div', { className: 'ni-field' },
+    React.createElement('div', { className: 'ni-label' },
+      label, required && React.createElement('span', { className: 'req' }, ' *'),
+    ),
+    children,
+  );
+}
+
+function NewImpiantoDrawer({ open, onClose, onCreate }) {
+  const [canale,     setCanale]     = useState(null);
+  const [tipologia,  setTipologia]  = useState(null);
+  const [formato,    setFormato]    = useState(null);
+  // indirizzo
+  const [addrSuggs,  setAddrSuggs]  = useState([]);
+  const [via,        setVia]        = useState('');
+  const [civico,     setCivico]     = useState('');
+  const [cap,        setCap]        = useState('');
+  const [citta,      setCitta]      = useState('');
+  const [provincia,  setProvincia]  = useState('');
+  const [regione,    setRegione]    = useState('');
+  const [nazione,    setNazione]    = useState('');
+  const [lat,        setLat]        = useState('');
+  const [lng,        setLng]        = useState('');
+  const [note,       setNote]       = useState('');
+  // altri
+  const [titolare,   setTitolare]   = useState(null);
+  const [vendita,    setVendita]    = useState(null);
+  const [cimasa,     setCimasa]     = useState('');
+  const [stato,      setStato]      = useState(null);
+  const [autorizzazioni, setAutorizzazioni] = useState([]);
+  const [concessioni,    setConcessioni]    = useState([]);
+
+  const debRef = useRef(null);
+
+  const tipologieOpts = React.useMemo(() =>
+    Object.entries(MACRO_TIPI).map(([group, tipi]) => ({
+      label: group, options: tipi.map(t => ({ value: t, label: t })),
+    })), []);
+
+  const formatiOpts = React.useMemo(() =>
+    tipologia ? (TIPO_FORMATI[tipologia] || []).map(f => ({ value: f, label: f })) : []
+  , [tipologia]);
+
+  const canSave = canale && tipologia && formato && via.trim() && citta.trim() && stato;
+
+  const applyAddr = (s) => {
+    const fullAddr = [s.via, s.civico].filter(Boolean).join(' ');
+    setVia(fullAddr); setCivico(s.civico || ''); setAddrSuggs([]);
+    setCap(s.cap); setCitta(s.citta);
+    setProvincia(s.provincia); setRegione(s.regione); setNazione(s.nazione);
+    setLat(String(s.lat.toFixed(6))); setLng(String(s.lng.toFixed(6)));
+  };
+
+  const handleViaSearch = (val) => {
+    setVia(val);
+    if (debRef.current) clearTimeout(debRef.current);
+    if (val && val.length >= 3) {
+      debRef.current = setTimeout(async () => {
+        setAddrSuggs(await fetchAddrSuggestions(val));
+      }, 350);
+    } else {
+      setAddrSuggs([]);
+    }
+  };
+
+  const reset = () => {
+    setCanale(null); setTipologia(null); setFormato(null);
+    setAddrSuggs([]);
+    setVia(''); setCivico(''); setCap(''); setCitta(''); setProvincia(''); setRegione(''); setNazione('');
+    setLat(''); setLng(''); setNote('');
+    setTitolare(null); setVendita(null);
+    setCimasa(''); setStato(null); setAutorizzazioni([]); setConcessioni([]);
+  };
+
+  const handleClose = () => { reset(); onClose(); };
+
+  return React.createElement(Drawer, {
+    title: 'Nuovo Impianto',
+    placement: 'right',
+    size: 'large',
+    open,
+    onClose: handleClose,
+    footer: React.createElement('div', { style: { display: 'flex', justifyContent: 'flex-end', gap: 8 } },
+      React.createElement(Button, { onClick: handleClose }, 'Annulla'),
+      React.createElement(Button, {
+        type: 'primary', disabled: !canSave,
+        onClick: () => {
+          const imp = {
+            id: 'IMP-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+            codice: (canale || 'OOH') + '-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+            canale, tipologia, formato,
+            via, civico, cap, citta, provincia, regione, nazione, lat, lng,
+            note, titolare, vendita, cimasa, stato,
+            autorizzazioni, concessioni,
+          };
+          if (onCreate) onCreate(imp);
+          handleClose();
+        },
+      }, 'Crea Impianto'),
+    ),
+  },
+
+    // ── Identità ─────────────────────────────────────────
+    React.createElement('div', { className: 'ni-section' },
+      React.createElement('div', { className: 'ni-section-title' }, 'Identità'),
+      React.createElement('div', { className: 'ni-grid ni-grid-3' },
+        nif('Canale', true,
+          React.createElement(Select, {
+            placeholder: 'OOH o DOOH?', style: { width: '100%' },
+            options: CANALI_OPTS, value: canale,
+            onChange: v => { setCanale(v); setTipologia(null); setFormato(null); },
+          })
+        ),
+        nif('Tipologia', true,
+          React.createElement(Select, {
+            placeholder: canale ? 'Es. Pensilina, Palina…' : 'Prima seleziona il canale', style: { width: '100%' },
+            options: tipologieOpts, value: tipologia, disabled: !canale,
+            onChange: v => { setTipologia(v); setFormato(null); },
+          })
+        ),
+        nif('Formato', true,
+          React.createElement(Select, {
+            placeholder: tipologia ? 'Es. 120×180 cm' : 'Prima seleziona la tipologia', style: { width: '100%' },
+            options: formatiOpts, value: formato, disabled: !tipologia,
+            onChange: setFormato,
+          })
+        ),
+      ),
+    ),
+
+    // ── Localizzazione ───────────────────────────────────
+    React.createElement('div', { className: 'ni-section' },
+      React.createElement('div', { className: 'ni-section-title' }, 'Localizzazione'),
+
+      // Indirizzo + Civico
+      React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '1fr 88px', gap: 12 } },
+      nif('Indirizzo', true,
+        React.createElement(AutoComplete, {
+          style: { width: '100%' },
+          value: via,
+          options: addrSuggs.map(s => ({
+            value: s.via,
+            label: React.createElement('div', { style: { display: 'flex', gap: 8, alignItems: 'flex-start', padding: '2px 0' } },
+              React.createElement('div', {
+                style: { width: 24, height: 24, borderRadius: 4, background: 'rgba(62,0,251,0.08)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 },
+              },
+                React.createElement(EnvironmentOutlined, { style: { fontSize: 11, color: '#3E00FB' } })
+              ),
+              React.createElement('div', { style: { flex: 1, minWidth: 0 } },
+                React.createElement('div', { style: { fontSize: 13, fontWeight: 500, color: 'rgba(0,0,0,0.85)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, s.display),
+                s.sub && React.createElement('div', { style: { fontSize: 11, color: 'rgba(0,0,0,0.45)', marginTop: 1 } }, s.sub),
+              ),
+            ),
+            key: s.id,
+            _sdata: s,
+          })),
+          onSearch: handleViaSearch,
+          onChange: (val) => { if (typeof val === 'string') setVia(val); },
+          onSelect: (val, option) => { if (option._sdata) applyAddr(option._sdata); },
+          onClear: () => { setVia(''); setAddrSuggs([]); },
+          allowClear: true,
+          notFoundContent: null,
+          popupMatchSelectWidth: true,
+          getPopupContainer: () => document.body,
+        },
+          React.createElement(Input, {
+            prefix: React.createElement(EnvironmentOutlined, { style: { color: 'rgba(0,0,0,0.3)' } }),
+            placeholder: 'Es. Via Maqueda, Palermo…',
+          })
+        )
+      ),
+      nif('N. civico', false,
+        React.createElement(Input, {
+          placeholder: 'Es. 148',
+          value: civico, onChange: e => setCivico(e.target.value),
+        })
+      ),
+      ), // fine grid Indirizzo + Civico
+      React.createElement('div', { className: 'ni-grid ni-grid-2' },
+        nif('Città', false,
+          React.createElement(Input, { placeholder: '—', value: citta, onChange: e => setCitta(e.target.value) })
+        ),
+        nif('Provincia', false,
+          React.createElement(Input, { placeholder: '—', value: provincia, onChange: e => setProvincia(e.target.value) })
+        ),
+      ),
+      nif('Note geografiche', false,
+        React.createElement(Input.TextArea, {
+          placeholder: 'Es. angolo con Via Bandiera, fronte semaforo…',
+          rows: 2, value: note, onChange: e => setNote(e.target.value),
+        })
+      ),
+    ),
+
+    // ── Gestione ─────────────────────────────────────────
+    React.createElement('div', { className: 'ni-section' },
+      React.createElement('div', { className: 'ni-section-title' }, 'Gestione'),
+      React.createElement('div', { className: 'ni-grid ni-grid-2' },
+        nif('Titolare', false,
+          React.createElement(Select, {
+            placeholder: 'Ente, privato o media owner…', style: { width: '100%' }, showSearch: true,
+            options: TITOLARE_OPTS, value: titolare, onChange: setTitolare,
+          })
+        ),
+        nif('Modalità di vendita', false,
+          React.createElement(Select, {
+            placeholder: 'Seleziona', style: { width: '100%' },
+            options: VENDITA_OPTS, value: vendita, onChange: setVendita,
+          })
+        ),
+      ),
+      React.createElement('div', { className: 'ni-grid ni-grid-2' },
+        nif('Cimasa', false,
+          React.createElement(Input, {
+            placeholder: 'Es. CIM-2024-001',
+            value: cimasa, onChange: e => setCimasa(e.target.value),
+          })
+        ),
+        nif('Stato', true,
+          React.createElement(Select, {
+            placeholder: 'Seleziona', style: { width: '100%' },
+            options: STATI_AMM_OPTS, value: stato, onChange: setStato,
+          })
+        ),
+      ),
+    ),
+
+    // ── Autorizzazioni e concessioni ─────────────────────
+    React.createElement('div', { className: 'ni-section' },
+      React.createElement('div', { className: 'ni-section-title' }, 'Autorizzazioni e concessioni'),
+      nif('Autorizzazioni', false,
+        React.createElement(Select, {
+          mode: 'multiple', style: { width: '100%' }, showSearch: true,
+          placeholder: 'Cerca per numero o ente…',
+          options: MOCK_AUTORIZZAZIONI, value: autorizzazioni, onChange: setAutorizzazioni,
+          optionFilterProp: 'label', maxTagCount: 'responsive',
+        })
+      ),
+      nif('Concessioni', false,
+        React.createElement(Select, {
+          mode: 'multiple', style: { width: '100%' }, showSearch: true,
+          placeholder: 'Cerca per numero o tipo…',
+          options: MOCK_CONCESSIONI, value: concessioni, onChange: setConcessioni,
+          optionFilterProp: 'label', maxTagCount: 'responsive',
+        })
+      ),
+    ),
+
+  ); // Drawer
+}
+
+// ─────────────────────────────────────────────────────────
+// IMPIANTO DETAIL PAGE
+// ─────────────────────────────────────────────────────────
+const MOCK_EVENTS = [
+  { date: '02/02/2025', time: '11:25', dot: '#3E00FB', title: 'Nuova squadra assegnata', desc: "La squadra 'Publiposter' è stata assegnata all'impianto. Incarichi: Affissione e Incollaggio.", user: 'Marco Bianchi' },
+  { date: '02/02/2025', time: '11:25', dot: '#FA8C16', title: 'Nuovo incarico assegnato', desc: "Manutenzione e Installazione/Assemblaggio assegnati a START Affissioni.", user: 'Marco Bianchi' },
+  { date: '12/11/2024', time: '09:10', dot: '#52C41A', title: 'Stato cambiato in Attivo', desc: "L'impianto è ora disponibile per la pianificazione.", user: 'Admin Sistema' },
+  { date: '05/10/2024', time: '14:30', dot: '#D48806', title: 'Impianto inizializzato', desc: "Inserimento dati tecnici e amministrativi completato.", user: 'Admin Sistema' },
+  { date: '01/10/2024', time: '10:00', dot: '#3E00FB', title: 'Impianto creato', desc: "Nuovo impianto registrato nel sistema.", user: 'Admin Sistema' },
+];
+
+function ImpiantoDetailPage({ imp, onBack }) {
+  const [activeTab, setActiveTab] = useState('dati-admin');
+  const stateColor = STATO_COLORS[imp.stato_amm] || STATO_AMM_CONFIG[imp.stato_amm]?.dot || '#8C8C8C';
+  const displayName = imp.tipo
+    ? `${(imp.tipo||'').replace(' ','_')}_${(imp.citta||'PA').replace(/\s/g,'').slice(0,6).toUpperCase()}01`
+    : imp.id || 'Impianto';
+  const address = [imp.via, imp.civico, imp.citta].filter(Boolean).join(', ') || imp.indirizzo || 'Palermo, PA';
+
+  const cards1 = [
+    { label: 'Owner',        value: imp.titolare || 'Comune di Palermo', icon: React.createElement('div', { style: { width: 20, height: 20, borderRadius: 4, background: '#3E00FB', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginRight: 4 } }, React.createElement('span', { style: { color: '#fff', fontSize: 9, fontWeight: 700 } }, 'P')) },
+    { label: 'System Type',  value: imp.tipo || '—', sub: `${imp.faces || 1} face${(imp.faces||1)>1?'s':''}` },
+    { label: 'Status',       value: imp.stato_amm || 'Attivo', dot: stateColor, sub: 'dal 12/11/2024' },
+    { label: 'Sizes',        value: imp.formato || '—', sub: imp.illuminato ? 'Illuminato' : 'Non illuminato' },
+  ];
+  const cards2 = [
+    { label: 'Account Number', value: imp.id || '—',          big: true },
+    { label: 'Cimasa Code',    value: imp.cimasa || 'A2398',  big: true, copy: true },
+    { label: 'Land',           value: 'Privato', sub: 'Categoria: Normale', big: true },
+    { label: 'Area Code',      value: imp.zona?.slice(0,2)||'2', big: true },
+  ];
+
+  const tabItems = [
+    {
+      key: 'dati-admin', label: 'Dati Amministrativi',
+      children: React.createElement('div', null,
+        React.createElement('div', { className: 'imp-detail-event-filters' },
+          React.createElement(DatePicker.RangePicker, { size: 'small', placeholder: ['Inizio', 'Fine'] }),
+          React.createElement(Select, { size: 'small', placeholder: 'Tipo evento', style: { width: 150 }, options: [{value:'all',label:'Tutti i tipi'},{value:'assign',label:'Assegnazione'},{value:'status',label:'Cambio stato'},{value:'duty',label:'Incarico'}] }),
+          React.createElement(Select, { size: 'small', placeholder: 'Agente', style: { width: 140 }, options: [{value:'all',label:'Tutti'},{value:'mb',label:'Marco Bianchi'},{value:'admin',label:'Admin'}] }),
+          React.createElement(Input, { size: 'small', placeholder: 'Cerca evento…', prefix: React.createElement(icons.SearchOutlined, { style: { color: 'rgba(0,0,0,0.3)' } }), style: { width: 180 } }),
+          React.createElement('div', { style: { flex: 1 } }),
+          React.createElement(Button, { size: 'small', type: 'primary', icon: React.createElement(icons.PlusOutlined) }, 'New Event'),
+        ),
+        React.createElement('div', { className: 'imp-detail-timeline' },
+          ...MOCK_EVENTS.map((ev, i) =>
+            React.createElement('div', { key: i, className: 'imp-detail-tl-item' },
+              React.createElement('div', { className: 'imp-detail-tl-date' },
+                React.createElement('div', { className: 'imp-detail-tl-date-d' }, ev.date),
+                React.createElement('div', { className: 'imp-detail-tl-date-t' }, React.createElement(icons.ClockCircleOutlined, { style: { fontSize: 10 } }), ' ', ev.time),
+              ),
+              React.createElement('div', { className: 'imp-detail-tl-dot', style: { background: ev.dot } }),
+              React.createElement('div', { className: 'imp-detail-tl-body' },
+                React.createElement('div', { className: 'imp-detail-tl-title' }, ev.title),
+                React.createElement('div', { className: 'imp-detail-tl-desc' }, ev.desc),
+                React.createElement('div', { className: 'imp-detail-tl-user' },
+                  React.createElement(Avatar, { size: 16, style: { background: '#3E00FB', fontSize: 8, flexShrink: 0 } }, ev.user.split(' ').map(w=>w[0]).join('')),
+                  ev.user,
+                ),
+              ),
+            )
+          ),
+        ),
+      ),
+    },
+    {
+      key: 'dati-tecnici', label: 'Dati Tecnici',
+      children: React.createElement(Descriptions, { column: 2, size: 'small', bordered: true, style: { marginTop: 16 },
+        items: [
+          { key:'t1', label:'Tipologia',   children: imp.tipo||'—' },
+          { key:'t2', label:'Formato',     children: imp.formato||'—' },
+          { key:'t3', label:'Faces',       children: String(imp.faces||1) },
+          { key:'t4', label:'Illuminato',  children: imp.illuminato ? 'Sì' : 'No' },
+          { key:'t5', label:'Canale',      children: imp.canale||'OOH' },
+          { key:'t6', label:'Latitudine',  children: String(imp.lat||'—') },
+          { key:'t7', label:'Longitudine', children: String(imp.lng||'—') },
+        ],
+      }),
+    },
+    { key:'asset',      label:'Asset e Dispositivi',   children: React.createElement(Empty, { description:'Nessun asset registrato', image:Empty.PRESENTED_IMAGE_SIMPLE, style:{marginTop:48} }) },
+    { key:'ops',        label:'Operazioni e Squadre',  children: React.createElement(Empty, { description:'Nessuna operazione registrata', image:Empty.PRESENTED_IMAGE_SIMPLE, style:{marginTop:48} }) },
+    {
+      key: 'vendita', label: 'Profilo Vendita',
+      children: React.createElement(Descriptions, { column: 2, size: 'small', bordered: true, style: { marginTop: 16 },
+        items: [
+          { key:'v1', label:'Modalità',     children: imp.vendita||'—' },
+          { key:'v2', label:'Proprietario', children: imp.titolare||'—' },
+          { key:'v3', label:'Cimasa',       children: imp.cimasa||'—' },
+        ],
+      }),
+    },
+    { key:'accounting', label:'Contabilità', children: React.createElement(Empty, { description:'Nessun dato contabile', image:Empty.PRESENTED_IMAGE_SIMPLE, style:{marginTop:48} }) },
+  ];
+
+  return React.createElement('div', { className: 'imp-detail-page' },
+
+    // ── Topbar
+    React.createElement('div', { className: 'imp-detail-topbar' },
+      React.createElement(Button, { type:'text', size:'small', icon:React.createElement(icons.ArrowLeftOutlined), onClick:onBack, style:{color:'rgba(0,0,0,0.45)',marginRight:4} }),
+      React.createElement(Text, { style:{color:'rgba(0,0,0,0.45)',fontSize:13} }, 'Systems Map'),
+      React.createElement('span', { style:{color:'rgba(0,0,0,0.2)',margin:'0 6px',fontSize:13} }, '/'),
+      React.createElement(Text, { style:{color:'rgba(0,0,0,0.45)',fontSize:13} }, 'Inventory'),
+      React.createElement('span', { style:{color:'rgba(0,0,0,0.2)',margin:'0 6px',fontSize:13} }, '/'),
+      React.createElement(Text, { strong:true, style:{fontSize:13} }, displayName),
+    ),
+
+    // ── Gallery
+    React.createElement('div', { className: 'imp-detail-gallery' },
+      React.createElement('div', { className: 'imp-detail-gallery-main', style:{ background:'linear-gradient(160deg,#1a2540 0%,#2a3a5a 100%)', display:'flex', alignItems:'center', justifyContent:'center' } },
+        React.createElement('img', { src:`../../assets/${TIPO_TO_FOLDER[imp.tipo]||'OOH/palina'}/active.svg`, style:{height:'75%',opacity:0.55,filter:'drop-shadow(0 4px 12px rgba(0,0,0,0.4))'}, onError:e=>{e.target.style.display='none';} }),
+      ),
+      React.createElement('div', { className: 'imp-detail-gallery-grid' },
+        ...[['#1e2e3a','#1a283a'],['#243244','#22304a']].flat().map((bg,i)=>
+          React.createElement('div', { key:i, className:'imp-detail-gallery-thumb', style:{background:`linear-gradient(135deg,${bg} 0%,${bg}bb 100%)`} },
+            i===3 ? React.createElement('div', { style:{position:'absolute',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'} },
+              React.createElement('span', { style:{color:'#fff',fontSize:11,fontWeight:600} }, '+ Vedi tutte')
+            ) : null
+          )
+        ),
+      ),
+    ),
+
+    // ── Title bar
+    React.createElement('div', { className: 'imp-detail-title-bar' },
+      React.createElement(Button, { type:'link', size:'small', icon:React.createElement(icons.ArrowLeftOutlined), onClick:onBack, style:{paddingLeft:0,color:'rgba(0,0,0,0.45)'} }, 'Torna alla mappa'),
+      React.createElement('div', { style:{width:1,height:16,background:'#E8E8E8',flexShrink:0} }),
+      React.createElement('span', { className:'imp-detail-name' }, displayName),
+      React.createElement('div', { style:{flex:1} }),
+      React.createElement(Button, { icon:React.createElement(icons.EditOutlined) }, 'Modifica'),
+    ),
+
+    // ── Body
+    React.createElement('div', { className: 'imp-detail-body' },
+
+      // Sidebar
+      React.createElement('div', { className: 'imp-detail-sidebar' },
+        React.createElement('div', { className: 'imp-detail-map-mini' },
+          React.createElement('svg', { viewBox:'0 0 240 140', xmlns:'http://www.w3.org/2000/svg', style:{width:'100%',height:'100%'} },
+            React.createElement('rect', { width:240, height:140, fill:'#E8EEF4' }),
+            React.createElement('line', { x1:0,y1:65,x2:240,y2:65,   stroke:'#fff', strokeWidth:10 }),
+            React.createElement('line', { x1:115,y1:0,x2:115,y2:140, stroke:'#fff', strokeWidth:7 }),
+            React.createElement('line', { x1:0,y1:30,x2:240,y2:18,   stroke:'#EEF2F7', strokeWidth:4 }),
+            React.createElement('line', { x1:0,y1:105,x2:240,y2:118, stroke:'#EEF2F7', strokeWidth:4 }),
+            React.createElement('line', { x1:55,y1:0,x2:70,y2:140,   stroke:'#D8E2EC', strokeWidth:2 }),
+            React.createElement('line', { x1:168,y1:0,x2:158,y2:140, stroke:'#D8E2EC', strokeWidth:2 }),
+            React.createElement('rect', { x:18,y:15,width:48,height:32,rx:3,fill:'#C5D4E2' }),
+            React.createElement('rect', { x:155,y:72,width:58,height:38,rx:3,fill:'#C5D4E2' }),
+            React.createElement('rect', { x:128,y:18,width:36,height:32,rx:3,fill:'#C5D4E2' }),
+            React.createElement('rect', { x:18,y:75,width:34,height:28,rx:3,fill:'#D4DEEA' }),
+            React.createElement('circle', { cx:115, cy:60, r:11, fill:'#3E00FB', stroke:'white', strokeWidth:2.5 }),
+            React.createElement('circle', { cx:115, cy:60, r:4,  fill:'white' }),
+          ),
+        ),
+        React.createElement('div', { className:'imp-detail-addr' },
+          React.createElement(icons.EnvironmentOutlined, { style:{fontSize:12,color:'#3E00FB',marginTop:1,flexShrink:0} }),
+          address,
+        ),
+        React.createElement('div', { className:'imp-detail-sidebar-section' },
+          React.createElement('div', { className:'imp-detail-sidebar-label' }, 'Event History'),
+          React.createElement(DatePicker.RangePicker, { size:'small', style:{width:'100%'}, placeholder:['Inizio','Fine'] }),
+        ),
+      ),
+
+      // Main
+      React.createElement('div', { className: 'imp-detail-main' },
+
+        // Info cards row 1
+        React.createElement('div', { className:'imp-detail-cards' },
+          ...cards1.map((c,i)=>
+            React.createElement('div', { key:i, className:'imp-detail-card' },
+              React.createElement('div', { className:'imp-detail-card-label' }, c.label),
+              React.createElement('div', { className:'imp-detail-card-value' },
+                c.dot && React.createElement('span', { style:{width:8,height:8,borderRadius:'50%',background:c.dot,flexShrink:0} }),
+                c.icon,
+                c.value||'—',
+              ),
+              c.sub && React.createElement('div', { className:'imp-detail-card-sub' }, c.sub),
+            )
+          ),
+        ),
+
+        // Info cards row 2
+        React.createElement('div', { className:'imp-detail-cards' },
+          ...cards2.map((c,i)=>
+            React.createElement('div', { key:i, className:'imp-detail-card' },
+              React.createElement('div', { className:'imp-detail-card-label' }, c.label),
+              React.createElement('div', { className:'imp-detail-card-value', style:{fontSize:c.big?18:14, fontWeight:c.big?700:600} },
+                c.value||'—',
+                c.copy && React.createElement(Tooltip, { title:'Copia' },
+                  React.createElement(Button, { type:'text', size:'small', icon:React.createElement(icons.CopyOutlined), style:{color:'rgba(0,0,0,0.3)',marginLeft:2} })
+                ),
+              ),
+              c.sub && React.createElement('div', { className:'imp-detail-card-sub' }, c.sub),
+            )
+          ),
+        ),
+
+        // Tabs
+        React.createElement('div', { className:'imp-detail-tabs-wrap' },
+          React.createElement(Tabs, { items:tabItems.map(t=>({key:t.key,label:t.label})), activeKey:activeTab, onChange:setActiveTab, size:'small' }),
+        ),
+
+        // Tab content
+        React.createElement('div', { className:'imp-detail-tab-content' },
+          tabItems.find(t=>t.key===activeTab)?.children,
+        ),
+      ),
+    ),
+  );
+}
+// ─────────────────────────────────────────────────────────
 // APP
 // ─────────────────────────────────────────────────────────
 function App() {
+  const [showNewImpianto,  setShowNewImpianto]  = useState(false);
+  const [detailImpianto,   setDetailImpianto]   = useState(null);
   const [highlightedId, setHighlightedId] = useState(null);
   const [selectedIds,   setSelectedIds]   = useState(new Set());
   const [expandedIds,   setExpandedIds]   = useState(new Set());
@@ -1961,22 +2612,27 @@ function App() {
   return React.createElement('div', { className: 'app-shell' },
     React.createElement(Navbar),
 
-    React.createElement('div', { className: 'ooh-workspace' },
+    detailImpianto
+      ? React.createElement(ImpiantoDetailPage, { imp: detailImpianto, onBack: () => setDetailImpianto(null) })
+      : React.createElement('div', { className: 'ooh-workspace' },
 
       // ── SEARCH CARD (top) ──────────────────────────────
       React.createElement('div', { className: 'ooh-search-card' },
         React.createElement('div', { className: 'ooh-search-area' },
 
-          // Titolo
-          React.createElement('div', { style: { display: 'flex', justifyContent: 'center' } },
+          // ── Riga header: titolo | searchbar centrata | CTA ──
+          React.createElement('div', { style: { display: 'flex', alignItems: 'center' } },
+
+          // Titolo — sinistra (flex:1 per bilanciare)
+          React.createElement('div', { style: { flex: 1 } },
             React.createElement('span', { style: { fontSize: 22, fontWeight: 700, color: 'rgba(0,0,0,0.88)', letterSpacing: '-0.3px' } }, 'Parco Impianti'),
           ),
 
-          // Search bar — compact + CTA
-          React.createElement('div', { className: 'ss-search-bar' },
+          // Search bar — centro (larghezza fissa)
+          React.createElement('div', { className: 'ss-search-bar', style: { width: 700 } },
 
             // Compact group: input + filtri + cerca
-            React.createElement('div', { style: { flex: 1, maxWidth: 900, position: 'relative' } },
+            React.createElement('div', { style: { flex: 1, position: 'relative' } },
               React.createElement(Space.Compact, { style: { width: '100%' } },
                 React.createElement(Input, {
                   placeholder: 'Cerca via, quartiere, città, provincia…',
@@ -2038,16 +2694,38 @@ function App() {
               ),
             ),
 
-            React.createElement(Button, {
-              type: 'primary',
-              icon: React.createElement(PlusOutlined),
-            }, 'Nuovo Impianto'),
+          ), // ss-search-bar
 
+          // CTA — destra (flex:1 per bilanciare, allineato a destra)
+          React.createElement('div', { style: { flex: 1, display: 'flex', justifyContent: 'flex-end' } },
+            React.createElement(Space, null,
+              React.createElement(Dropdown, {
+                menu: {
+                  items: [
+                    { key: 'nuova-tipologia', label: 'Nuova tipologia' },
+                    { key: 'nuovo-formato',   label: 'Nuovo formato' },
+                  ],
+                },
+                trigger: ['click'],
+                placement: 'bottomRight',
+              },
+                React.createElement(Button, {
+                  icon: React.createElement(PlusOutlined),
+                }, 'Nuovo'),
+              ),
+              React.createElement(Button, {
+                type: 'primary',
+                icon: React.createElement(PlusOutlined),
+                onClick: () => setShowNewImpianto(true),
+              }, 'Nuovo Impianto'),
+            ),
           ),
+
+          ), // riga header
 
           // ── Brief chips: zona attiva ────
           appliedZone &&
-          React.createElement('div', { className: 'ss-brief-chips', style: { marginTop: 6 } },
+          React.createElement('div', { className: 'ss-brief-chips', style: { padding: '0 20px 12px' } },
             React.createElement('span', { className: 'ss-brief-label' }, 'Filtri attivi:'),
 
             React.createElement('div', { className: 'ss-zone-active-tag' },
@@ -2120,6 +2798,12 @@ function App() {
           )
         : React.createElement(ListView, { impianti: filteredImpianti, viewMode, setViewMode })
     ),
+
+    React.createElement(NewImpiantoDrawer, {
+      open: showNewImpianto,
+      onClose: () => setShowNewImpianto(false),
+      onCreate: (imp) => { setDetailImpianto(imp); },
+    }),
 
     React.createElement(Drawer, {
       title: 'Filtri avanzati',
