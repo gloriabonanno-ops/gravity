@@ -2889,7 +2889,7 @@ function nearestPointOnPath(path, lat, lng) {
 // ── Geocoding utilities (Photon + Overpass) ──────────────────────────────────
 // Photon: OSM-based autocomplete, free, no API key, Italian support.
 // Bounded to Sicily + provinces: minLng,minLat,maxLng,maxLat
-const PHOTON_BBOX = '11.8,36.4,15.2,38.5';
+const PHOTON_BBOX = '11.9,36.55,15.70,38.35';
 
 // Map a Photon GeoJSON feature to our internal zone shape.
 function photonFeatureToZone(feat) {
@@ -5393,8 +5393,12 @@ out geom;`;
     zoneAcRef.current = setTimeout(() => {
       if (!window.google?.maps?.places) return;
       const svc = new google.maps.places.AutocompleteService();
+      const SICILY_BOUNDS = new google.maps.LatLngBounds(
+        { lat: 36.55, lng: 11.90 },   // SW
+        { lat: 38.35, lng: 15.70 }    // NE
+      );
       svc.getPlacePredictions(
-        { input: q, componentRestrictions: { country: 'it' }, language: 'it' },
+        { input: q, bounds: SICILY_BOUNDS, strictBounds: true, language: 'it' },
         (predictions, status) => {
           if (status !== google.maps.places.PlacesServiceStatus.OK || !predictions) return;
           const groups = {};
