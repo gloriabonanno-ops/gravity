@@ -1901,105 +1901,105 @@ const SEARCH_RESULTS = (() => {
   ];
   const STATES = ['Available','Available','Available','Available','Available','In Option','In Option','Reserved','Reserved'];
 
-  // [street, baseLat, baseLng, count, city, province, channel]
+  // [street, startLat, startLng, endLat, endLng, count, city, province, channel]
   // channel: 'OOH' (arredo urbano classico) | 'DOOH' (digitale, strade ad alto traffico)
   // Totale: 524 spazi — 394 OOH · 130 DOOH
   const ZONES = window._GRAVITY_ZONES = [
-    // ── PALERMO — DOOH (arterie principali, alta percorrenza) ─────────────────
-    ['Via della Libertà',        38.1230, 13.3521, 14, 'Palermo',          'PA', 'DOOH'],
-    ['Via Roma',                 38.1118, 13.3666, 12, 'Palermo',          'PA', 'DOOH'],
-    ['Via Maqueda',              38.1100, 13.3600, 12, 'Palermo',          'PA', 'DOOH'],
-    ['Viale Reg. Siciliana',     38.0960, 13.3454, 16, 'Palermo',          'PA', 'DOOH'],
-    ['Via Emerico Amari',        38.1190, 13.3660, 10, 'Palermo',          'PA', 'DOOH'],
-    ['Via Leonardo da Vinci',    38.1270, 13.3450, 12, 'Palermo',          'PA', 'DOOH'],
-    ['Piazza Castelnuovo',       38.1200, 13.3578,  8, 'Palermo',          'PA', 'DOOH'],
+    // ── PALERMO — DOOH ───────────────────────────────────────────────────────
+    ['Via della Libertà',        38.1196, 13.3570, 38.1490, 13.3408, 14, 'Palermo',          'PA', 'DOOH'],
+    ['Via Roma',                 38.1079, 13.3662, 38.1182, 13.3641, 12, 'Palermo',          'PA', 'DOOH'],
+    ['Via Maqueda',              38.1065, 13.3608, 38.1212, 13.3545, 12, 'Palermo',          'PA', 'DOOH'],
+    ['Viale Reg. Siciliana',     38.0828, 13.2782, 38.1035, 13.4295, 16, 'Palermo',          'PA', 'DOOH'],
+    ['Via Emerico Amari',        38.1178, 13.3618, 38.1205, 13.3698, 10, 'Palermo',          'PA', 'DOOH'],
+    ['Via Leonardo da Vinci',    38.1265, 13.3255, 38.1290, 13.3495, 12, 'Palermo',          'PA', 'DOOH'],
+    ['Piazza Castelnuovo',       38.1194, 13.3555, 38.1210, 13.3598,  8, 'Palermo',          'PA', 'DOOH'],
     // ── PALERMO — OOH ────────────────────────────────────────────────────────
-    ['Corso V. Emanuele',        38.1118, 13.3612, 10, 'Palermo',          'PA', 'OOH'],
-    ['Via Notarbartolo',         38.1310, 13.3478, 10, 'Palermo',          'PA', 'OOH'],
-    ['Via Cavour',               38.1155, 13.3690, 10, 'Palermo',          'PA', 'OOH'],
-    ['Via Dante',                38.1195, 13.3560,  8, 'Palermo',          'PA', 'OOH'],
-    ['Corso Calatafimi',         38.1024, 13.3349, 12, 'Palermo',          'PA', 'OOH'],
-    ['Via Oreto',                38.1052, 13.3578, 10, 'Palermo',          'PA', 'OOH'],
-    ['Viale Lazio',              38.1092, 13.3383,  8, 'Palermo',          'PA', 'OOH'],
-    ['Via Ugo La Malfa',         38.1175, 13.3365, 10, 'Palermo',          'PA', 'OOH'],
-    ['Via Resuttana',            38.1355, 13.3405,  8, 'Palermo',          'PA', 'OOH'],
-    ['Via Messina Marine',       38.0950, 13.3800,  8, 'Palermo',          'PA', 'OOH'],
-    ['Piazza Politeama',         38.1196, 13.3564,  6, 'Palermo',          'PA', 'OOH'],
-    ['Via Marchese Ugo',         38.1230, 13.3480,  8, 'Palermo',          'PA', 'OOH'],
-    ['Via Perpignano',           38.1050, 13.3260,  8, 'Palermo',          'PA', 'OOH'],
-    ['Via Ausonia',              38.1160, 13.3685,  8, 'Palermo',          'PA', 'OOH'],
-    ['Via Duca della Verdura',   38.1215, 13.3545,  6, 'Palermo',          'PA', 'OOH'],
-    ['Piazza Sturzo',            38.1158, 13.3590,  6, 'Palermo',          'PA', 'OOH'],
+    ['Corso V. Emanuele',        38.1120, 13.3452, 38.1112, 13.3710, 10, 'Palermo',          'PA', 'OOH'],
+    ['Via Notarbartolo',         38.1292, 13.3468, 38.1400, 13.3432, 10, 'Palermo',          'PA', 'OOH'],
+    ['Via Cavour',               38.1145, 13.3648, 38.1175, 13.3718, 10, 'Palermo',          'PA', 'OOH'],
+    ['Via Dante',                38.1182, 13.3540, 38.1212, 13.3578,  8, 'Palermo',          'PA', 'OOH'],
+    ['Corso Calatafimi',         38.1075, 13.3440, 38.0882, 13.3148, 12, 'Palermo',          'PA', 'OOH'],
+    ['Via Oreto',                38.1062, 13.3558, 38.0988, 13.3628, 10, 'Palermo',          'PA', 'OOH'],
+    ['Viale Lazio',              38.1068, 13.3358, 38.1118, 13.3412,  8, 'Palermo',          'PA', 'OOH'],
+    ['Via Ugo La Malfa',         38.1168, 13.3368, 38.1252, 13.3318, 10, 'Palermo',          'PA', 'OOH'],
+    ['Via Resuttana',            38.1338, 13.3402, 38.1448, 13.3298,  8, 'Palermo',          'PA', 'OOH'],
+    ['Via Messina Marine',       38.0992, 13.3782, 38.0875, 13.3898,  8, 'Palermo',          'PA', 'OOH'],
+    ['Piazza Politeama',         38.1188, 13.3548, 38.1205, 13.3580,  6, 'Palermo',          'PA', 'OOH'],
+    ['Via Marchese Ugo',         38.1218, 13.3462, 38.1252, 13.3502,  8, 'Palermo',          'PA', 'OOH'],
+    ['Via Perpignano',           38.1038, 13.3218, 38.1082, 13.3295,  8, 'Palermo',          'PA', 'OOH'],
+    ['Via Ausonia',              38.1148, 13.3658, 38.1172, 13.3705,  8, 'Palermo',          'PA', 'OOH'],
+    ['Via Duca della Verdura',   38.1202, 13.3518, 38.1228, 13.3572,  6, 'Palermo',          'PA', 'OOH'],
+    ['Piazza Sturzo',            38.1150, 13.3578, 38.1165, 13.3602,  6, 'Palermo',          'PA', 'OOH'],
     // ── TRAPANI — DOOH ────────────────────────────────────────────────────────
-    ['Via Fardella',             37.9830, 12.6095, 10, 'Trapani',          'TP', 'DOOH'],
+    ['Via Fardella',             37.9782, 12.6048, 37.9865, 12.6148, 10, 'Trapani',          'TP', 'DOOH'],
     // ── TRAPANI — OOH ─────────────────────────────────────────────────────────
-    ['Piazza Vittorio Veneto',   37.9816, 12.5985,  8, 'Trapani',          'TP', 'OOH'],
-    ['Corso Vittorio Emanuele',  37.9695, 12.5991,  8, 'Trapani',          'TP', 'OOH'],
-    ['Via G. B. Fardella',       37.9780, 12.6070,  6, 'Trapani',          'TP', 'OOH'],
+    ['Piazza Vittorio Veneto',   37.9808, 12.5968, 37.9822, 12.6002,  8, 'Trapani',          'TP', 'OOH'],
+    ['Corso Vittorio Emanuele',  37.9688, 12.5928, 37.9710, 12.6062,  8, 'Trapani',          'TP', 'OOH'],
+    ['Via G. B. Fardella',       37.9762, 12.6042, 37.9808, 12.6105,  6, 'Trapani',          'TP', 'OOH'],
     // ── MARSALA — DOOH ────────────────────────────────────────────────────────
-    ['Viale delle Sirene',       37.8010, 12.4340,  8, 'Marsala',          'TP', 'DOOH'],
+    ['Viale delle Sirene',       37.7985, 12.4298, 37.8042, 12.4390,  8, 'Marsala',          'TP', 'DOOH'],
     // ── MARSALA — OOH ─────────────────────────────────────────────────────────
-    ['Via XI Maggio',            37.7990, 12.4390,  8, 'Marsala',          'TP', 'OOH'],
-    ['Lungomare Mediterraneo',   37.7955, 12.4270,  6, 'Marsala',          'TP', 'OOH'],
+    ['Via XI Maggio',            37.7978, 12.4362, 37.8012, 12.4428,  8, 'Marsala',          'TP', 'OOH'],
+    ['Lungomare Mediterraneo',   37.7938, 12.4228, 37.7972, 12.4318,  6, 'Marsala',          'TP', 'OOH'],
     // ── MAZARA DEL VALLO — OOH ────────────────────────────────────────────────
-    ['Lungomare Mazzini',        37.6580, 12.5930,  8, 'Mazara del Vallo', 'TP', 'OOH'],
-    ['Via Castelvetrano',        37.6510, 12.5880,  6, 'Mazara del Vallo', 'TP', 'OOH'],
+    ['Lungomare Mazzini',        37.6555, 12.5878, 37.6608, 12.5985,  8, 'Mazara del Vallo', 'TP', 'OOH'],
+    ['Via Castelvetrano',        37.6492, 12.5845, 37.6542, 12.5928,  6, 'Mazara del Vallo', 'TP', 'OOH'],
     // ── ALCAMO — OOH ──────────────────────────────────────────────────────────
-    ['Via Alcide De Gasperi',    37.9800, 13.0280,  6, 'Alcamo',           'TP', 'OOH'],
-    ['Corso 6 Aprile',           37.9770, 13.0250,  6, 'Alcamo',           'TP', 'OOH'],
+    ['Via Alcide De Gasperi',    37.9788, 13.0252, 37.9820, 13.0315,  6, 'Alcamo',           'TP', 'OOH'],
+    ['Corso 6 Aprile',           37.9758, 13.0225, 37.9785, 13.0280,  6, 'Alcamo',           'TP', 'OOH'],
     // ── AGRIGENTO — DOOH ──────────────────────────────────────────────────────
-    ['Via Atenea',               37.3115, 13.5780, 10, 'Agrigento',        'AG', 'DOOH'],
+    ['Via Atenea',               37.3102, 13.5748, 37.3128, 13.5812, 10, 'Agrigento',        'AG', 'DOOH'],
     // ── AGRIGENTO — OOH ───────────────────────────────────────────────────────
-    ['Viale della Vittoria',     37.3085, 13.5710,  8, 'Agrigento',        'AG', 'OOH'],
-    ['Via Empedocle',            37.3060, 13.5760,  6, 'Agrigento',        'AG', 'OOH'],
+    ['Viale della Vittoria',     37.3068, 13.5682, 37.3102, 13.5748,  8, 'Agrigento',        'AG', 'OOH'],
+    ['Via Empedocle',            37.3048, 13.5738, 37.3072, 13.5788,  6, 'Agrigento',        'AG', 'OOH'],
     // ── SCIACCA — OOH ─────────────────────────────────────────────────────────
-    ['Lungomare Cristoforo Colombo', 37.5090, 13.0700, 8, 'Sciacca',       'AG', 'OOH'],
-    ['Viale della Vittoria',         37.5080, 13.0860, 8, 'Sciacca',       'AG', 'OOH'],
-    ['Via Licata',               37.5050, 13.0820,  6, 'Sciacca',          'AG', 'OOH'],
+    ['Lungomare Cristoforo Colombo', 37.5082, 13.0672, 37.5098, 13.0768, 8, 'Sciacca',       'AG', 'OOH'],
+    ['Viale della Vittoria',         37.5068, 13.0832, 37.5092, 13.0898, 8, 'Sciacca',       'AG', 'OOH'],
+    ['Via Licata',               37.5038, 13.0798, 37.5062, 13.0852,  6, 'Sciacca',          'AG', 'OOH'],
     // ── PORTO EMPEDOCLE — OOH ─────────────────────────────────────────────────
-    ['Via Roma',                 37.2950, 13.5270,  8, 'Porto Empedocle',  'AG', 'OOH'],
+    ['Via Roma',                 37.2930, 13.5238, 37.2975, 13.5308,  8, 'Porto Empedocle',  'AG', 'OOH'],
     // ── CALTANISSETTA — DOOH ──────────────────────────────────────────────────
-    ['Corso Vittorio Emanuele',  37.4920, 14.0640, 10, 'Caltanissetta',    'CL', 'DOOH'],
+    ['Corso Vittorio Emanuele',  37.4905, 14.0608, 37.4940, 14.0678, 10, 'Caltanissetta',    'CL', 'DOOH'],
     // ── CALTANISSETTA — OOH ───────────────────────────────────────────────────
-    ['Via Turati',               37.4900, 14.0560,  8, 'Caltanissetta',    'CL', 'OOH'],
-    ['Viale Amedeo',             37.4940, 14.0610,  6, 'Caltanissetta',    'CL', 'OOH'],
+    ['Via Turati',               37.4882, 14.0530, 37.4920, 14.0595,  8, 'Caltanissetta',    'CL', 'OOH'],
+    ['Viale Amedeo',             37.4928, 14.0588, 37.4955, 14.0638,  6, 'Caltanissetta',    'CL', 'OOH'],
     // ── GELA — DOOH ───────────────────────────────────────────────────────────
-    ['Corso Vittorio Emanuele',  37.0710, 14.2540,  8, 'Gela',             'CL', 'DOOH'],
+    ['Corso Vittorio Emanuele',  37.0695, 14.2498, 37.0725, 14.2585,  8, 'Gela',             'CL', 'DOOH'],
     // ── GELA — OOH ────────────────────────────────────────────────────────────
-    ['Lungomare Federico II',    37.0660, 14.2580,  8, 'Gela',             'CL', 'OOH'],
-    ['Via Generale Cascino',     37.0740, 14.2500,  6, 'Gela',             'CL', 'OOH'],
+    ['Lungomare Federico II',    37.0648, 14.2535, 37.0672, 14.2632,  8, 'Gela',             'CL', 'OOH'],
+    ['Via Generale Cascino',     37.0728, 14.2472, 37.0752, 14.2528,  6, 'Gela',             'CL', 'OOH'],
     // ── PALERMO hinterland — OOH ──────────────────────────────────────────────
-    ['Corso Butera',             38.0887, 13.5117,  8, 'Bagheria',         'PA', 'OOH'],
-    ['Via Consolare',            38.0865, 13.5134,  6, 'Bagheria',         'PA', 'OOH'],
-    ['Corso Pietro Novelli',     38.0819, 13.2930,  6, 'Monreale',         'PA', 'OOH'],
-    ['Via Aldo Moro',            38.1290, 13.1900,  6, 'Carini',           'PA', 'OOH'],
-    ['Via Roma',                 38.0440, 13.1110,  6, 'Partinico',        'PA', 'OOH'],
+    ['Corso Butera',             38.0875, 13.5088, 38.0900, 13.5148,  8, 'Bagheria',         'PA', 'OOH'],
+    ['Via Consolare',            38.0852, 13.5112, 38.0878, 13.5158,  6, 'Bagheria',         'PA', 'OOH'],
+    ['Corso Pietro Novelli',     38.0808, 13.2905, 38.0832, 13.2958,  6, 'Monreale',         'PA', 'OOH'],
+    ['Via Aldo Moro',            38.1278, 13.1872, 38.1305, 13.1932,  6, 'Carini',           'PA', 'OOH'],
+    ['Via Roma',                 38.0428, 13.1082, 38.0455, 13.1142,  6, 'Partinico',        'PA', 'OOH'],
     // ── TERMINI IMERESE — OOH ─────────────────────────────────────────────────
-    ['Piazza Duomo',             37.9847, 13.6963,  6, 'Termini Imerese',  'PA', 'OOH'],
-    ['Via Libertà',              37.9870, 13.6940,  6, 'Termini Imerese',  'PA', 'OOH'],
+    ['Piazza Duomo',             37.9840, 13.6948, 37.9855, 13.6978,  6, 'Termini Imerese',  'PA', 'OOH'],
+    ['Via Libertà',              37.9858, 13.6918, 37.9882, 13.6962,  6, 'Termini Imerese',  'PA', 'OOH'],
     // ── CASTELVETRANO — OOH ───────────────────────────────────────────────────
-    ['Piazza Garibaldi',         37.6757, 12.7916,  8, 'Castelvetrano',    'TP', 'OOH'],
-    ['Viale Vittorio Veneto',    37.6730, 12.7885,  6, 'Castelvetrano',    'TP', 'OOH'],
+    ['Piazza Garibaldi',         37.6748, 12.7898, 37.6768, 12.7935,  8, 'Castelvetrano',    'TP', 'OOH'],
+    ['Viale Vittorio Veneto',    37.6718, 12.7862, 37.6742, 12.7908,  6, 'Castelvetrano',    'TP', 'OOH'],
     // ── SAN VITO LO CAPO — OOH ────────────────────────────────────────────────
-    ['Via Savoia',               38.1759, 12.7313,  6, 'San Vito Lo Capo', 'TP', 'OOH'],
+    ['Via Savoia',               38.1748, 12.7295, 38.1772, 12.7332,  6, 'San Vito Lo Capo', 'TP', 'OOH'],
     // ── CASTELLAMMARE DEL GOLFO — OOH ─────────────────────────────────────────
-    ['Via G. Garibaldi',         38.0290, 12.8810,  6, 'Castellammare del Golfo', 'TP', 'OOH'],
+    ['Via G. Garibaldi',         38.0278, 12.8788, 38.0302, 12.8835,  6, 'Castellammare del Golfo', 'TP', 'OOH'],
     // ── CAMPOBELLO DI MAZARA — OOH ────────────────────────────────────────────
-    ['Via Roma',                 37.6380, 12.7440,  4, 'Campobello di Mazara', 'TP', 'OOH'],
+    ['Via Roma',                 37.6370, 12.7420, 37.6390, 12.7462,  4, 'Campobello di Mazara', 'TP', 'OOH'],
     // ── LICATA — OOH ──────────────────────────────────────────────────────────
-    ['Via Roma',                 37.1012, 13.9388,  8, 'Licata',           'AG', 'OOH'],
-    ['Corso Roma',               37.1040, 13.9350,  6, 'Licata',           'AG', 'OOH'],
+    ['Via Roma',                 37.0998, 13.9362, 37.1028, 13.9418,  8, 'Licata',           'AG', 'OOH'],
+    ['Corso Roma',               37.1028, 13.9325, 37.1055, 13.9378,  6, 'Licata',           'AG', 'OOH'],
     // ── CANICATTÌ — OOH ───────────────────────────────────────────────────────
-    ['Corso Umberto',            37.3582, 13.8479,  8, 'Canicattì',        'AG', 'OOH'],
-    ['Via Roma',                 37.3560, 13.8500,  6, 'Canicattì',        'AG', 'OOH'],
+    ['Corso Umberto',            37.3568, 13.8452, 37.3598, 13.8512,  8, 'Canicattì',        'AG', 'OOH'],
+    ['Via Roma',                 37.3548, 13.8475, 37.3572, 13.8528,  6, 'Canicattì',        'AG', 'OOH'],
     // ── FAVARA — OOH ──────────────────────────────────────────────────────────
-    ['Corso Vittorio Emanuele',  37.3176, 13.6613,  6, 'Favara',           'AG', 'OOH'],
+    ['Corso Vittorio Emanuele',  37.3165, 13.6588, 37.3188, 13.6642,  6, 'Favara',           'AG', 'OOH'],
     // ── RIBERA — OOH ──────────────────────────────────────────────────────────
-    ['Via Palermo',              37.4999, 13.2674,  6, 'Ribera',           'AG', 'OOH'],
+    ['Via Palermo',              37.4988, 13.2648, 37.5012, 13.2702,  6, 'Ribera',           'AG', 'OOH'],
     // ── NISCEMI — OOH ─────────────────────────────────────────────────────────
-    ['Corso Vittorio Emanuele',  37.1485, 14.3872,  6, 'Niscemi',          'CL', 'OOH'],
+    ['Corso Vittorio Emanuele',  37.1472, 14.3845, 37.1498, 14.3900,  6, 'Niscemi',          'CL', 'OOH'],
     // ── MUSSOMELI — OOH ───────────────────────────────────────────────────────
-    ['Via Roma',                 37.5785, 13.7503,  4, 'Mussomeli',        'CL', 'OOH'],
+    ['Via Roma',                 37.5778, 13.7485, 37.5792, 13.7522,  4, 'Mussomeli',        'CL', 'OOH'],
   ];
 
   // Face labels by system type
@@ -2091,14 +2091,17 @@ const SEARCH_RESULTS = (() => {
 
   const out = [];
   let n = 1;
-  ZONES.forEach(([street, bLat, bLng, count, city, province, channel]) => {
+  ZONES.forEach(([street, startLat, startLng, endLat, endLng, count, city, province, channel]) => {
     const isDooh = channel === 'DOOH';
     for (let i = 0; i < count; i++, n++) {
-      // Scatter deterministico lungo l'asse della via:
-      // lat ±0.003° ≈ ±330m (distribuzione longitudinale lungo la strada)
-      // lng ±0.0006° ≈ ±50m (offset laterale minimo per evitare sovrapposizione esatta)
-      const sysLat = +(bLat + ((n * 17 + i * 31) % 60 - 30) * 0.0001).toFixed(6);
-      const sysLng = +(bLng + ((n * 23 + i * 13) % 12 - 6)  * 0.0001).toFixed(6);
+      // Posizionamento preciso: interpolazione lineare tra start e end della via
+      const t = (i + 0.5) / count; // da 0.5/count a (count-0.5)/count — evita gli estremi
+      const dLat = endLat - startLat;
+      const dLng = endLng - startLng;
+      const len  = Math.sqrt(dLat * dLat + dLng * dLng) || 1;
+      const side = (i % 2 === 0) ? 1 : -1; // alterna lato destra/sinistra
+      const sysLat = +(startLat + t * dLat + side * (-dLng / len) * 0.000008).toFixed(6);
+      const sysLng = +(startLng + t * dLng + side * ( dLat / len) * 0.000008).toFixed(6);
       const sysState  = STATES[(n * 7 + i * 11) % STATES.length];
       const id        = `SYS-${String(n).padStart(3,'0')}`;
       const type      = isDooh
@@ -4548,8 +4551,6 @@ function SelectSystems({ planning, onBack, onApply }) {
   const [hoveredId, setHoveredId]               = useState(null);
   const [focusedId, setFocusedId]               = useState(null);
   const [panelOpen, setPanelOpen]               = useState(true);
-  const [mapReady,  setMapReady]                = useState(false);
-  const [geocodeReady, setGeocodeReady]         = useState(false);
   const [panelTab, setPanelTab]                 = useState(planning.state === 'Bozza' ? 'results' : 'selected');
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [poiDrawerOpen, setPoiDrawerOpen]       = useState(false);
@@ -5509,7 +5510,6 @@ out geom;`;
     map.addListener('click', () => setFocusedId(null));
 
     mapRef.current = map;
-    setMapReady(true);
 
     const clusterer = new markerClusterer.MarkerClusterer({
       map,
@@ -5534,90 +5534,6 @@ out geom;`;
       mapRef.current = null;
     };
   }, []);
-
-  // ── Posizionamento reale dei marker via Google Maps Geocoding API ──
-  React.useEffect(() => {
-    if (!mapReady) return;
-    const CACHE_PREFIX = 'gmway3_';
-    const geocoder = new google.maps.Geocoder();
-    let cancelled = false;
-
-    // Geocodifica un indirizzo con Google Maps (con cache sessionStorage)
-    const geocodeAddress = (address) => new Promise((resolve) => {
-      const ckey = CACHE_PREFIX + address;
-      const cached = sessionStorage.getItem(ckey);
-      if (cached) { resolve(JSON.parse(cached)); return; }
-      geocoder.geocode({ address, region: 'it' }, (results, status) => {
-        if (cancelled) { resolve(null); return; }
-        if (status === 'OK' && results[0]) {
-          const loc = results[0].geometry.location;
-          const vp  = results[0].geometry.viewport;
-          const data = {
-            lat:   loc.lat(),   lng:   loc.lng(),
-            swLat: vp.getSouthWest().lat(), swLng: vp.getSouthWest().lng(),
-            neLat: vp.getNorthEast().lat(), neLng: vp.getNorthEast().lng(),
-          };
-          try { sessionStorage.setItem(ckey, JSON.stringify(data)); } catch(e) {}
-          resolve(data);
-        } else {
-          resolve(null);
-        }
-      });
-    });
-
-    // Distribuisce n marker lungo l'asse principale della strada
-    // (usa il viewport Google per determinare estensione e direzione reale)
-    const distributeAlongStreet = (geo, n) => {
-      const latSpan = geo.neLat - geo.swLat;
-      const lngSpan = geo.neLng - geo.swLng;
-      const cosLat  = Math.cos(geo.lat * Math.PI / 180);
-      const latM    = latSpan * 111320;
-      const lngM    = lngSpan * 111320 * cosLat;
-      const isNS    = latM >= lngM; // strada prevalentemente N-S o E-W
-
-      return Array.from({ length: n }, (_, i) => {
-        // t da 0.1 a 0.9 — evita di mettere marker agli estremi del viewport
-        const t = 0.1 + (i / Math.max(n - 1, 1)) * 0.8;
-        // offset laterale minimo per evitare sovrapposizione esatta su una linea
-        const lateralOffset = (i % 2 === 0 ? 1 : -1) * 0.000015;
-        if (isNS) {
-          return {
-            lat: +(geo.swLat + t * latSpan).toFixed(6),
-            lng: +(geo.lng + lateralOffset).toFixed(6),
-          };
-        } else {
-          return {
-            lat: +(geo.lat + lateralOffset).toFixed(6),
-            lng: +(geo.swLng + t * lngSpan).toFixed(6),
-          };
-        }
-      });
-    };
-
-    (async () => {
-      const zones = window._GRAVITY_ZONES || [];
-      for (const [street, , , , city] of zones) {
-        if (cancelled) return;
-        const geoKey  = `${street}, ${city}`;
-        const systems = SEARCH_RESULTS.filter(s => s._geoKey === geoKey);
-        if (!systems.length) continue;
-
-        const geo = await geocodeAddress(`${street}, ${city}, Italia`);
-        if (geo) {
-          const pts = distributeAlongStreet(geo, systems.length);
-          systems.forEach((s, i) => {
-            s.lat = pts[i].lat;
-            s.lng = pts[i].lng;
-          });
-        }
-        // Pausa minima per non saturare l'API Geocoding
-        await new Promise(r => setTimeout(r, 60));
-      }
-      if (!cancelled) setGeocodeReady(v => !v);
-    })();
-
-    return () => { cancelled = true; };
-  }, [mapReady]);
 
   // ── Zone overlays (Google Maps) — usa geometria reale Overpass, fallback approssimato ──
   React.useEffect(() => {
@@ -5769,7 +5685,7 @@ out geom;`;
 
     markersRef.current = newMarkers;
     clusterer.addMarkers(newMarkers);
-  }, [selectedFaceIds, hoveredId, focusedId, selectedSystemIds, filteredSystems, geocodeReady]);
+  }, [selectedFaceIds, hoveredId, focusedId, selectedSystemIds, filteredSystems]);
 
 
   const displayedItems = panelTab === 'selected'
