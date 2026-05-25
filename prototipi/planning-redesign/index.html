@@ -4969,10 +4969,20 @@ function SelectSystems({ planning, onBack, onApply }) {
       return geo.paths.some(rings => pointInPolygonLatLng(sysLat, sysLng, rings[0]));
     }
     if (geo.type === 'polyline') {
-      // Per le vie: distanza < 300 m da uno qualsiasi dei segmenti
-      return geo.paths.some(line =>
-        line.some(pt => haversineMeters(sysLat, sysLng, pt.lat, pt.lng) < 300)
-      );
+      // Distanza < 300 m dal segmento più vicino della polilinea (proiezione ortogonale)
+      const BUFFER = 300;
+      return geo.paths.some(line => {
+        for (let i = 0; i < line.length - 1; i++) {
+          const a = line[i], b = line[i + 1];
+          const dLat = b.lat - a.lat, dLng = b.lng - a.lng;
+          const len2 = dLat * dLat + dLng * dLng;
+          const t = len2 === 0 ? 0 : Math.max(0, Math.min(1,
+            ((sysLat - a.lat) * dLat + (sysLng - a.lng) * dLng) / len2));
+          const nearLat = a.lat + t * dLat, nearLng = a.lng + t * dLng;
+          if (haversineMeters(sysLat, sysLng, nearLat, nearLng) < BUFFER) return true;
+        }
+        return false;
+      });
     }
     return false;
   };
@@ -5059,7 +5069,7 @@ function SelectSystems({ planning, onBack, onApply }) {
       // Rimuove eventuale suffisso città (es. "Via Notarbartolo, Palermo" → "Via Notarbartolo")
       const streetName = name.includes(',') ? name.split(',')[0].trim() : name;
       try {
-        const q = `[out:json][timeout:20];way["name"="${streetName}"]["highway"](around:600,${lat},${lng});out geom;`;
+        const q = `[out:json][timeout:25];way["name"="${streetName}"]["highway"](around:4000,${lat},${lng});out geom;`;
         const data = await _overpassFetch(q);
 
         if (data.elements?.length) {
