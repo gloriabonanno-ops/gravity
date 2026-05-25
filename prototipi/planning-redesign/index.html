@@ -5535,111 +5535,83 @@ out geom;`;
     };
   }, []);
 
-  // ── Posizionamento reale dei marker via Overpass (polilinea stradale) ──
+  // ── Posizionamento reale dei marker via Google Maps Geocoding API ──
   React.useEffect(() => {
     if (!mapReady) return;
-    const CACHE_PREFIX = 'ovway2_';
+    const CACHE_PREFIX = 'gmway3_';
+    const geocoder = new google.maps.Geocoder();
     let cancelled = false;
 
-    // Distanza haversine in metri tra due punti {lat,lng}
-    const ptDist = (a, b) => haversineMeters(a.lat, a.lng, b.lat, b.lng);
-
-    // Lunghezza totale di una polilinea [{lat,lng}]
-    const polylineLen = (pts) => {
-      let l = 0;
-      for (let i = 1; i < pts.length; i++) l += ptDist(pts[i - 1], pts[i]);
-      return l;
-    };
-
-    // Campiona `n` punti equidistanti lungo una polilinea (escludendo i capi estremi)
-    const sampleAlong = (pts, n) => {
-      if (!pts.length) return [];
-      if (n === 1) return [pts[Math.floor(pts.length / 2)]];
-      const total = polylineLen(pts);
-      const step  = total / (n + 1);
-      const result = [];
-      let accumulated = 0;
-      let target = step;
-      for (let i = 1; i < pts.length && result.length < n; i++) {
-        const d = ptDist(pts[i - 1], pts[i]);
-        while (target <= accumulated + d && result.length < n) {
-          const t = (target - accumulated) / d;
-          result.push({
-            lat: pts[i-1].lat + (pts[i].lat - pts[i-1].lat) * t,
-            lng: pts[i-1].lng + (pts[i].lng - pts[i-1].lng) * t,
-          });
-          target += step;
-        }
-        accumulated += d;
-      }
-      return result;
-    };
-
-    // Concatena i way OSM nell'ordine più lineare (greedy nearest-endpoint)
-    const chainWays = (ways) => {
-      if (!ways.length) return [];
-      const segs = ways.map(w => w.geometry.map(p => ({ lat: p.lat, lng: p.lon })));
-      const result = [...segs.shift()];
-      while (segs.length) {
-        const tail = result[result.length - 1];
-        let bestIdx = 0, bestDist = Infinity, bestReverse = false;
-        segs.forEach((s, i) => {
-          const dStart = ptDist(tail, s[0]);
-          const dEnd   = ptDist(tail, s[s.length - 1]);
-          if (dStart < bestDist) { bestDist = dStart; bestIdx = i; bestReverse = false; }
-          if (dEnd   < bestDist) { bestDist = dEnd;   bestIdx = i; bestReverse = true;  }
-        });
-        const seg = segs.splice(bestIdx, 1)[0];
-        result.push(...(bestReverse ? seg.reverse() : seg));
-      }
-      return result;
-    };
-
-    // Recupera i punti della polilinea di una strada da Overpass (con cache)
-    const fetchStreetLine = async (street, baseLat, baseLng) => {
-      const ckey = CACHE_PREFIX + street + '|' + baseLat.toFixed(3);
+    // Geocodifica un indirizzo con Google Maps (con cache sessionStorage)
+    const geocodeAddress = (address) => new Promise((resolve) => {
+      const ckey = CACHE_PREFIX + address;
       const cached = sessionStorage.getItem(ckey);
-      if (cached) return JSON.parse(cached);
-      try {
-        const q = `[out:json][timeout:25];way["name"="${street}"]["highway"](around:600,${baseLat},${baseLng});out geom;`;
-        const res = await fetch('https://overpass-api.de/api/interpreter', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: 'data=' + encodeURIComponent(q),
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        const ways = (data.elements || []).filter(e => e.type === 'way' && e.geometry?.length);
-        if (!ways.length) return null;
-        const pts = chainWays(ways);
-        try { sessionStorage.setItem(ckey, JSON.stringify(pts)); } catch(e) {}
-        return pts;
-      } catch(e) {
-        console.warn('[Overpass marker]', street, e);
-        return null;
-      }
+      if (cached) { resolve(JSON.parse(cached)); return; }
+      geocoder.geocode({ address, region: 'it' }, (results, status) => {
+        if (cancelled) { resolve(null); return; }
+        if (status === 'OK' && results[0]) {
+          const loc = results[0].geometry.location;
+          const vp  = results[0].geometry.viewport;
+          const data = {
+            lat:   loc.lat(),   lng:   loc.lng(),
+            swLat: vp.getSouthWest().lat(), swLng: vp.getSouthWest().lng(),
+            neLat: vp.getNorthEast().lat(), neLng: vp.getNorthEast().lng(),
+          };
+          try { sessionStorage.setItem(ckey, JSON.stringify(data)); } catch(e) {}
+          resolve(data);
+        } else {
+          resolve(null);
+        }
+      });
+    });
+
+    // Distribuisce n marker lungo l'asse principale della strada
+    // (usa il viewport Google per determinare estensione e direzione reale)
+    const distributeAlongStreet = (geo, n) => {
+      const latSpan = geo.neLat - geo.swLat;
+      const lngSpan = geo.neLng - geo.swLng;
+      const cosLat  = Math.cos(geo.lat * Math.PI / 180);
+      const latM    = latSpan * 111320;
+      const lngM    = lngSpan * 111320 * cosLat;
+      const isNS    = latM >= lngM; // strada prevalentemente N-S o E-W
+
+      return Array.from({ length: n }, (_, i) => {
+        // t da 0.1 a 0.9 — evita di mettere marker agli estremi del viewport
+        const t = 0.1 + (i / Math.max(n - 1, 1)) * 0.8;
+        // offset laterale minimo per evitare sovrapposizione esatta su una linea
+        const lateralOffset = (i % 2 === 0 ? 1 : -1) * 0.000015;
+        if (isNS) {
+          return {
+            lat: +(geo.swLat + t * latSpan).toFixed(6),
+            lng: +(geo.lng + lateralOffset).toFixed(6),
+          };
+        } else {
+          return {
+            lat: +(geo.lat + lateralOffset).toFixed(6),
+            lng: +(geo.swLng + t * lngSpan).toFixed(6),
+          };
+        }
+      });
     };
 
     (async () => {
       const zones = window._GRAVITY_ZONES || [];
-      for (const [street, baseLat, baseLng, , city] of zones) {
+      for (const [street, , , , city] of zones) {
         if (cancelled) return;
         const geoKey  = `${street}, ${city}`;
         const systems = SEARCH_RESULTS.filter(s => s._geoKey === geoKey);
         if (!systems.length) continue;
 
-        const pts = await fetchStreetLine(street, baseLat, baseLng);
-        if (pts && pts.length >= 2) {
-          const sampled = sampleAlong(pts, systems.length);
+        const geo = await geocodeAddress(`${street}, ${city}, Italia`);
+        if (geo) {
+          const pts = distributeAlongStreet(geo, systems.length);
           systems.forEach((s, i) => {
-            if (sampled[i]) {
-              s.lat = +sampled[i].lat.toFixed(6);
-              s.lng = +sampled[i].lng.toFixed(6);
-            }
+            s.lat = pts[i].lat;
+            s.lng = pts[i].lng;
           });
         }
-        // Fallback: i marker restano alle coordinate base del ZONES (meglio del random)
-        await new Promise(r => setTimeout(r, 200)); // pausa anti-throttle Overpass
+        // Pausa minima per non saturare l'API Geocoding
+        await new Promise(r => setTimeout(r, 60));
       }
       if (!cancelled) setGeocodeReady(v => !v);
     })();
