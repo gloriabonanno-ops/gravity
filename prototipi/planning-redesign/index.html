@@ -2299,11 +2299,12 @@ const _palermoCirPromise = fetch('../../assets/palermo-zones.geojson')
 // Ogni voce: { label, type, lat, lng, filterCity?, filterProvince?, filterRadius, mapRadius }
 // filterCity/filterProvince → matching per nome; filterRadius → haversine per strade
 const GEO_SUGGESTIONS = [
+  // ── Regione ────────────────────────────────────────────────────────────────────
+  { label:'Sicilia',           type:'Regione',   lat:37.80,   lng:13.10,   mapRadius:200000 },
   // ── Province ──────────────────────────────────────────────────────────────────
   { label:'Palermo',           type:'Provincia', lat:38.1157, lng:13.3615, filterProvince:'PA', mapRadius:40000 },
   { label:'Trapani',           type:'Provincia', lat:37.9800, lng:12.6150, filterProvince:'TP', mapRadius:35000 },
   { label:'Agrigento',         type:'Provincia', lat:37.3104, lng:13.5765, filterProvince:'AG', mapRadius:38000 },
-  { label:'Caltanissetta',     type:'Provincia', lat:37.4920, lng:14.0640, filterProvince:'CL', mapRadius:30000 },
   // ── Città ─────────────────────────────────────────────────────────────────────
   { label:'Palermo',           type:'Città',     lat:38.1157, lng:13.3615, filterCity:'Palermo',                   mapRadius:12000 },
   { label:'Trapani',           type:'Città',     lat:37.9800, lng:12.6150, filterCity:'Trapani',                   mapRadius:5000  },
@@ -2313,8 +2314,6 @@ const GEO_SUGGESTIONS = [
   { label:'Agrigento',         type:'Città',     lat:37.3104, lng:13.5765, filterCity:'Agrigento',                 mapRadius:5000  },
   { label:'Sciacca',           type:'Città',     lat:37.5076, lng:13.0783, filterCity:'Sciacca',                   mapRadius:4000  },
   { label:'Porto Empedocle',   type:'Città',     lat:37.2950, lng:13.5270, filterCity:'Porto Empedocle',           mapRadius:3000  },
-  { label:'Caltanissetta',     type:'Città',     lat:37.4920, lng:14.0640, filterCity:'Caltanissetta',             mapRadius:5000  },
-  { label:'Gela',              type:'Città',     lat:37.0710, lng:14.2540, filterCity:'Gela',                      mapRadius:5000  },
   { label:'Bagheria',          type:'Città',     lat:38.0887, lng:13.5117, filterCity:'Bagheria',                  mapRadius:3500  },
   { label:'Monreale',          type:'Città',     lat:38.0819, lng:13.2930, filterCity:'Monreale',                  mapRadius:3000  },
   { label:'Carini',            type:'Città',     lat:38.1290, lng:13.1900, filterCity:'Carini',                    mapRadius:3000  },
@@ -2328,8 +2327,6 @@ const GEO_SUGGESTIONS = [
   { label:'Canicattì',         type:'Città',     lat:37.3582, lng:13.8479, filterCity:'Canicattì',                 mapRadius:3500  },
   { label:'Favara',            type:'Città',     lat:37.3176, lng:13.6613, filterCity:'Favara',                    mapRadius:3000  },
   { label:'Ribera',            type:'Città',     lat:37.4999, lng:13.2674, filterCity:'Ribera',                    mapRadius:2500  },
-  { label:'Niscemi',           type:'Città',     lat:37.1485, lng:14.3872, filterCity:'Niscemi',                   mapRadius:3000  },
-  { label:'Mussomeli',         type:'Città',     lat:37.5785, lng:13.7503, filterCity:'Mussomeli',                 mapRadius:2500  },
   // ── Strade Palermo ────────────────────────────────────────────────────────────
   { label:'Via della Libertà, Palermo',       type:'Via',       lat:38.1230, lng:13.3521, filterRadius:700,  mapRadius:700  },
   { label:'Via Roma, Palermo',                type:'Via',       lat:38.1118, lng:13.3666, filterRadius:700,  mapRadius:700  },
@@ -2381,15 +2378,6 @@ const GEO_SUGGESTIONS = [
   { label:'Corso Umberto, Canicattì',           type:'Corso',   lat:37.3582, lng:13.8479, filterRadius:700,  mapRadius:700  },
   { label:'Corso Vittorio Emanuele, Favara',    type:'Corso',   lat:37.3176, lng:13.6613, filterRadius:700,  mapRadius:700  },
   { label:'Via Palermo, Ribera',                type:'Via',     lat:37.4999, lng:13.2674, filterRadius:600,  mapRadius:600  },
-  // ── Strade Caltanissetta / provincia CL ───────────────────────────────────────
-  { label:'Corso Vittorio Emanuele, Caltanissetta', type:'Corso', lat:37.4920, lng:14.0640, filterRadius:800, mapRadius:800 },
-  { label:'Via Turati, Caltanissetta',          type:'Via',     lat:37.4900, lng:14.0560, filterRadius:600,  mapRadius:600  },
-  { label:'Viale Amedeo, Caltanissetta',        type:'Viale',   lat:37.4940, lng:14.0610, filterRadius:700,  mapRadius:700  },
-  { label:'Corso Vittorio Emanuele, Gela',      type:'Corso',   lat:37.0710, lng:14.2540, filterRadius:800,  mapRadius:800  },
-  { label:'Lungomare Federico II, Gela',        type:'Lungomare', lat:37.0660, lng:14.2580, filterRadius:900, mapRadius:900 },
-  { label:'Via Generale Cascino, Gela',         type:'Via',     lat:37.0740, lng:14.2500, filterRadius:600,  mapRadius:600  },
-  { label:'Corso Vittorio Emanuele, Niscemi',   type:'Corso',   lat:37.1485, lng:14.3872, filterRadius:600,  mapRadius:600  },
-  { label:'Via Roma, Mussomeli',                type:'Via',     lat:37.5785, lng:13.7503, filterRadius:500,  mapRadius:500  },
   // ── Strade Palermo hinterland ─────────────────────────────────────────────────
   { label:'Corso Butera, Bagheria',             type:'Corso',   lat:38.0887, lng:13.5117, filterRadius:700,  mapRadius:700  },
   { label:'Via Consolare, Bagheria',            type:'Via',     lat:38.0865, lng:13.5134, filterRadius:600,  mapRadius:600  },
@@ -2812,16 +2800,17 @@ function catIconSvg(antIconName, bgColor, size) {
 
 // Mappa tipo GEO_SUGGESTIONS → chiave SUGG_CONFIG
 const _GEO_TYPE_MAP = {
-  'Provincia': 'province', 'Città': 'city', 'zona': 'zona',
+  'Regione': 'province', 'Provincia': 'province', 'Città': 'city', 'zona': 'zona',
   'Via': 'via', 'Viale': 'viale', 'Corso': 'corso',
-  'Piazza': 'piazza', 'Lungomare': 'area',
+  'Piazza': 'piazza', 'Lungomare': 'street',
 };
 
 // Struttura piatta uguale a inventory-map--v2: { type, text, detail, lat, lng, zoom }
 const LOCATION_SUGG = GEO_SUGGESTIONS.map(item => {
   const type = _GEO_TYPE_MAP[item.type] || 'area';
   const city = item.label.includes(',') ? item.label.split(',').slice(1).join(',').trim() : null;
-  const detail = type === 'province' ? `Provincia · Sicilia`
+  const detail = item.type === 'Regione'  ? `Regione · Italia`
+    : type === 'province' ? `Provincia · Sicilia`
     : type === 'city'     ? `Comune · Sicilia`
     : city                ? `${item.type} · ${city}, Sicilia`
     : `${item.type} · Sicilia`;
@@ -2830,14 +2819,14 @@ const LOCATION_SUGG = GEO_SUGGESTIONS.map(item => {
 });
 
 const SUGG_CONFIG = {
-  city:     { label: 'Città',     bg: '#F0EEFF', color: '#3E00FB', icon: icons.HomeOutlined      },
-  province: { label: 'Provincia', bg: '#E6F7FF', color: '#0091FF', icon: icons.EnvironmentOutlined },
-  zona:     { label: 'Quartiere', bg: '#FFF7E6', color: '#FA8C16', icon: icons.AppstoreOutlined  },
-  via:      { label: 'Via',       bg: '#F6FFED', color: '#389E0D', icon: icons.SendOutlined      },
-  corso:    { label: 'Corso',     bg: '#F6FFED', color: '#389E0D', icon: icons.SendOutlined      },
-  viale:    { label: 'Viale',     bg: '#F6FFED', color: '#389E0D', icon: icons.SendOutlined      },
-  piazza:   { label: 'Piazza',    bg: '#FFF0F6', color: '#EB2F96', icon: icons.PushpinOutlined   },
-  area:     { label: 'Area',      bg: '#F5F5F5', color: '#8C8C8C', icon: icons.BranchesOutlined  },
+  city:     { label: 'Comune',    bg: '#F0EEFF', color: '#3E00FB', icon: icons.HomeOutlined        },
+  province: { label: 'Provincia', bg: '#E6F7FF', color: '#0091FF', icon: icons.EnvironmentOutlined  },
+  zona:     { label: 'Quartiere', bg: '#FFF7E6', color: '#FA8C16', icon: icons.AppstoreOutlined    },
+  via:      { label: 'Via',       bg: '#F6FFED', color: '#389E0D', icon: icons.SendOutlined        },
+  corso:    { label: 'Corso',     bg: '#F6FFED', color: '#389E0D', icon: icons.SendOutlined        },
+  viale:    { label: 'Viale',     bg: '#F6FFED', color: '#389E0D', icon: icons.SendOutlined        },
+  piazza:   { label: 'Piazza',    bg: '#FFF0F6', color: '#EB2F96', icon: icons.PushpinOutlined     },
+  street:   { label: 'Strada',    bg: '#F6FFED', color: '#389E0D', icon: icons.SendOutlined        },
 };
 
 const BRIEF_ZONE_ITEMS = [
@@ -2860,10 +2849,10 @@ function getSuggestions(query) {
     if (buckets[bucket] && buckets[bucket].length < 4) buckets[bucket].push(item);
   });
   return [
-    { key: 'city',     label: 'Città e Comuni',     items: buckets.city },
-    { key: 'province', label: 'Province',            items: buckets.province },
-    { key: 'zona',     label: 'Quartieri e Zone',    items: buckets.zona },
-    { key: 'street',   label: 'Strade e Aree',       items: buckets.street },
+    { key: 'city',     label: 'Città e Comuni',      items: buckets.city },
+    { key: 'province', label: 'Province e Regioni',  items: buckets.province },
+    { key: 'zona',     label: 'Quartieri e Aree',    items: buckets.zona },
+    { key: 'street',   label: 'Strade e Vie',        items: buckets.street },
   ].filter(g => g.items.length > 0);
 }
 
@@ -2889,7 +2878,7 @@ function nearestPointOnPath(path, lat, lng) {
 // ── Geocoding utilities (Photon + Overpass) ──────────────────────────────────
 // Photon: OSM-based autocomplete, free, no API key, Italian support.
 // Bounded to Sicily + provinces: minLng,minLat,maxLng,maxLat
-const PHOTON_BBOX = '11.9,36.55,15.70,38.35';
+const PHOTON_BBOX = '11.9,36.60,14.20,38.35';
 
 // Map a Photon GeoJSON feature to our internal zone shape.
 function photonFeatureToZone(feat) {
@@ -5394,8 +5383,8 @@ out geom;`;
       if (!window.google?.maps?.places) return;
       const svc = new google.maps.places.AutocompleteService();
       const SICILY_BOUNDS = new google.maps.LatLngBounds(
-        { lat: 36.55, lng: 11.90 },   // SW
-        { lat: 38.35, lng: 15.70 }    // NE
+        { lat: 36.60, lng: 11.90 },   // SW — Sicilia Occidentale (PA, TP, AG)
+        { lat: 38.35, lng: 14.20 }    // NE
       );
       svc.getPlacePredictions(
         { input: q, bounds: SICILY_BOUNDS, strictBounds: true, language: 'it' },
@@ -5407,14 +5396,14 @@ out geom;`;
             let type, gk, gl;
             if (types.includes('locality') || types.includes('administrative_area_level_3')) {
               type = 'city';     gk = 'city';     gl = 'Città e Comuni';
-            } else if (types.includes('administrative_area_level_2')) {
-              type = 'province'; gk = 'province'; gl = 'Province';
+            } else if (types.includes('administrative_area_level_2') || types.includes('administrative_area_level_1')) {
+              type = 'province'; gk = 'province'; gl = 'Province e Regioni';
             } else if (types.includes('sublocality') || types.includes('neighborhood')) {
-              type = 'zona';     gk = 'zona';     gl = 'Quartieri e Zone';
+              type = 'zona';     gk = 'zona';     gl = 'Quartieri e Aree';
             } else if (types.includes('route')) {
-              type = 'via';      gk = 'street';   gl = 'Strade e Aree';
+              type = 'via';      gk = 'street';   gl = 'Strade e Vie';
             } else {
-              type = 'area';     gk = 'street';   gl = 'Luoghi';
+              return; // ignora tipi non appartenenti ai 4 gruppi gestiti
             }
             if (!groups[gk]) groups[gk] = { key: gk, label: gl, items: [] };
             groups[gk].items.push({
@@ -6294,7 +6283,7 @@ out geom;`;
                       React.createElement(React.Fragment, { key: group.key },
                         React.createElement('div', { className: 'ss-sugg-group-title' }, group.label),
                         group.items.map(s => {
-                          const cfg = SUGG_CONFIG[s.type] || SUGG_CONFIG.area;
+                          const cfg = SUGG_CONFIG[s.type] || SUGG_CONFIG.street;
                           return React.createElement('div', {
                             key: s.text,
                             className: 'ss-suggestion-item',
