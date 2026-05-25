@@ -5608,8 +5608,7 @@ out geom;`;
         geo.paths.forEach(line => {
           const pl = new google.maps.Polyline({
             map, path: line,
-            strokeColor: 'rgba(62,0,251,0.85)',
-            strokeOpacity: 1, strokeWeight: 5,
+            strokeColor, strokeOpacity: 1, strokeWeight: 4,
           });
           zoneCirclesRef.current.push(pl);
         });
