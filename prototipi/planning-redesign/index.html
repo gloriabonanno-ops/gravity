@@ -5688,14 +5688,15 @@ out geom;`;
     });
 
     // Elabora a batch da 8, con 120ms di pausa tra batch
+    // setGeocodeReady viene chiamato solo al termine per evitare flickering dei marker
     (async () => {
       const BATCH = 8, PAUSE = 120;
       for (let i = 0; i < queue.length; i += BATCH) {
         if (cancelled) return;
         await Promise.all(queue.slice(i, i + BATCH).map(geocodeOne));
-        if (!cancelled) setGeocodeReady(v => !v);
         if (i + BATCH < queue.length) await new Promise(r => setTimeout(r, PAUSE));
       }
+      if (!cancelled) setGeocodeReady(v => !v);
     })();
 
     return () => { cancelled = true; };
