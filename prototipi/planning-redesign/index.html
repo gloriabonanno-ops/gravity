@@ -4550,6 +4550,7 @@ function SelectSystems({ planning, onBack, onApply }) {
   const [expandedSysIds, setExpandedSysIds]     = useState(new Set());
   const [hoveredId, setHoveredId]               = useState(null);
   const [focusedId, setFocusedId]               = useState(null);
+  const [geocodeReady, setGeocodeReady]         = useState(false);
   const [panelOpen, setPanelOpen]               = useState(true);
   const [panelTab, setPanelTab]                 = useState(planning.state === 'Bozza' ? 'results' : 'selected');
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
@@ -5641,6 +5642,65 @@ out geom;`;
     });
   }, [activePois, filteredPoiPoints, poiRadiusM]);
 
+  // ── Geocoding preciso: address + numero civico → punto sulla carreggiata ──
+  // Il Geocoder Google restituisce RANGE_INTERPOLATED (punto reale sulla via)
+  // quando l'indirizzo include il numero civico. I risultati vengono salvati
+  // in localStorage in modo permanente — il primo caricamento geocodifica tutto,
+  // i successivi sono istantanei.
+  React.useEffect(() => {
+    if (!window.google?.maps?.Geocoder) return;
+    const geocoder = new google.maps.Geocoder();
+    const CACHE = 'gc_v4_';
+    let cancelled = false;
+
+    // Applica subito i risultati già in cache
+    let nCached = 0;
+    SEARCH_RESULTS.forEach(sys => {
+      try {
+        const hit = localStorage.getItem(CACHE + sys.id);
+        if (hit) { const p = JSON.parse(hit); sys.lat = p.lat; sys.lng = p.lng; nCached++; }
+      } catch(e) {}
+    });
+    if (nCached > 0) setGeocodeReady(v => !v);
+
+    // Accoda i sistemi senza cache
+    const queue = SEARCH_RESULTS.filter(sys => {
+      try { return !localStorage.getItem(CACHE + sys.id); } catch(e) { return true; }
+    });
+    if (!queue.length) return;
+
+    const geocodeOne = (sys) => new Promise(resolve => {
+      if (cancelled) { resolve(); return; }
+      // indirizzo completo: "Via Notarbartolo, 47, Palermo, Italy"
+      const address = `${sys.address}, ${sys.city}, Italy`;
+      geocoder.geocode({ address, region: 'it' }, (results, status) => {
+        if (cancelled) { resolve(); return; }
+        if (status === 'OK' && results[0]) {
+          const loc = results[0].geometry.location;
+          const lat = +loc.lat().toFixed(6);
+          const lng = +loc.lng().toFixed(6);
+          sys.lat = lat;
+          sys.lng = lng;
+          try { localStorage.setItem(CACHE + sys.id, JSON.stringify({ lat, lng })); } catch(e) {}
+        }
+        resolve();
+      });
+    });
+
+    // Elabora a batch da 8, con 120ms di pausa tra batch
+    (async () => {
+      const BATCH = 8, PAUSE = 120;
+      for (let i = 0; i < queue.length; i += BATCH) {
+        if (cancelled) return;
+        await Promise.all(queue.slice(i, i + BATCH).map(geocodeOne));
+        if (!cancelled) setGeocodeReady(v => !v);
+        if (i + BATCH < queue.length) await new Promise(r => setTimeout(r, PAUSE));
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, []); // eslint-disable-line
+
   // Update markers on state change (Google Maps + MarkerClusterer)
   React.useEffect(() => {
     const map       = mapRef.current;
@@ -5685,7 +5745,7 @@ out geom;`;
 
     markersRef.current = newMarkers;
     clusterer.addMarkers(newMarkers);
-  }, [selectedFaceIds, hoveredId, focusedId, selectedSystemIds, filteredSystems]);
+  }, [selectedFaceIds, hoveredId, focusedId, selectedSystemIds, filteredSystems, geocodeReady]);
 
 
   const displayedItems = panelTab === 'selected'
