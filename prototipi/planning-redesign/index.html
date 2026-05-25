@@ -5061,7 +5061,7 @@ function SelectSystems({ planning, onBack, onApply }) {
   };
 
   const fetchZoneGeometry = React.useCallback(async (name, lat, lng, type) => {
-    const STREET_TYPES = new Set(['via', 'corso', 'viale', 'piazza', 'lungomare']);
+    const STREET_TYPES = new Set(['via', 'corso', 'viale', 'piazza', 'lungomare', 'street']);
     const isStreet = STREET_TYPES.has(type);
 
     // ── Strade: Overpass highway ───────────────────────────────
@@ -5233,12 +5233,17 @@ out geom;`;
       }
       if (minFacesEnabled && sys.faces < minFacesValue) return false;
       if (appliedZones.length > 0) {
-        if (!sys.lat || !sys.lng) return false;
+        const STREET_ZONE_TYPES = new Set(['via', 'corso', 'viale', 'piazza', 'street']);
         const matchesAny = appliedZones.some(({ text: q, target }) => {
+          // Strade: match solo sul nome via nell'indirizzo dell'impianto
+          if (STREET_ZONE_TYPES.has(target?.type)) {
+            const streetName = q.includes(',') ? q.split(',')[0].trim() : q;
+            return (sys.address || '').toLowerCase().includes(streetName.toLowerCase());
+          }
+          // Poligoni (provincia, regione, città, quartiere): point-in-polygon o haversine fallback
+          if (!sys.lat || !sys.lng) return false;
           const geo = zoneGeometries.get(q);
-          // Se abbiamo geometria reale, usa point-in-polygon
           if (geo) return systemInZoneGeo(sys.lat, sys.lng, geo);
-          // Fallback: haversine dal centro (geometria ancora in carico)
           if (target?.lat != null && target?.lng != null)
             return haversineMeters(sys.lat, sys.lng, target.lat, target.lng) <= ZONE_RADIUS(target.type);
           return false;
@@ -5624,7 +5629,10 @@ out geom;`;
         });
 
       } else {
-        // Fallback approssimato (in attesa del fetch o fetch fallito)
+        // Strade: nessun fallback — la polilinea appare solo quando Overpass risponde
+        const STREET_ZONE_TYPES = new Set(['via', 'corso', 'viale', 'piazza', 'street']);
+        if (STREET_ZONE_TYPES.has(target.type)) return;
+        // Poligoni: cerchio approssimato in attesa del fetch o se fetch fallito
         const r = ZONE_RADIUS(target.type);
         const path = zonePolygonPath(target.lat, target.lng, r);
         const polygon = new google.maps.Polygon({
