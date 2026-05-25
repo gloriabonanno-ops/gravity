@@ -1941,6 +1941,15 @@ const SEARCH_RESULTS = (() => {
     ['Via Bara all\'Olivella',   38.1180, 13.3578, 38.1195, 13.3625,  6, 'Palermo',          'PA', 'OOH'],
     ['Via Bandiera',             38.1118, 13.3638, 38.1138, 13.3688,  6, 'Palermo',          'PA', 'OOH'],
     ['Via Vittorio Emanuele Orlando', 38.1138, 13.3565, 38.1158, 13.3610,  6, 'Palermo',     'PA', 'OOH'],
+    ['Via dei Candelai',             38.1148, 13.3578, 38.1168, 13.3618,  6, 'Palermo',     'PA', 'OOH'],
+    ['Via Makeda',                   38.1158, 13.3558, 38.1178, 13.3598,  6, 'Palermo',     'PA', 'OOH'],
+    ['Piazza Marina',                38.1118, 13.3698, 38.1135, 13.3728,  6, 'Palermo',     'PA', 'OOH'],
+    ['Via Torino',                   38.1128, 13.3578, 38.1148, 13.3615,  6, 'Palermo',     'PA', 'OOH'],
+    ['Via Venezia',                  38.1138, 13.3588, 38.1155, 13.3625,  6, 'Palermo',     'PA', 'OOH'],
+    ['Piazza Garraffello',           38.1125, 13.3688, 38.1140, 13.3718,  6, 'Palermo',     'PA', 'OOH'],
+    ['Via Discesa dei Giudici',      38.1105, 13.3658, 38.1122, 13.3688,  6, 'Palermo',     'PA', 'OOH'],
+    ['Via Porta di Castro',          38.1095, 13.3618, 38.1115, 13.3648,  6, 'Palermo',     'PA', 'OOH'],
+    ['Via Roma',                     38.1135, 13.3628, 38.1158, 13.3668,  8, 'Palermo',     'PA', 'OOH'],
     // ── TRAPANI — DOOH ────────────────────────────────────────────────────────
     ['Via Fardella',             37.9782, 12.6048, 37.9865, 12.6148, 10, 'Trapani',          'TP', 'DOOH'],
     // ── TRAPANI — OOH ─────────────────────────────────────────────────────────
@@ -2119,7 +2128,8 @@ const SEARCH_RESULTS = (() => {
         ? DOOH_TYPES[(n * 3 + i * 7) % DOOH_TYPES.length]
         : OOH_TYPES[(n * 3 + i * 7) % OOH_TYPES.length];
       // Modello di vendita: tipi speciali sempre LT-only, ~20% degli altri anche (solo OOH)
-      const saleModel = !isDooh && (LT_ONLY_TYPES.has(type) || (n * 7 + i * 3) % 5 === 0)
+      // n % 5 === 0 garantisce distribuzione uniforme tra zone (evita collisioni hash per zone consecutive)
+      const saleModel = !isDooh && (LT_ONLY_TYPES.has(type) || n % 5 === 0)
         ? 'long_term_only' : 'standard';
       const labels     = FACE_LABELS[type] || ['Anteriore','Posteriore'];
       const fmtOptions = FACE_FORMAT_MULTI[type];
