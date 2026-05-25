@@ -527,3 +527,134 @@ Il prodotto attuale ha "Seleziona tutti" come pulsante separato in alto — nuov
 | 26 | "Premium" è una categoria commerciale codificata o un'invenzione del prototipo? | Data model |
 | 27 | L'inserzionista nel drawer creazione è selezionato dal planner o precompilato? | Flusso dati |
 | 28 | I nomi delle KPI card usano il linguaggio corretto del team? | Nomenclatura |
+
+---
+
+## Modello di ricerca e filtro — Specifica tecnica
+
+### Architettura del sistema
+
+Il sistema di ricerca combina tre layer sovrapposti in AND:
+
+```
+INVENTARIO (tutti gli impianti del canale)
+    ↓ zona           → solo gli impianti nell'area geografica scelta
+    ↓ raggio POI     → solo gli impianti vicini ai punti di interesse
+    ↓ filtri         → solo gli impianti con le proprietà volute
+    = RISULTATI FINALI
+```
+
+Ogni layer è opzionale. Un layer non attivo non filtra nulla (pass-through).
+
+---
+
+### Layer 1 — Zona
+
+Definisce l'area geografica. L'utente può inserire vie, quartieri, comuni,
+province, regioni. La ricerca usa Google Maps AutocompleteService per
+suggerimenti in tempo reale; la selezione geocodifica il placeId in coordinate.
+
+| Tipo zona          | Esempi                           | Raggio spaziale |
+|--------------------|----------------------------------|-----------------|
+| Provincia          | Palermo, PA                      | 40 km           |
+| Comune/città       | Palermo, Trapani                 | 8 km            |
+| Quartiere/area     | Palermo Politeama, Borgo Vecchio | 1.2 km          |
+| Via/strada         | Via Maqueda, Piazza Castelnuovo  | 1.2 km          |
+
+Senza coordinate (testo libero): match testuale su città, provincia, indirizzo.
+Più zone attive → OR: l'impianto appare se è dentro **almeno una** zona.
+
+---
+
+### Layer 2 — POI e Collezioni POI
+
+Un POI è un punto fisico reale (scuola, ospedale…) con coordinate precise.
+Ogni POI genera un **raggio** attorno a sé: passano solo gli impianti dentro
+quel raggio.
+
+**Singolo POI** — un punto cercato dall'utente.
+
+**Collezione POI** — un gruppo di punti predefiniti nel database, identificati
+con il nome "Categoria Città" (es. _Scuole Palermo_). Ogni punto è un luogo
+reale con indirizzo completo e numero civico.
+
+**Raggio POI** — un unico valore globale applicato a tutti i POI attivi,
+modificabile dalla card in alto a sinistra della mappa. Tre modalità:
+- Metri (100 m – 2 km, default 500 m)
+- A piedi (1–30 min, dove 1 min ≈ 80 m)
+- In auto (1–30 min, dove 1 min ≈ 400 m)
+
+La card è sempre visibile quando ci sono POI attivi.
+
+---
+
+### Intersezione Zona × POI (il cuore del sistema)
+
+Quando entrambi i layer sono attivi, la logica è:
+
+```
+1. filteredPoiPoints
+   Per ogni collezione attiva, conserva solo i punti-POI
+   che si trovano DENTRO le zone attive.
+   Esempio: "Scuole Palermo" ha 20 scuole; se la zona è
+   "Palermo Politeama" (raggio 1.2 km), solo le 3-4 scuole
+   in quel quartiere vengono usate per generare i raggi.
+
+2. filteredSystems
+   Un impianto passa se:
+   a) è dentro almeno una zona attiva
+   b) E è dentro il raggio di almeno uno dei punti del passo 1
+
+3. filtri proprietà
+   Restringono ulteriormente su tipo, formato, stato, ecc.
+```
+
+Se non ci sono zone attive, tutti i punti della collezione generano raggi
+(nessuna restrizione geografica sui POI).
+
+---
+
+### Layer 3 — Filtri proprietà
+
+Filtrano gli attributi dell'impianto:
+
+| Filtro            | Tipo     | Note                                   |
+|-------------------|----------|----------------------------------------|
+| Stato             | Multi    | Disponibile / In Opzione / Riservato   |
+| Tipo impianto     | Multi    | Palina, Cartello, Pensilina, Billboard…|
+| Formato           | Multi    | 70×100 cm, 6×4 m…                      |
+| Illuminazione     | Multi    | Illuminate / Non illuminate            |
+| N. facce minimo   | Slider   | —                                      |
+| Prezzo max        | Slider   | —                                      |
+
+Tutti i filtri sono AND. Filtro non attivo = nessun filtro (mostra tutto).
+
+---
+
+### Comportamento mappa
+
+| Evento                       | Azione mappa                              |
+|------------------------------|-------------------------------------------|
+| Zona aggiunta                | fitBounds sugli impianti filtrati         |
+| POI/Collezione aggiunta      | fitBounds su impianti + punti POI visibili|
+| Zona o POI rimossi           | fitBounds sul contenuto rimanente         |
+| Filtri tipo/stato cambiati   | Nessun re-frame (non interrompe navigaz.) |
+
+Padding destro = 440 px quando il pannello laterale è aperto, così il centro
+visivo coincide con l'area mappa libera dalla UI.
+
+**Layer visuali sulla mappa (z-order):**
+- Marker POI (icona categoria nel cerchio colorato) — z 2000
+- Cerchi POI (fill 7%, stroke 35%, colore della categoria)
+- Cerchi zona (solo contorno, no fill)
+- Marker impianti (cluster + singoli, colore per stato)
+
+---
+
+### Note implementative
+
+- Formula distanza: Haversine, R = 6.371.000 m (WGS84)
+- Walk speed: 80 m/min | Drive speed: 400 m/min (≈ 24 km/h urbano)
+- Tutti i calcoli di distanza confrontano lat/lng WGS84 dirette (nessuna proiezione)
+- Le collezioni POI sono dati statici nel prototipo; in produzione arriveranno
+  dal database (API REST). La struttura dati è identica: `{ id, label, city, points: [{lat, lng, name}] }`
