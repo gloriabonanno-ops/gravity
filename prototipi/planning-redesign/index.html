@@ -2798,9 +2798,7 @@ function catIconSvg(antIconName, bgColor, size) {
           iconFragment = `<svg viewBox="${viewBox}" width="${iSize}" height="${iSize}" x="${offset}" y="${offset}">${pathsHtml}</svg>`;
         }
       }
-    } catch(e) {
-      console.warn('[catIconSvg] failed for', antIconName, e);
-    }
+    } catch(e) { /* ignore */ }
   }
   const result = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">`
     + `<circle cx="${size/2}" cy="${size/2}" r="${r}" fill="${bgColor}" stroke="white" stroke-width="2"/>`
@@ -5073,7 +5071,7 @@ function SelectSystems({ planning, onBack, onApply }) {
           const lines = geojsonToGoogleLines(osmtogeojson(data));
           if (lines.length) return { type: 'polyline', paths: lines };
         }
-      } catch(e) { console.warn('[Overpass] street error:', e); }
+      } catch(e) { /* ignore */ }
       return null;
     }
 
@@ -5090,7 +5088,7 @@ function SelectSystems({ planning, onBack, onApply }) {
             const paths = geojsonToGooglePaths({ features: [feature] });
             if (paths.length) return { type: 'polygon', paths };
           }
-        } catch(e) { console.warn('[Nominatim] error:', e); }
+        } catch(e) { /* ignore */ }
       }
       return null;
     }
@@ -5134,7 +5132,7 @@ out geom;`;
           if (paths.length) return { type: 'polygon', paths };
         }
       }
-    } catch(e) { console.warn('[Overpass] is_in error:', e); }
+    } catch(e) { /* ignore */ }
 
     return null;
   }, []);
