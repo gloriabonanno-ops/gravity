@@ -4584,12 +4584,7 @@ function SelectSystems({ planning, onBack, onApply }) {
   const [selectedIllumination, setSelectedIllumination] = useState([]);
   const [minFacesEnabled, setMinFacesEnabled]   = useState(false);
   const [minFacesValue, setMinFacesValue]       = useState(2);
-  const [appliedZones, setAppliedZones]           = useState(() =>
-    (planning.briefZones || []).map(bz => ({
-      text:   bz.label,
-      target: { lat: bz.lat, lng: bz.lng, zoom: bz.zoom || 14, type: bz.type || 'zona' },
-    }))
-  );
+  const [appliedZones, setAppliedZones]           = useState([]);
   const [zoneGeometries, setZoneGeometries]       = useState(new Map()); // text → { type:'polygon'|'polyline', paths }
   const zoneGeoCacheRef                           = React.useRef(new Map()); // cache persistente
   const [selectedFormats, setSelectedFormats]     = useState([]);
@@ -5514,25 +5509,17 @@ out geom;`;
   React.useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
-    // Framing iniziale: se il planning ha briefZones usa quello, altrimenti tutta la Sicilia
-    const firstZone = appliedZones.find(z => z.target?.lat != null);
-    let center, initZoom, allBounds;
-    if (firstZone) {
-      center   = { lat: firstZone.target.lat, lng: firstZone.target.lng };
-      initZoom = firstZone.target.zoom || 14;
-    } else {
-      allBounds = new google.maps.LatLngBounds();
-      SEARCH_RESULTS.filter(r => r.lat && r.lng).forEach(r => allBounds.extend({ lat: r.lat, lng: r.lng }));
-      center   = allBounds.isEmpty()
-        ? { lat: 37.9, lng: 13.1 }
-        : { lat: (allBounds.getNorthEast().lat() + allBounds.getSouthWest().lat()) / 2,
-            lng: (allBounds.getNorthEast().lng() + allBounds.getSouthWest().lng()) / 2 };
-      initZoom = 10;
-    }
+    // Framing iniziale: inquadra tutta la Sicilia (tutti gli spazi)
+    const allBounds = new google.maps.LatLngBounds();
+    SEARCH_RESULTS.filter(r => r.lat && r.lng).forEach(r => allBounds.extend({ lat: r.lat, lng: r.lng }));
+    const center = allBounds.isEmpty()
+      ? { lat: 37.9, lng: 13.1 }
+      : { lat: (allBounds.getNorthEast().lat() + allBounds.getSouthWest().lat()) / 2,
+          lng: (allBounds.getNorthEast().lng() + allBounds.getSouthWest().lng()) / 2 };
 
     const map = new google.maps.Map(mapContainerRef.current, {
       center,
-      zoom: initZoom,
+      zoom: 10,
       mapTypeId: 'roadmap',
       disableDefaultUI: false,
       zoomControl: true,
@@ -5549,7 +5536,7 @@ out geom;`;
       ],
     });
 
-    if (allBounds && !allBounds.isEmpty()) map.fitBounds(allBounds);
+    if (!allBounds.isEmpty()) map.fitBounds(allBounds);
 
     map.addListener('click', () => setFocusedId(null));
 
