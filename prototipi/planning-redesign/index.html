@@ -1607,6 +1607,8 @@ function markerSrc(type, state) {
   const file   = MARKER_STATE_FILE[state] || 'available';
   return `../assets/${folder}/${file}.svg`;
 }
+// Cache SVG content preloaded at runtime (keyed by URL)
+const _assetSvgCache = {};
 function getMarkerSize(zoom) {
   if (zoom <= 11) return [10, 15];
   if (zoom <= 12) return [12, 18];
@@ -5439,39 +5441,48 @@ out geom;`;
     if (isFocused)      { w = Math.round(w * 1.4); h = Math.round(h * 1.4); }
     else if (isHovered) { w = Math.round(w * 1.12); h = Math.round(h * 1.12); }
 
-    const dimmed  = hasFocus && !isFocused && !isSelected;
-    const opacity = dimmed ? 0.15 : 1;
+    const dimOpacity = (hasFocus && !isFocused && !isSelected) ? 0.2 : 1;
+    const src = markerSrc(sys.type, sys.state);
+    const svgContent = _assetSvgCache[src];
 
-    const fill = isSelected
-      ? '#3E00FB'
-      : sys.state === 'Reserved'  ? '#BFBFBF'
-      : sys.state === 'In Option' ? '#FA8C16'
-      : sys.channel === 'DOOH'    ? '#1677FF'
-      : '#3E00FB';
+    if (svgContent) {
+      // Estrae il contenuto interno dell'SVG (senza il tag <svg> esterno)
+      const inner = svgContent
+        .replace(/<\?xml[^>]*\?>\s*/i, '')
+        .replace(/<svg[^>]*>/i, '')
+        .replace(/<\/svg>\s*$/i, '');
 
-    // Selected via checkbox → stroke primary visibile; Focused → stroke bianco più spesso
-    const strokeColor = isFocused ? 'white' : isSelected ? '#3E00FB' : 'rgba(255,255,255,0.75)';
-    const strokeW     = isFocused ? 2.5 : isSelected ? 3 : 1.5;
+      // Drop shadow per focused
+      const focusDefs = isFocused
+        ? `<defs><filter id="fs" x="-50%" y="-50%" width="200%" height="200%">
+             <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#3E00FB" flood-opacity="0.5"/>
+           </filter></defs>`
+        : '';
+      const focusFilter = isFocused ? 'filter="url(#fs)"' : '';
 
-    // Drop shadow solo sul focused
-    const shadow = isFocused
-      ? `<defs><filter id="fs" x="-60%" y="-60%" width="220%" height="220%">
-           <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#3E00FB" flood-opacity="0.45"/>
-         </filter></defs>`
-      : '';
-    const filterAttr = isFocused ? 'filter="url(#fs)"' : '';
+      // Anello di selezione al centro del pallino (y≈33 nel viewBox 78×120)
+      const selRing = isSelected && !isFocused
+        ? `<circle cx="39.75" cy="46" r="22" fill="none" stroke="#3E00FB" stroke-width="4" stroke-opacity="0.9"/>`
+        : '';
 
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 32" width="${w}" height="${h}">
-      ${shadow}
-      <path d="M12 2 C6.8 2 2.5 6.4 2.5 11.5 C2.5 18.8 12 32 12 32 C12 32 21.5 18.8 21.5 11.5 C21.5 6.4 17.2 2 12 2 Z"
-            fill="${fill}" stroke="${strokeColor}" stroke-width="${strokeW}" opacity="${opacity}" ${filterAttr}/>
-      <circle cx="12" cy="11" r="4.2" fill="rgba(255,255,255,0.88)" opacity="${opacity}"/>
-    </svg>`;
+      const wrapped = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 78 120" opacity="${dimOpacity}">
+        ${focusDefs}
+        <g ${focusFilter}>${inner}</g>
+        ${selRing}
+      </svg>`;
 
+      return {
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(wrapped),
+        scaledSize: new google.maps.Size(w, h),
+        anchor: new google.maps.Point(w / 2, Math.round(h * 0.92)),
+      };
+    }
+
+    // Fallback URL (prima che gli SVG siano caricati)
     return {
-      url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+      url: src,
       scaledSize: new google.maps.Size(w, h),
-      anchor: new google.maps.Point(w / 2, h),
+      anchor: new google.maps.Point(w / 2, Math.round(h * 0.92)),
     };
   };
 
@@ -5641,6 +5652,20 @@ out geom;`;
       });
     });
   }, [activePois, filteredPoiPoints, poiRadiusM]);
+
+  // ── Preload asset SVG markers ──────────────────────────────────────────────
+  React.useEffect(() => {
+    const needed = new Set(
+      SEARCH_RESULTS.map(s => markerSrc(s.type, s.state))
+    );
+    Promise.all([...needed].map(async url => {
+      if (_assetSvgCache[url]) return;
+      try {
+        const r = await fetch(url);
+        if (r.ok) _assetSvgCache[url] = await r.text();
+      } catch(e) {}
+    })).then(() => setGeocodeReady(v => !v));
+  }, []); // eslint-disable-line
 
   // ── Geocoding preciso: address + numero civico → punto sulla carreggiata ──
   // Il Geocoder Google restituisce RANGE_INTERPOLATED (punto reale sulla via)
