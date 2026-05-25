@@ -18,6 +18,7 @@
        (APIs & Services → Credentials → HTTP referrers) prima di qualsiasi deploy pubblico. -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeN8PAeuZkOtG8uyRzvXP2rOzP37HMBdI&libraries=places"></script>
   <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+  <script src="https://unpkg.com/osmtogeojson@3.0.0-beta.5/osmtogeojson.js"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -2264,6 +2265,11 @@ function planningDurationLabel(planning) {
   return `${days} ${days === 1 ? 'giorno' : 'giorni'}`;
 }
 
+// Precarica il GeoJSON delle circoscrizioni di Palermo appena la pagina esegue lo script
+const _palermoCirPromise = fetch('../../assets/palermo-zones.geojson')
+  .then(r => r.json())
+  .catch(() => null);
+
 // Ogni voce: { label, type, lat, lng, filterCity?, filterProvince?, filterRadius, mapRadius }
 // filterCity/filterProvince → matching per nome; filterRadius → haversine per strade
 const GEO_SUGGESTIONS = [
@@ -2317,14 +2323,14 @@ const GEO_SUGGESTIONS = [
   { label:'Viale Regione Siciliana, Palermo', type:'Viale',     lat:38.0960, lng:13.3454, filterRadius:1000, mapRadius:1000 },
   { label:'Viale Lazio, Palermo',             type:'Viale',     lat:38.1092, lng:13.3383, filterRadius:800,  mapRadius:800  },
   { label:'Corso Calatafimi, Palermo',        type:'Corso',     lat:38.1024, lng:13.3349, filterRadius:900,  mapRadius:900  },
-  { label:'Corso V. Emanuele, Palermo',       type:'Corso',     lat:38.1118, lng:13.3610, filterRadius:800,  mapRadius:800  },
+  { label:'Corso Vittorio Emanuele, Palermo',       type:'Corso',     lat:38.1118, lng:13.3610, filterRadius:800,  mapRadius:800  },
   { label:'Piazza Politeama, Palermo',        type:'Piazza',    lat:38.1196, lng:13.3564, filterRadius:500,  mapRadius:500  },
   { label:'Piazza Castelnuovo, Palermo',      type:'Piazza',    lat:38.1200, lng:13.3578, filterRadius:500,  mapRadius:500  },
   { label:'Piazza Sturzo, Palermo',           type:'Piazza',    lat:38.1158, lng:13.3590, filterRadius:400,  mapRadius:400  },
   // ── Strade Trapani / provincia TP ─────────────────────────────────────────────
   { label:'Via Fardella, Trapani',              type:'Via',     lat:37.9830, lng:12.6095, filterRadius:700,  mapRadius:700  },
   { label:'Corso Vittorio Emanuele, Trapani',   type:'Corso',   lat:37.9695, lng:12.5991, filterRadius:800,  mapRadius:800  },
-  { label:'Via G. B. Fardella, Trapani',        type:'Via',     lat:37.9780, lng:12.6070, filterRadius:600,  mapRadius:600  },
+  { label:'Via Giovanni Battista Fardella, Trapani',        type:'Via',     lat:37.9780, lng:12.6070, filterRadius:600,  mapRadius:600  },
   { label:'Viale delle Sirene, Marsala',        type:'Viale',   lat:37.8010, lng:12.4340, filterRadius:800,  mapRadius:800  },
   { label:'Via XI Maggio, Marsala',             type:'Via',     lat:37.7990, lng:12.4390, filterRadius:600,  mapRadius:600  },
   { label:'Lungomare Mediterraneo, Marsala',    type:'Lungomare', lat:37.7955, lng:12.4270, filterRadius:900, mapRadius:900 },
@@ -2335,7 +2341,7 @@ const GEO_SUGGESTIONS = [
   { label:'Piazza Vittorio Veneto, Trapani',    type:'Piazza',  lat:37.9816, lng:12.5985, filterRadius:450,  mapRadius:450  },
   { label:'Piazza Garibaldi, Castelvetrano',    type:'Piazza',  lat:37.6757, lng:12.7916, filterRadius:400,  mapRadius:400  },
   { label:'Via Savoia, San Vito Lo Capo',       type:'Via',     lat:38.1759, lng:12.7313, filterRadius:500,  mapRadius:500  },
-  { label:'Via G. Garibaldi, Castellammare del Golfo', type:'Via', lat:38.0290, lng:12.8810, filterRadius:600, mapRadius:600 },
+  { label:'Via Giuseppe Garibaldi, Castellammare del Golfo', type:'Via', lat:38.0290, lng:12.8810, filterRadius:600, mapRadius:600 },
   // ── Strade Agrigento / provincia AG ───────────────────────────────────────────
   { label:'Via Atenea, Agrigento',              type:'Via',     lat:37.3115, lng:13.5780, filterRadius:700,  mapRadius:700  },
   { label:'Viale della Vittoria, Agrigento',    type:'Viale',   lat:37.3085, lng:13.5710, filterRadius:800,  mapRadius:800  },
@@ -2723,6 +2729,23 @@ function tipoIconSvg(tipo, color) {
 // Builds an SVG string: colored circle with an AntD icon inside (white).
 // Used for POI markers on the map.
 const _catIconCache = {};
+
+// Ant Design v5 UMD icons are forwardRef components. When called, they return
+// React.createElement(AntdIcon, { ...props, icon: <svgDataObject> }).
+// The svgDataObject is a plain JS tree: { icon: { tag, attrs, children[] }, name, theme }
+// — much simpler to traverse than the full React element tree.
+function _extractPathsFromIconData(node) {
+  if (!node) return { paths: [], viewBox: '64 64 896 896' };
+  const result = { paths: [], viewBox: (node.attrs && node.attrs.viewBox) || '64 64 896 896' };
+  function walk(n) {
+    if (!n) return;
+    if (n.tag === 'path' && n.attrs && n.attrs.d) result.paths.push(n.attrs.d);
+    if (Array.isArray(n.children)) n.children.forEach(walk);
+  }
+  walk(node);
+  return result;
+}
+
 function catIconSvg(antIconName, bgColor, size) {
   const key = `${antIconName}-${bgColor}-${size}`;
   if (_catIconCache[key]) return _catIconCache[key];
@@ -2730,25 +2753,31 @@ function catIconSvg(antIconName, bgColor, size) {
   const r = size / 2 - 1.5;
   let iconFragment = '';
   if (IconComp) {
-    const iSize = Math.round(size * 0.48);
-    const offset = Math.round((size - iSize) / 2);
-    const div = document.createElement('div');
-    ReactDOM.flushSync(() => {
-      ReactDOM.createRoot(div).render(
-        React.createElement(IconComp, { style: { fontSize: iSize, color: 'white', display: 'block' } })
-      );
-    });
-    const svg = div.querySelector('svg');
-    if (svg) {
-      svg.setAttribute('width', iSize);
-      svg.setAttribute('height', iSize);
-      svg.setAttribute('x', offset);
-      svg.setAttribute('y', offset);
-      iconFragment = svg.outerHTML;
+    try {
+      // Call the forwardRef render fn to get the AntdIcon element,
+      // then read the icon data object from props.icon
+      const renderFn = typeof IconComp === 'function' ? IconComp
+                      : (IconComp.render || null);
+      const el = renderFn ? renderFn({ style: {} }, null) : null;
+      const iconData = el && el.props && el.props.icon;
+      if (iconData) {
+        // iconData may be { icon: { tag, attrs, children }, name, theme }
+        // or directly the svg node depending on version
+        const svgNode = iconData.icon || iconData;
+        const { paths: pathDs, viewBox } = _extractPathsFromIconData(svgNode);
+        if (pathDs.length) {
+          const iSize = Math.round(size * 0.56);
+          const offset = Math.round((size - iSize) / 2);
+          const pathsHtml = pathDs.map(d => `<path d="${d}" fill="white"/>`).join('');
+          iconFragment = `<svg viewBox="${viewBox}" width="${iSize}" height="${iSize}" x="${offset}" y="${offset}">${pathsHtml}</svg>`;
+        }
+      }
+    } catch(e) {
+      console.warn('[catIconSvg] failed for', antIconName, e);
     }
   }
   const result = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">`
-    + `<circle cx="${size/2}" cy="${size/2}" r="${r}" fill="${bgColor}" fill-opacity="0.9" stroke="white" stroke-width="2"/>`
+    + `<circle cx="${size/2}" cy="${size/2}" r="${r}" fill="${bgColor}" stroke="white" stroke-width="2"/>`
     + iconFragment
     + `</svg>`;
   _catIconCache[key] = result;
@@ -3550,9 +3579,6 @@ const OOH_ALL_TYPES = {
 const DOOH_ALL_TYPES = {
   'Digitale':        ['Billboard', 'Alux', 'Totem'],
 };
-// Legacy — usato come default quando il canale non è noto
-const ALL_TYPES = OOH_ALL_TYPES;
-const ALL_TYPE_FLAT = Object.values(ALL_TYPES).flat();
 
 // Formati disponibili per tipologia OOH
 const OOH_TYPE_FORMATS = {
@@ -4540,6 +4566,8 @@ function SelectSystems({ planning, onBack, onApply }) {
   const [minFacesEnabled, setMinFacesEnabled]   = useState(false);
   const [minFacesValue, setMinFacesValue]       = useState(2);
   const [appliedZones, setAppliedZones]           = useState([]);
+  const [zoneGeometries, setZoneGeometries]       = useState(new Map()); // text → { type:'polygon'|'polyline', paths }
+  const zoneGeoCacheRef                           = React.useRef(new Map()); // cache persistente
   const [selectedFormats, setSelectedFormats]     = useState([]);
   const [maxPriceEnabled, setMaxPriceEnabled]     = useState(false);
   const [maxPriceValue, setMaxPriceValue]         = useState(300);
@@ -4886,6 +4914,257 @@ function SelectSystems({ planning, onBack, onApply }) {
   const ZONE_RADIUS = (type) =>
     type === 'province' ? 40000 : type === 'city' ? 8000 : 1200;
 
+  // Popola il ref dalle Promise globale (già in volo dal caricamento pagina)
+  React.useEffect(() => {
+    _palermoCirPromise.then(data => { if (data) palermoCirRef.current = data; });
+  }, []);
+
+  // Ray-casting point-in-polygon — ring in formato GeoJSON [lng, lat]
+  const pointInPolygon = (lat, lng, ring) => {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i], [xj, yj] = ring[j];
+      if ((yi > lat) !== (yj > lat) && lng < ((xj - xi) * (lat - yi)) / (yj - yi) + xi)
+        inside = !inside;
+    }
+    return inside;
+  };
+
+  // Ray-casting point-in-polygon — ring in formato Google Maps { lat, lng }
+  const pointInPolygonLatLng = (lat, lng, ring) => {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const { lat: yi, lng: xi } = ring[i], { lat: yj, lng: xj } = ring[j];
+      if ((yi > lat) !== (yj > lat) && lng < ((xj - xi) * (lat - yi)) / (yj - yi) + xi)
+        inside = !inside;
+    }
+    return inside;
+  };
+
+  // Verifica se un punto è dentro una geometria di zona (polygon o polyline con buffer)
+  const systemInZoneGeo = (sysLat, sysLng, geo) => {
+    if (!geo) return false;
+    if (geo.type === 'polygon') {
+      // Basta che sia dentro almeno uno dei poligoni (outer ring)
+      return geo.paths.some(rings => pointInPolygonLatLng(sysLat, sysLng, rings[0]));
+    }
+    if (geo.type === 'polyline') {
+      // Per le vie: distanza < 300 m da uno qualsiasi dei segmenti
+      return geo.paths.some(line =>
+        line.some(pt => haversineMeters(sysLat, sysLng, pt.lat, pt.lng) < 300)
+      );
+    }
+    return false;
+  };
+
+  // Trova la circoscrizione che contiene il punto → restituisce i paths Google Maps
+  // Usa la Promise globale così funziona anche se chiamata prima del mount
+  const findPalermoCir = async (lat, lng) => {
+    const data = await _palermoCirPromise;
+    if (!data) return null;
+    for (const feat of data.features) {
+      const rings = feat.geometry.coordinates;
+      if (pointInPolygon(lat, lng, rings[0]))
+        return rings.map(ring => ring.map(([lo, la]) => ({ lat: la, lng: lo })));
+    }
+    return null;
+  };
+
+  // Genera un poligono irregolare attorno a un centro (simula confini reali)
+  const zonePolygonPath = (centerLat, centerLng, radiusM) => {
+    const numPoints = 12;
+    const latFactor = 1 / 111320;
+    const lngFactor = 1 / (111320 * Math.cos(centerLat * Math.PI / 180));
+    // Pseudo-random deterministico basato su lat/lng → stessa zona = stessa forma
+    let s = Math.abs(Math.round(centerLat * 1000 + centerLng * 1000)) || 42;
+    const rand = () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+    return Array.from({ length: numPoints }, (_, i) => {
+      const angle = (i / numPoints) * 2 * Math.PI + (rand() - 0.5) * 0.18;
+      const r = radiusM * (0.72 + rand() * 0.5);
+      return { lat: centerLat + Math.sin(angle) * r * latFactor,
+               lng: centerLng + Math.cos(angle) * r * lngFactor };
+    });
+  };
+
+  // ── Nominatim (ricerca luoghi) + Overpass (strade) ───────────────────────
+  const OVERPASS_URL  = 'https://overpass-api.de/api/interpreter';
+  const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
+
+  const _overpassFetch = async (query) => {
+    const res = await fetch(OVERPASS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'data=' + encodeURIComponent(query),
+    });
+    if (!res.ok) throw new Error(`Overpass HTTP ${res.status}`);
+    return res.json();
+  };
+
+  const _nominatimSearch = async (q, lat, lng, delta = 0.3) => {
+    const viewbox = `${lng - delta},${lat - delta},${lng + delta},${lat + delta}`;
+    const url = `${NOMINATIM_URL}?` + new URLSearchParams({
+      q, format: 'geojson', polygon_geojson: 1,
+      limit: 10, countrycodes: 'it', viewbox, bounded: 1,
+    });
+    const res = await fetch(url, { headers: { 'Accept-Language': 'it,en' } });
+    if (!res.ok) throw new Error(`Nominatim HTTP ${res.status}`);
+    return res.json();
+  };
+
+  // Estrae il feature poligonale più rilevante dalla risposta Nominatim.
+  // Preferisce relation OSM (confini amministrativi/place) rispetto a way o node.
+  const _bestNominatimPolygon = (geojson) => {
+    const polys = (geojson.features || []).filter(f =>
+      f.geometry?.type === 'Polygon' || f.geometry?.type === 'MultiPolygon'
+    );
+    if (!polys.length) return null;
+    // Ordine preferenza: relation boundary > relation place > way > resto
+    const rank = f => {
+      const p = f.properties || {};
+      if (p.osm_type === 'R' && p.class === 'boundary') return 0;
+      if (p.osm_type === 'R' && p.class === 'place')    return 1;
+      if (p.osm_type === 'R')                            return 2;
+      if (p.osm_type === 'W')                            return 3;
+      return 4;
+    };
+    return polys.sort((a, b) => rank(a) - rank(b))[0];
+  };
+
+  const fetchZoneGeometry = React.useCallback(async (name, lat, lng, type) => {
+    const STREET_TYPES = new Set(['via', 'corso', 'viale', 'piazza', 'lungomare']);
+    const isStreet = STREET_TYPES.has(type);
+
+    // ── Strade: Overpass highway ───────────────────────────────
+    if (isStreet) {
+      // Rimuove eventuale suffisso città (es. "Via Notarbartolo, Palermo" → "Via Notarbartolo")
+      const streetName = name.includes(',') ? name.split(',')[0].trim() : name;
+      try {
+        const q = `[out:json][timeout:20];way["name"="${streetName}"]["highway"](around:600,${lat},${lng});out geom;`;
+        const data = await _overpassFetch(q);
+
+        if (data.elements?.length) {
+          const lines = geojsonToGoogleLines(osmtogeojson(data));
+          if (lines.length) return { type: 'polyline', paths: lines };
+        }
+      } catch(e) { console.warn('[Overpass] street error:', e); }
+      return null;
+    }
+
+    // ── Province e Città: Nominatim per nome ──────────────────
+    if (type === 'province' || type === 'city') {
+      const delta = type === 'province' ? 1.5 : 0.5;
+      const shortName = name.includes(' ') ? name.split(' ').slice(1).join(' ') : null;
+      for (const q of [name, shortName].filter(Boolean)) {
+        try {
+          const geojson = await _nominatimSearch(q, lat, lng, delta);
+
+          const feature = _bestNominatimPolygon(geojson);
+          if (feature) {
+            const paths = geojsonToGooglePaths({ features: [feature] });
+            if (paths.length) return { type: 'polygon', paths };
+          }
+        } catch(e) { console.warn('[Nominatim] error:', e); }
+      }
+      return null;
+    }
+
+    // ── Quartieri / Zone: GeoJSON locale Palermo (point-in-polygon) ──
+    const localPaths = await findPalermoCir(lat, lng);
+    if (localPaths) {
+
+      return { type: 'polygon', paths: [localPaths] };
+    }
+
+    // ── Quartieri / Zone: is_in Overpass (fallback per zone fuori Palermo) ──
+    // Trova tutte le aree OSM che CONTENGONO le coordinate, poi sceglie
+    // la più specifica (admin_level più alto o place=suburb/quarter).
+    try {
+      const q = `[out:json][timeout:25];
+is_in(${lat},${lng})->.a;
+(
+  relation(pivot.a)["boundary"="administrative"];
+  relation(pivot.a)["place"~"suburb|quarter|neighbourhood|district"];
+);
+out geom;`;
+      const data = await _overpassFetch(q);
+
+      if (data.elements?.length) {
+        // Ordina per specificità: admin_level più alto = più locale
+        const sorted = data.elements
+          .filter(e => e.tags?.name)
+          .sort((a, b) => {
+            const al = parseInt(a.tags?.admin_level || 0);
+            const bl = parseInt(b.tags?.admin_level || 0);
+            // Preferisci place=suburb/quarter rispetto a boundary admin generico
+            const aPlace = a.tags?.place ? 10 : al;
+            const bPlace = b.tags?.place ? 10 : bl;
+            return bPlace - aPlace; // decrescente: più specifico prima
+          });
+
+        if (sorted.length) {
+          const geo = osmtogeojson({ elements: [sorted[0]] });
+          const paths = geojsonToGooglePaths(geo);
+          if (paths.length) return { type: 'polygon', paths };
+        }
+      }
+    } catch(e) { console.warn('[Overpass] is_in error:', e); }
+
+    return null;
+  }, []);
+
+  // Converte Feature GeoJSON Polygon/MultiPolygon in array di polygons Google Maps.
+  // Ogni elemento è un array di rings [outerRing, ...holes] → un solo google.maps.Polygon per feature.
+  const geojsonToGooglePaths = (geojson) => {
+    const polygons = [];
+    geojson.features?.forEach(f => {
+      const g = f.geometry;
+      if (!g) return;
+      if (g.type === 'Polygon') {
+        polygons.push(g.coordinates.map(ring => ring.map(([lng, lat]) => ({ lat, lng }))));
+      } else if (g.type === 'MultiPolygon') {
+        g.coordinates.forEach(poly => {
+          polygons.push(poly.map(ring => ring.map(([lng, lat]) => ({ lat, lng }))));
+        });
+      }
+    });
+    return polygons; // paths[i] = [outerRing, ...holeRings]
+  };
+
+  // Converte Feature GeoJSON LineString/MultiLineString in array di paths Google Maps
+  const geojsonToGoogleLines = (geojson) => {
+    const lines = [];
+    geojson.features?.forEach(f => {
+      const g = f.geometry;
+      if (!g) return;
+      const segs = g.type === 'LineString' ? [g.coordinates]
+        : g.type === 'MultiLineString' ? g.coordinates : [];
+      segs.forEach(seg => lines.push(seg.map(([lng, lat]) => ({ lat, lng }))));
+    });
+    return lines;
+  };
+
+  // Effect: scarica geometria reale per ogni zona aggiunta
+  React.useEffect(() => {
+    appliedZones.forEach(({ text, target }) => {
+      if (!target?.lat || !target?.lng) return;
+      if (zoneGeoCacheRef.current.has(text)) return;
+      zoneGeoCacheRef.current.set(text, 'loading');
+      fetchZoneGeometry(text, target.lat, target.lng, target.type)
+        .then(geo => {
+          zoneGeoCacheRef.current.set(text, geo);
+          setZoneGeometries(prev => { const m = new Map(prev); m.set(text, geo); return m; });
+        })
+        .catch(() => {
+          zoneGeoCacheRef.current.set(text, null);
+        });
+    });
+    // Pulisce cache per zone rimosse
+    zoneGeoCacheRef.current.forEach((_, key) => {
+      if (!appliedZones.some(z => z.text === key)) zoneGeoCacheRef.current.delete(key);
+    });
+  }, [appliedZones, fetchZoneGeometry]);
+  // ─────────────────────────────────────────────────────────────────────────
+
   const filteredPoiPoints = React.useMemo(() => {
     const result = new Map();
     activePois.forEach(poi => {
@@ -4924,15 +5203,15 @@ function SelectSystems({ planning, onBack, onApply }) {
       }
       if (minFacesEnabled && sys.faces < minFacesValue) return false;
       if (appliedZones.length > 0) {
+        if (!sys.lat || !sys.lng) return false;
         const matchesAny = appliedZones.some(({ text: q, target }) => {
-          if (target && target.lat != null && target.lng != null && sys.lat && sys.lng) {
+          const geo = zoneGeometries.get(q);
+          // Se abbiamo geometria reale, usa point-in-polygon
+          if (geo) return systemInZoneGeo(sys.lat, sys.lng, geo);
+          // Fallback: haversine dal centro (geometria ancora in carico)
+          if (target?.lat != null && target?.lng != null)
             return haversineMeters(sys.lat, sys.lng, target.lat, target.lng) <= ZONE_RADIUS(target.type);
-          }
-          const qNorm = normalizeText(q);
-          return normalizeText(sys.city     || '').includes(qNorm)
-              || normalizeText(sys.province || '').includes(qNorm)
-              || normalizeText(sys.zona     || '').includes(qNorm)
-              || matchesSearch(sys.address  || '', q);
+          return false;
         });
         if (!matchesAny) return false;
       }
@@ -4949,7 +5228,7 @@ function SelectSystems({ planning, onBack, onApply }) {
   }, [planning.category, planning.start, planning.end,
       visibleStates, selectedTypes, selectedFormats,
       selectedIllumination, minFacesEnabled, minFacesValue,
-      appliedZones, activePois, poiRadiusM, filteredPoiPoints]);
+      appliedZones, zoneGeometries, activePois, poiRadiusM, filteredPoiPoints]);
 
   // ── Auto-framing mappa ───────────────────────────────────
   // Helper condiviso: ritorna i bounds di tutti i contenuti visibili
@@ -5009,6 +5288,7 @@ function SelectSystems({ planning, onBack, onApply }) {
   const infoWindowRef      = React.useRef(null);    // google.maps.InfoWindow
   const poiOverlaysRef     = React.useRef([]);      // POI circles + markers
   const zoneCirclesRef     = React.useRef([]);      // zone highlight circles
+  const palermoCirRef      = React.useRef(null);    // GeoJSON circoscrizioni Palermo
   const poiSuggestRef      = React.useRef(null);    // debounce timer for POI autocomplete
 
   // Misura il right del dropdown allineandolo all'inizio del pulsante Collezioni POI
@@ -5192,7 +5472,7 @@ function SelectSystems({ planning, onBack, onApply }) {
     };
   }, []);
 
-  // ── Zone highlight circles (Google Maps) ─────────────────
+  // ── Zone overlays (Google Maps) — usa geometria reale Overpass, fallback approssimato ──
   React.useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -5201,23 +5481,48 @@ function SelectSystems({ planning, onBack, onApply }) {
     appliedZones.forEach(z => {
       const target = z.target;
       if (!target || !target.lat || !target.lng) return;
-      const r = ZONE_RADIUS(target.type);
-      // Stile diverso per zone ampie (provincia/città) vs zone strette (quartiere/via)
-      const isLarge = target.type === 'province' || target.type === 'city';
-      const circle = new google.maps.Circle({
-        map,
-        center: { lat: target.lat, lng: target.lng },
-        radius: r,
-        strokeColor: isLarge ? 'rgba(0,0,0,0.22)' : 'rgba(62,0,251,0.45)',
-        strokeOpacity: 1,
-        strokeWeight: isLarge ? 1 : 1.5,
-        strokeDasharray: isLarge ? undefined : '6 4',
-        fillColor: isLarge ? 'transparent' : '#3E00FB',
-        fillOpacity: isLarge ? 0 : 0.04,
-      });
-      zoneCirclesRef.current.push(circle);
+      const strokeColor = 'rgba(0,0,0,0.28)';
+      const strokeWeight = 1.5;
+      const fillColor   = '#000000';
+      const fillOpacity = 0.04;
+
+      const geo = zoneGeometries.get(z.text);
+
+      if (geo?.type === 'polygon' && geo.paths?.length) {
+        // Geometria reale — ogni elemento è [outerRing, ...holes] → un Polygon per feature
+        geo.paths.forEach(polygonRings => {
+          const polygon = new google.maps.Polygon({
+            map, paths: polygonRings,
+            strokeColor, strokeOpacity: 1, strokeWeight,
+            fillColor, fillOpacity,
+          });
+          zoneCirclesRef.current.push(polygon);
+        });
+
+      } else if (geo?.type === 'polyline' && geo.paths?.length) {
+        // Via/strada — disegna come Polyline spessa
+        geo.paths.forEach(line => {
+          const pl = new google.maps.Polyline({
+            map, path: line,
+            strokeColor: 'rgba(62,0,251,0.85)',
+            strokeOpacity: 1, strokeWeight: 5,
+          });
+          zoneCirclesRef.current.push(pl);
+        });
+
+      } else {
+        // Fallback approssimato (in attesa del fetch o fetch fallito)
+        const r = ZONE_RADIUS(target.type);
+        const path = zonePolygonPath(target.lat, target.lng, r);
+        const polygon = new google.maps.Polygon({
+          map, paths: path,
+          strokeColor, strokeOpacity: 1, strokeWeight,
+          fillColor, fillOpacity,
+        });
+        zoneCirclesRef.current.push(polygon);
+      }
     });
-  }, [appliedZones]);
+  }, [appliedZones, zoneGeometries]);
 
   // ── POI circles + markers (Google Maps) ──────────────────
   React.useEffect(() => {
@@ -5246,25 +5551,21 @@ function SelectSystems({ planning, onBack, onApply }) {
           fillOpacity: 0.07,
         });
 
-        // Marker icona categoria
-        const size = isMulti ? 18 : 26;
-        const emojiSvg = poi.antIcon
-          ? catIconSvg(poi.antIcon, pinColor, size)
-          : (() => {
-              const r2 = size / 2 - 1.5;
-              return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">`
-                + `<circle cx="${size/2}" cy="${size/2}" r="${r2}" fill="${pinColor}" fill-opacity="0.85" stroke="white" stroke-width="2"/>`
-                + `</svg>`;
-            })();
+        // Marker POI: cerchio colorato con icona dentro
         const radiusLabel = POI_UNIT_CONFIG[poiRadiusUnit]?.fmt(poiRadiusIdx) ?? `${radiusM} m`;
         const tooltipText = isMulti
           ? `${poi.label} (${idx + 1}/${pts.length}) — Raggio: ${radiusLabel}`
           : `${poi.label} — Raggio: ${radiusLabel}`;
+
+        const size = isMulti ? 20 : 28;
+        const iconName = poi.isCategory ? (poi.antIcon || 'EnvironmentOutlined') : 'PushpinOutlined';
+        const markerSvg = catIconSvg(iconName, pinColor, size);
+
         const marker = new google.maps.Marker({
           map,
           position: { lat: pt.lat, lng: pt.lng },
           icon: {
-            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(emojiSvg),
+            url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(markerSvg),
             scaledSize: new google.maps.Size(size, size),
             anchor: new google.maps.Point(size / 2, size / 2),
           },
@@ -5633,7 +5934,7 @@ function SelectSystems({ planning, onBack, onApply }) {
                   const c = p.color || '#FF4A1C';
                   return React.createElement('span', { key: p.id, className: 'ss-input-tag',
                     style: { background: `${c}14`, border: `1px solid ${c}55`, color: c } },
-                    React.createElement(icons.EnvironmentOutlined, { style: { fontSize: 11 } }), ' ', p.label,
+                    React.createElement(icons.PushpinOutlined, { style: { fontSize: 11 } }), ' ', p.label,
                     React.createElement('span', {
                       className: 'ss-input-tag-x', style: { color: c },
                       onMouseDown: e => { e.preventDefault(); removePoi(p.id); },
@@ -5783,7 +6084,7 @@ function SelectSystems({ planning, onBack, onApply }) {
                             ? activePois.some(p => p.collectionId === item.id)
                             : activePois.some(p => p.id === item.id || p.label === item.label);
                           const color = isCollection ? (item.color || '#3E00FB') : '#FF4A1C';
-                          const Icon  = isCollection ? (icons[item.antIcon] || icons.AimOutlined) : icons.EnvironmentOutlined;
+                          const Icon  = isCollection ? (icons[item.antIcon] || icons.AimOutlined) : icons.PushpinOutlined;
                           const sub   = isCollection ? `${item.points.length} punti` : (item.detail || '');
                           return React.createElement('div', {
                             key: item.id || item.key,
@@ -6266,7 +6567,7 @@ function SelectSystems({ planning, onBack, onApply }) {
                 }
               },
             },
-              React.createElement(icons.EnvironmentOutlined, { style: { fontSize: 11, color: '#FF4A1C' } }),
+              React.createElement(icons.PushpinOutlined, { style: { fontSize: 11, color: '#FF4A1C' } }),
               s.label
             )
           )
