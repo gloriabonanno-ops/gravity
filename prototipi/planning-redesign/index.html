@@ -1905,7 +1905,7 @@ const SEARCH_RESULTS = (() => {
 
   // [street, startLat, startLng, endLat, endLng, count, city, province, channel]
   // channel: 'OOH' (arredo urbano classico) | 'DOOH' (digitale, strade ad alto traffico)
-  // Totale: 524 spazi — 394 OOH · 130 DOOH
+  // Totale: ~582 spazi — ~452 OOH · 130 DOOH
   const ZONES = window._GRAVITY_ZONES = [
     // ── PALERMO — DOOH ───────────────────────────────────────────────────────
     ['Via della Libertà',        38.1196, 13.3570, 38.1490, 13.3408, 14, 'Palermo',          'PA', 'DOOH'],
@@ -1932,6 +1932,15 @@ const SEARCH_RESULTS = (() => {
     ['Via Ausonia',              38.1148, 13.3658, 38.1172, 13.3705,  8, 'Palermo',          'PA', 'OOH'],
     ['Via Duca della Verdura',   38.1202, 13.3518, 38.1228, 13.3572,  6, 'Palermo',          'PA', 'OOH'],
     ['Piazza Sturzo',            38.1150, 13.3578, 38.1165, 13.3602,  6, 'Palermo',          'PA', 'OOH'],
+    // ── PALERMO — Centro Storico — OOH ───────────────────────────────────────
+    ['Via Ruggero Settimo',      38.1172, 13.3548, 38.1196, 13.3565,  8, 'Palermo',          'PA', 'OOH'],
+    ['Piazza Verdi',             38.1168, 13.3538, 38.1182, 13.3562,  6, 'Palermo',          'PA', 'OOH'],
+    ['Via Lincoln',              38.1082, 13.3658, 38.1105, 13.3722,  8, 'Palermo',          'PA', 'OOH'],
+    ['Piazza Pretoria',          38.1135, 13.3608, 38.1148, 13.3628,  6, 'Palermo',          'PA', 'OOH'],
+    ['Via Alloro',               38.1112, 13.3668, 38.1135, 13.3718,  8, 'Palermo',          'PA', 'OOH'],
+    ['Via Bara all\'Olivella',   38.1180, 13.3578, 38.1195, 13.3625,  6, 'Palermo',          'PA', 'OOH'],
+    ['Via Bandiera',             38.1118, 13.3638, 38.1138, 13.3688,  6, 'Palermo',          'PA', 'OOH'],
+    ['Via Vittorio Emanuele Orlando', 38.1138, 13.3565, 38.1158, 13.3610,  6, 'Palermo',     'PA', 'OOH'],
     // ── TRAPANI — DOOH ────────────────────────────────────────────────────────
     ['Via Fardella',             37.9782, 12.6048, 37.9865, 12.6148, 10, 'Trapani',          'TP', 'DOOH'],
     // ── TRAPANI — OOH ─────────────────────────────────────────────────────────
