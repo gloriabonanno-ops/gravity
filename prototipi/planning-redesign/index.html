@@ -2909,7 +2909,13 @@ async function photonSuggest(query, limit = 7) {
     if (!res.ok) return [];
     const data = await res.json();
     const seen = new Set();
+    // Filtro aggiuntivo sulle coordinate: Sicilia Occidentale (PA, TP, AG)
+    const [bboxMinLng, bboxMinLat, bboxMaxLng, bboxMaxLat] = PHOTON_BBOX.split(',').map(Number);
     return (data.features || [])
+      .filter(f => {
+        const [lng, lat] = f.geometry?.coordinates || [];
+        return lng >= bboxMinLng && lng <= bboxMaxLng && lat >= bboxMinLat && lat <= bboxMaxLat;
+      })
       .map(photonFeatureToZone)
       .filter(z => { if (!z || seen.has(z.label)) return false; seen.add(z.label); return true; });
   } catch { return []; }
@@ -5390,8 +5396,13 @@ out geom;`;
         { input: q, bounds: SICILY_BOUNDS, strictBounds: true, language: 'it' },
         (predictions, status) => {
           if (status !== google.maps.places.PlacesServiceStatus.OK || !predictions) return;
+          // strictBounds non è affidabile per query brevi: filtro aggiuntivo su "Sicilia"
+          const sicilian = predictions.filter(p =>
+            p.description.toLowerCase().includes('sicil') ||
+            (p.structured_formatting?.secondary_text || '').toLowerCase().includes('sicil')
+          );
           const groups = {};
-          predictions.forEach(pred => {
+          sicilian.forEach(pred => {
             const types = pred.types || [];
             let type, gk, gl;
             if (types.includes('locality') || types.includes('administrative_area_level_3')) {
