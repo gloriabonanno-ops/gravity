@@ -306,7 +306,7 @@
     .ni-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 
     /* ── Create page ── */
-    .create-page { flex: 1; min-height: 0; display: flex; flex-direction: column; background: #fff; overflow: hidden; }
+    .create-page { flex: 1; min-height: 0; display: flex; flex-direction: column; background: #F5F5F5; overflow: hidden; }
     .create-topbar { display: flex; align-items: center; gap: 8px; height: 52px; padding: 0 24px; background: #fff; border-bottom: 1px solid #F0F0F0; flex-shrink: 0; }
     .create-body { flex: 1; min-height: 0; display: flex; overflow: hidden; }
     .create-nav { width: 188px; flex-shrink: 0; padding: 20px 12px; background: #fff; border-right: 1px solid #F0F0F0; overflow-y: auto; }
@@ -327,6 +327,17 @@
     .ni-switch-sub   { font-size: 12px; color: rgba(0,0,0,0.45); margin-top: 1px; }
     .ni-entity-tag { display: inline-flex; align-items: center; gap: 6px; background: #F5F5F5; border: 1px solid #D9D9D9; border-radius: 4px; padding: 3px 8px; font-size: 12px; color: rgba(0,0,0,0.75); margin: 3px 4px 3px 0; }
     .ni-entity-tag-remove { cursor: pointer; color: rgba(0,0,0,0.35); font-size: 10px; }
+
+    /* ── Modale Nuovo Impianto ─────────────────────────────── */
+    .nim-field { margin-bottom: 16px; }
+    .nim-field:last-child { margin-bottom: 0; }
+    .nim-label { font-size: 13px; color: rgba(0,0,0,0.65); margin-bottom: 5px; }
+    .nim-label .req { color: #FF4D4F; }
+    .nim-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .nim-grid-addr { display: grid; grid-template-columns: 1fr 88px; gap: 12px; }
+    .nim-section-title { font-size: 11px; font-weight: 600; color: rgba(0,0,0,0.35); text-transform: uppercase; letter-spacing: .07em; margin: 20px 0 12px; }
+    .nim-section-title:first-child { margin-top: 0; }
+
     /* ── Impianto Detail Page ───────────────────────────────── */
     .imp-detail-page { flex: 1; min-height: 0; overflow-y: auto; background: #f5f5f5; }
     .imp-detail-cover { height: 200px; display: flex; gap: 3px; overflow: hidden; background: #111; position: relative; flex-shrink: 0; }
@@ -351,7 +362,7 @@
 <div id="root"></div>
 <script>
 const { useState, useEffect, useRef, useCallback, useMemo } = React;
-const { ConfigProvider, Input, Tag, Badge, Avatar, Button, Empty, Drawer, InputNumber, Switch, Typography, Popover, Menu, Divider, Segmented, Table, Space, Cascader, Select, Dropdown, Form, AutoComplete, DatePicker, Upload, Tabs, Descriptions, Tooltip, Modal, Collapse, Pagination, Checkbox, Carousel, Row, Col, Card } = antd;
+const { ConfigProvider, Input, Tag, Badge, Avatar, Button, Empty, Drawer, InputNumber, Switch, Typography, Popover, Menu, Divider, Segmented, Table, Space, Cascader, Select, Dropdown, Form, AutoComplete, DatePicker, Upload, Modal, Tabs, Descriptions, Tooltip, Collapse, Pagination, Checkbox, Carousel, Row, Col, Card } = antd;
 const { Text } = Typography;
 const {
   SearchOutlined, BellOutlined, PlusOutlined, AppstoreOutlined, SendOutlined,
@@ -592,7 +603,6 @@ const MACRO_TIPI = {
   'Arredi urbani': ['Pensilina', 'Cassonetto', 'Palo luce', 'Fioriera', 'Parapedonale'],
   'Altro':         ['Telo', 'Fermata bus', 'Speciale'],
 };
-
 const FORMATI_PER_TIPO = {
   'Poster':           ['6×3 m', '4×3 m', '2×1 m'],
   'Rotor':            ['4×3 m', '3×2 m'],
@@ -843,6 +853,11 @@ const TIPO_TO_FOLDER = {
   'Cartello':         'OOH/cartello',
   'Poster':           'OOH/plancia',
 };
+const STATO_TO_FILE = {
+  'Disponibile': 'available',
+  'In Opzione':  'inOption',
+  'Riservato':   'reserved',
+};
 const STATO_AMM_CONFIG = {
   'Attivo':          { color: 'blue',    dot: '#1677FF', file: 'active'       },
   'In Manutenzione': { color: 'orange',  dot: '#FA8C16', file: 'maintenance'  },
@@ -974,7 +989,7 @@ const makeClusterSvg = (count) => {
   return { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), size: s };
 };
 
-function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect, onMarkerClick, onDetail, cardImp, onCardClose, flyToTarget }) {
+function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect, onMarkerClick, cardImp, onCardClose, onDetail, flyToTarget }) {
   const containerRef  = useRef(null);
   const mapRef        = useRef(null);
   const clustererRef  = useRef(null);
@@ -1052,7 +1067,6 @@ function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect
         openInfoRef.current = null;
       });
       marker.addListener('click', () => { if (onMarkerClick) onMarkerClick(imp); else onSelect(imp.id); });
-      if (onDetail) marker.addListener('dblclick', () => onDetail(imp));
 
       markersRef.current[imp.id] = { marker, imp, infoWindow };
       return marker;
@@ -2247,27 +2261,6 @@ function NewImpiantoDrawer({ open, onClose }) {
 }
 
 // ─────────────────────────────────────────────────────────
-// NUOVO IMPIANTO — PAGINA COMPLETA
-// ─────────────────────────────────────────────────────────
-const PROPRIETA_OPTS       = ['Comune','Città Metropolitana','Demanio pubblico','Proprietà privata','Altra PA'].map(v=>({value:v,label:v}));
-const MEDIA_ESTERNO_OPTS   = ['IGPDecaux','Clear Channel','Pubbliemma','Urban Vision','Posterscope','Nessuno'].map(v=>({value:v,label:v}));
-const TIPO_SUOLO_OPTS      = ['Pubblico','Privato','Demaniale','Stradale'].map(v=>({value:v,label:v}));
-const CAT_SUOLO_OPTS       = ['Urbano','Extraurbano','Autostradale','Pedonale'].map(v=>({value:v,label:v}));
-const CLASSE_COMUNE_OPTS   = ['A','B','C','D','E'].map(v=>({value:v,label:v}));
-const TIPO_FACCIA_OPTS     = ['Singola','Bifacciale','Trifacciale','Multifacciale'].map(v=>({value:v,label:v}));
-const ORIENTAMENTO_OPTS    = ['Nord','Nord-Est','Est','Sud-Est','Sud','Sud-Ovest','Ovest','Nord-Ovest'].map(v=>({value:v,label:v}));
-const RIPARATO_OPTS        = ['Riparato','Aperto'].map(v=>({value:v,label:v}));
-const MODELLO_VENDITA_OPTS = ['Flat','CPM','Revenue share','Programmatic','Forfait settimanale','Forfait mensile'].map(v=>({value:v,label:v}));
-const PRB_MDL_OPTS         = ['PRB','MDL'].map(v=>({value:v,label:v}));
-const STATO_GC_OPTS        = ['Approvato','In corso','Non richiesto','Respinto'].map(v=>({value:v,label:v}));
-const TIPO_FONDAZIONE_OPTS = ['Platea','Plinti','Pali','Travi rovesce','Micropali'].map(v=>({value:v,label:v}));
-const TIPO_PALI_OPTS       = ['Acciaio','Alluminio','Vetroresina','Calcestruzzo'].map(v=>({value:v,label:v}));
-const TIPO_CORNICE_OPTS    = ['Semplice','Doppia','Rinforzata','Profilata'].map(v=>({value:v,label:v}));
-const TIPO_PANNELLI_OPTS   = ['Alluminio','Acciaio','Legno','Composito','PVC'].map(v=>({value:v,label:v}));
-const TIPO_MAN_OPTS        = ['Ordinaria','Straordinaria','Urgente','Preventiva'].map(v=>({value:v,label:v}));
-const TIPO_AMM_OPTS        = ['Lineare','Degress','A quote costanti'].map(v=>({value:v,label:v}));
-
-// ─────────────────────────────────────────────────────────
 // IMPIANTO DETAIL PAGE
 // ─────────────────────────────────────────────────────────
 const antdMsg = antd.message;
@@ -3093,29 +3086,229 @@ function ImpiantoDetailPage({ imp, onBack }) {
 }
 
 // ─────────────────────────────────────────────────────────
-// FULL FORM NUOVO IMPIANTO
+// MODALE NUOVO IMPIANTO
 // ─────────────────────────────────────────────────────────
-function NewImpiantoPage({ onClose }) {
-  // ── Identità
+function NewImpiantoModal({ open, onClose, onCrea, onContinua }) {
   const [canale,    setCanale]    = useState(null);
-  const [nome,      setNome]      = useState('');
   const [tipologia, setTipologia] = useState(null);
   const [formato,   setFormato]   = useState(null);
+  const [nome,      setNome]      = useState('');
+  const [stato,     setStato]     = useState(null);
+  const [addrSuggs, setAddrSuggs] = useState([]);
+  const [via,       setVia]       = useState('');
+  const [civico,    setCivico]    = useState('');
+  const [cap,       setCap]       = useState('');
+  const [citta,     setCitta]     = useState('');
+  const [provincia, setProvincia] = useState('');
+  const [regione,   setRegione]   = useState('');
+  const [nazione,   setNazione]   = useState('');
+  const [lat,       setLat]       = useState('');
+  const [lng,       setLng]       = useState('');
+  const debRef = useRef(null);
+
+  const reset = () => {
+    setCanale(null); setTipologia(null); setFormato(null);
+    setNome(''); setStato(null);
+    setVia(''); setCivico(''); setCap(''); setCitta('');
+    setProvincia(''); setRegione(''); setNazione(''); setLat(''); setLng('');
+    setAddrSuggs([]);
+  };
+
+  const handleClose = () => { reset(); onClose(); };
+
+  const canSave = canale && tipologia && formato && via.trim() && citta.trim() && stato;
+
+  const tipologieOpts = React.useMemo(() =>
+    Object.entries(MACRO_TIPI).map(([group, tipi]) => ({
+      label: group, options: tipi.map(t => ({ value: t, label: t })),
+    })), []);
+  const formatiOpts = React.useMemo(() =>
+    tipologia ? (FORMATI_PER_TIPO[tipologia] || []).map(f => ({ value: f, label: f })) : [],
+    [tipologia]);
+
+  const applyAddr = (s) => {
+    setVia(s.via); setCivico(s.civico || ''); setAddrSuggs([]);
+    setCap(s.cap); setCitta(s.citta);
+    setProvincia(s.provincia); setRegione(s.regione); setNazione(s.nazione);
+    setLat(String(s.lat.toFixed(6))); setLng(String(s.lng.toFixed(6)));
+  };
+  const handleViaSearch = (val) => {
+    setVia(val);
+    if (debRef.current) clearTimeout(debRef.current);
+    if (val && val.length >= 3) {
+      debRef.current = setTimeout(async () => {
+        setAddrSuggs(await fetchAddrSuggestions(val));
+      }, 350);
+    } else {
+      setAddrSuggs([]);
+    }
+  };
+
+  const nf = (label, required, children) =>
+    React.createElement('div', { className: 'nim-field' },
+      React.createElement('div', { className: 'nim-label' },
+        label, required && React.createElement('span', { className: 'req' }, ' *'),
+      ),
+      children,
+    );
+
+  const viaAC = React.createElement(AutoComplete, {
+    style: { width: '100%' }, value: via,
+    options: addrSuggs.map(s => ({
+      value: s.via, key: s.id, _sdata: s,
+      label: React.createElement('div', { style: { display: 'flex', gap: 8, alignItems: 'flex-start', padding: '2px 0' } },
+        React.createElement('div', { style: { width: 24, height: 24, borderRadius: 4, background: 'rgba(62,0,251,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 } },
+          React.createElement(EnvironmentOutlined, { style: { fontSize: 11, color: '#3E00FB' } })
+        ),
+        React.createElement('div', { style: { flex: 1, minWidth: 0 } },
+          React.createElement('div', { style: { fontSize: 13, fontWeight: 500, color: 'rgba(0,0,0,0.85)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, s.display),
+          s.sub && React.createElement('div', { style: { fontSize: 11, color: 'rgba(0,0,0,0.45)', marginTop: 1 } }, s.sub),
+        ),
+      ),
+    })),
+    onSearch: handleViaSearch,
+    onChange: (val) => { if (typeof val === 'string') setVia(val); },
+    onSelect: (val, option) => { if (option._sdata) applyAddr(option._sdata); },
+    onClear: () => { setVia(''); setAddrSuggs([]); },
+    allowClear: true, notFoundContent: null,
+    popupMatchSelectWidth: true, getPopupContainer: () => document.body,
+  },
+    React.createElement(Input, {
+      prefix: React.createElement(EnvironmentOutlined, { style: { color: 'rgba(0,0,0,0.3)' } }),
+      placeholder: 'Es. Via Maqueda, Palermo…',
+    })
+  );
+
+  const collectData = () => ({
+    id: 'IMP-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+    codice: (canale || 'OOH') + '-' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+    canale, tipologia, formato, nome, stato,
+    via, civico, cap, citta, provincia, regione, nazione, lat, lng,
+    autorizzazioni: [], concessioni: [],
+  });
+
+  return React.createElement(Modal, {
+    open,
+    title: 'Nuovo Impianto',
+    onCancel: handleClose,
+    width: 560,
+    footer: React.createElement('div', { style: { display: 'flex', justifyContent: 'flex-end', gap: 8 } },
+      React.createElement(Button, {
+        disabled: !canSave,
+        onClick: () => { onContinua(collectData()); handleClose(); },
+      }, 'Completa'),
+      React.createElement(Button, {
+        type: 'primary', disabled: !canSave,
+        onClick: () => { onCrea(collectData()); handleClose(); },
+      }, 'Crea'),
+    ),
+  },
+
+    // ── Identità
+    React.createElement('div', { className: 'nim-section-title' }, 'Identità'),
+    React.createElement('div', { className: 'nim-grid-2' },
+      nf('Canale', true,
+        React.createElement(Select, {
+          value: canale, onChange: v => { setCanale(v); setTipologia(null); setFormato(null); },
+          options: CANALI_OPTS, style: { width: '100%' }, placeholder: 'OOH o DOOH?',
+        })
+      ),
+      nf('Nome impianto', false,
+        React.createElement(Input, { value: nome, onChange: e => setNome(e.target.value), placeholder: 'Es. Pensilina Piazza Verdi A' })
+      ),
+    ),
+    React.createElement('div', { className: 'nim-grid-2' },
+      nf('Tipologia', true,
+        React.createElement(Select, {
+          value: tipologia,
+          onChange: v => { setTipologia(v); setFormato(null); },
+          options: tipologieOpts,
+          disabled: !canale, showSearch: true,
+          style: { width: '100%' },
+          placeholder: canale ? 'Es. Pensilina, Palina…' : 'Prima seleziona il canale',
+        })
+      ),
+      nf('Formato', true,
+        React.createElement(Select, {
+          value: formato, onChange: setFormato,
+          options: formatiOpts, disabled: !tipologia,
+          style: { width: '100%' },
+          placeholder: tipologia ? 'Seleziona formato' : 'Prima seleziona la tipologia',
+        })
+      ),
+    ),
+
+    // ── Localizzazione
+    React.createElement('div', { className: 'nim-section-title' }, 'Localizzazione'),
+    React.createElement('div', { className: 'nim-grid-addr' },
+      nf('Via', true, viaAC),
+      nf('N. civico', false,
+        React.createElement(Input, { value: civico, onChange: e => setCivico(e.target.value), placeholder: '—' })
+      ),
+    ),
+    React.createElement('div', { className: 'nim-grid-2' },
+      nf('Città', true,
+        React.createElement(Input, { value: citta, onChange: e => setCitta(e.target.value), placeholder: '—' })
+      ),
+      nf('Provincia', false,
+        React.createElement(Input, { value: provincia, onChange: e => setProvincia(e.target.value), placeholder: '—' })
+      ),
+    ),
+
+    // ── Gestione
+    React.createElement('div', { className: 'nim-section-title' }, 'Gestione'),
+    nf('Stato', true,
+      React.createElement(Select, {
+        value: stato, onChange: setStato,
+        options: STATI_AMM_OPTS, style: { width: '100%' }, placeholder: 'Seleziona',
+      })
+    ),
+  );
+}
+
+// ─────────────────────────────────────────────────────────
+// NUOVO IMPIANTO — PAGINA COMPLETA
+// ─────────────────────────────────────────────────────────
+const PROPRIETA_OPTS       = ['Comune','Città Metropolitana','Demanio pubblico','Proprietà privata','Altra PA'].map(v=>({value:v,label:v}));
+const MEDIA_ESTERNO_OPTS   = ['IGPDecaux','Clear Channel','Pubbliemma','Urban Vision','Posterscope','Nessuno'].map(v=>({value:v,label:v}));
+const TIPO_SUOLO_OPTS      = ['Pubblico','Privato','Demaniale','Stradale'].map(v=>({value:v,label:v}));
+const CAT_SUOLO_OPTS       = ['Urbano','Extraurbano','Autostradale','Pedonale'].map(v=>({value:v,label:v}));
+const CLASSE_COMUNE_OPTS   = ['A','B','C','D','E'].map(v=>({value:v,label:v}));
+const TIPO_FACCIA_OPTS     = ['Singola','Bifacciale','Trifacciale','Multifacciale'].map(v=>({value:v,label:v}));
+const ORIENTAMENTO_OPTS    = ['Nord','Nord-Est','Est','Sud-Est','Sud','Sud-Ovest','Ovest','Nord-Ovest'].map(v=>({value:v,label:v}));
+const RIPARATO_OPTS        = ['Riparato','Aperto'].map(v=>({value:v,label:v}));
+const MODELLO_VENDITA_OPTS = ['Flat','CPM','Revenue share','Programmatic','Forfait settimanale','Forfait mensile'].map(v=>({value:v,label:v}));
+const PRB_MDL_OPTS         = ['PRB','MDL'].map(v=>({value:v,label:v}));
+const STATO_GC_OPTS        = ['Approvato','In corso','Non richiesto','Respinto'].map(v=>({value:v,label:v}));
+const TIPO_FONDAZIONE_OPTS = ['Platea','Plinti','Pali','Travi rovesce','Micropali'].map(v=>({value:v,label:v}));
+const TIPO_PALI_OPTS       = ['Acciaio','Alluminio','Vetroresina','Calcestruzzo'].map(v=>({value:v,label:v}));
+const TIPO_CORNICE_OPTS    = ['Semplice','Doppia','Rinforzata','Profilata'].map(v=>({value:v,label:v}));
+const TIPO_PANNELLI_OPTS   = ['Alluminio','Acciaio','Legno','Composito','PVC'].map(v=>({value:v,label:v}));
+const TIPO_MAN_OPTS        = ['Ordinaria','Straordinaria','Urgente','Preventiva'].map(v=>({value:v,label:v}));
+const TIPO_AMM_OPTS        = ['Lineare','Degress','A quote costanti'].map(v=>({value:v,label:v}));
+
+function NewImpiantoFullDrawer({ open, onClose, initialValues = {} }) {
+  const iv = initialValues;
+  // ── Identità
+  const [canale,    setCanale]    = useState(iv.canale    || null);
+  const [nome,      setNome]      = useState(iv.nome      || '');
+  const [tipologia, setTipologia] = useState(iv.tipologia || null);
+  const [formato,   setFormato]   = useState(iv.formato   || null);
   const [moduli,    setModuli]    = useState(null);
   const [dimModuli, setDimModuli] = useState('');
-  const [stato,     setStato]     = useState(null);
+  const [stato,     setStato]     = useState(iv.stato     || null);
 
   // ── Localizzazione
   const [addrSuggs,   setAddrSuggs]   = useState([]);
-  const [via,         setVia]         = useState('');
-  const [civico,      setCivico]      = useState('');
-  const [cap,         setCap]         = useState('');
-  const [citta,       setCitta]       = useState('');
-  const [provincia,   setProvincia]   = useState('');
-  const [regione,     setRegione]     = useState('');
-  const [nazione,     setNazione]     = useState('');
-  const [lat,         setLat]         = useState('');
-  const [lng,         setLng]         = useState('');
+  const [via,         setVia]         = useState(iv.via       || '');
+  const [civico,      setCivico]      = useState(iv.civico    || '');
+  const [cap,         setCap]         = useState(iv.cap       || '');
+  const [citta,       setCitta]       = useState(iv.citta     || '');
+  const [provincia,   setProvincia]   = useState(iv.provincia || '');
+  const [regione,     setRegione]     = useState(iv.regione   || '');
+  const [nazione,     setNazione]     = useState(iv.nazione   || '');
+  const [lat,         setLat]         = useState(iv.lat       || '');
+  const [lng,         setLng]         = useState(iv.lng       || '');
   const [tipoSuolo,   setTipoSuolo]   = useState(null);
   const [catSuolo,    setCatSuolo]    = useState(null);
   const [codiceArea,  setCodiceArea]  = useState('');
@@ -3224,7 +3417,6 @@ function NewImpiantoPage({ onClose }) {
     { id: 'permessi',        label: 'Permessi' },
     { id: 'struttura',       label: 'Struttura' },
     { id: 'manutenzione',    label: 'Manutenzione' },
-    { id: 'contabilita',     label: 'Contabilità' },
     { id: 'galleria',        label: 'Galleria' },
     { id: 'note',            label: 'Note' },
   ];
@@ -3347,19 +3539,19 @@ function NewImpiantoPage({ onClose }) {
     })
   );
 
-  return React.createElement('div', { className: 'create-page' },
-
-    React.createElement('div', { className: 'create-topbar' },
-      React.createElement(Button, { type: 'text', size: 'small', icon: React.createElement(ArrowLeftOutlined), onClick: onClose, style: { color: 'rgba(0,0,0,0.45)', marginRight: 4 } }),
-      React.createElement(Text, { style: { color: 'rgba(0,0,0,0.45)', fontSize: 13 } }, 'Systems Map'),
-      React.createElement('span', { style: { color: 'rgba(0,0,0,0.2)', margin: '0 6px', fontSize: 13 } }, '/'),
-      React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Nuovo Impianto'),
-      React.createElement('div', { style: { flex: 1 } }),
-      React.createElement(Space, null,
-        React.createElement(Button, { onClick: onClose }, 'Annulla'),
-        React.createElement(Button, { type: 'primary', disabled: !canSave, icon: React.createElement(PlusOutlined) }, 'Salva'),
-      ),
+  return React.createElement(Drawer, {
+    open: open,
+    onClose: onClose,
+    placement: 'right',
+    width: 1000,
+    destroyOnClose: true,
+    title: 'Nuovo Impianto',
+    footer: React.createElement(Space, { style: { justifyContent: 'flex-end', display: 'flex' } },
+      React.createElement(Button, { onClick: onClose }, 'Annulla'),
+      React.createElement(Button, { type: 'primary', disabled: !canSave, icon: React.createElement(PlusOutlined) }, 'Crea Impianto'),
     ),
+    styles: { body: { padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' } },
+  },
 
     React.createElement('div', { className: 'create-body' },
 
@@ -3553,29 +3745,7 @@ function NewImpiantoPage({ onClose }) {
           ),
         ),
 
-        // ── 9. Contabilità
-        sec('contabilita', 'Contabilità',
-          sub('Cespite'),
-          g3(
-            cs('Codice cespite', false, inp(codCespite,    setCodCespite,    '—')),
-            cs('Data acquisto',  false, dp(dataCespite,    setDataCespite)),
-            cs('Valore (€)',     false, num(valoreCespite, setValoreCespite, { min: 0, precision: 2 })),
-          ),
-          sub('Piano di ammortamento'),
-          g3(
-            cs('Tipo',           false, sel(tipoAmm,       setTipoAmm,       TIPO_AMM_OPTS)),
-            cs('Durata (anni)',   false, num(anniAmm,       setAnniAmm,       { min: 1, max: 50 })),
-            cs('Valore residuo (€)', false, num(valoreResiduo, setValoreResiduo, { min: 0, precision: 2 })),
-          ),
-          g2(
-            cs('Centro di costo', false, inp(centroCosto, setCentroCosto, '—')),
-            cs('Note contabili',  false,
-              React.createElement(Input.TextArea, { value: noteContabili, onChange: e => setNoteContabili(e.target.value), placeholder: '—', autoSize: { minRows: 2, maxRows: 4 } })
-            ),
-          ),
-        ),
-
-        // ── 10. Galleria
+        // ── 9. Galleria
         sec('galleria', 'Galleria',
           React.createElement('div', { style: { marginBottom: 8, fontSize: 13, color: 'rgba(0,0,0,0.45)' } },
             'Carica foto dell\'impianto: facciata, dettagli strutturali, contesto urbano.'
@@ -3613,7 +3783,10 @@ function NewImpiantoPage({ onClose }) {
 // APP
 // ─────────────────────────────────────────────────────────
 function App() {
-  const [page, setPage] = useState('map'); // 'map' | 'create'
+  const [page, setPage] = useState('map'); // 'map' | 'detail'
+  const [modalOpen,      setModalOpen]      = useState(false);
+  const [fullFormOpen,   setFullFormOpen]   = useState(false);
+  const [prefillData,    setPrefillData]    = useState({});
   const [detailImpianto, setDetailImpianto] = useState(null);
   const [cardImp,        setCardImp]        = useState(null);
   const [highlightedId, setHighlightedId] = useState(null);
@@ -3925,10 +4098,8 @@ function App() {
   return React.createElement('div', { className: 'app-shell' },
     React.createElement(Navbar),
 
-    detailImpianto
-      ? React.createElement(ImpiantoDetailPage, { imp: detailImpianto, onBack: () => setDetailImpianto(null) })
-      : page === 'create'
-      ? React.createElement(NewImpiantoPage, { onClose: () => setPage('map') })
+    page === 'detail'
+      ? React.createElement(ImpiantoDetailPage, { imp: detailImpianto, onBack: () => setPage('map') })
       : React.createElement('div', { className: 'ooh-workspace' },
 
       // ── SEARCH CARD (top) ──────────────────────────────
@@ -4028,11 +4199,24 @@ function App() {
                   icon: React.createElement(PlusOutlined),
                 }, 'Aggiungi'),
               ),
-              React.createElement(Button, {
-                type: 'primary',
-                icon: React.createElement(PlusOutlined),
-                onClick: () => setPage('create'),
-              }, 'Nuovo Impianto'),
+              React.createElement(Dropdown, {
+                menu: {
+                  items: [
+                    { key: 'breve', label: 'Form breve' },
+                    { key: 'completa', label: 'Form completo' },
+                  ],
+                  onClick: ({ key }) => {
+                    if (key === 'breve') setModalOpen(true);
+                    else setFullFormOpen(true);
+                  },
+                },
+                placement: 'bottomRight',
+              },
+                React.createElement(Button, {
+                  type: 'primary',
+                  icon: React.createElement(PlusOutlined),
+                }, 'Nuovo Impianto'),
+              ),
             ),
           ),
 
@@ -4063,9 +4247,9 @@ function App() {
               filteredIds,
               onSelect:         handleHighlight,
               onMarkerClick:    handleMarkerClick,
-              onDetail:         (imp) => setDetailImpianto(imp),
               cardImp,
               onCardClose:      () => { setCardImp(null); setHighlightedId(null); },
+              onDetail:         (imp) => { setDetailImpianto(imp); setPage('detail'); },
               flyToTarget,
             }),
 
@@ -4101,7 +4285,7 @@ function App() {
               })
             ),
           )
-        : React.createElement(ListView, { impianti: filteredImpianti, viewMode, setViewMode, onDetail: (imp) => setDetailImpianto(imp) })
+        : React.createElement(ListView, { impianti: filteredImpianti, viewMode, setViewMode, onDetail: (imp) => { setDetailImpianto(imp); setPage('detail'); } })
     ),
 
     React.createElement(Drawer, {
@@ -4128,6 +4312,25 @@ function App() {
         minFacesValue: draftFilters.minFacesValue,    onMinFacesValueChange:     v => setDraft('minFacesValue', v),
       })
     ),
+
+    React.createElement(NewImpiantoModal, {
+      open: modalOpen,
+      onClose: () => setModalOpen(false),
+      onCrea: (imp) => {
+        setDetailImpianto(imp);
+        setPage('detail');
+      },
+      onContinua: (data) => {
+        setPrefillData(data);
+        setModalOpen(false);
+        setFullFormOpen(true);
+      },
+    }),
+    React.createElement(NewImpiantoFullDrawer, {
+      open: fullFormOpen,
+      onClose: () => setFullFormOpen(false),
+      initialValues: prefillData,
+    }),
   );
 }
 
