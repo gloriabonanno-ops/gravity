@@ -338,72 +338,31 @@
     .nim-section-title { font-size: 11px; font-weight: 600; color: rgba(0,0,0,0.35); text-transform: uppercase; letter-spacing: .07em; margin: 20px 0 12px; }
     .nim-section-title:first-child { margin-top: 0; }
 
-    /* ── Impianto Detail Page ─────────────────────────────── */
-    /* ── Detail Page ─────────────────────────────────────── */
-    .imp-detail-page { flex: 1; min-height: 0; display: flex; flex-direction: column; background: #F5F5F5; overflow: hidden; }
-    .imp-detail-topbar { display: flex; align-items: center; gap: 4px; height: 48px; padding: 0 24px; background: #fff; border-bottom: 1px solid #F0F0F0; flex-shrink: 0; }
-
-    /* Gallery */
-    .imp-detail-gallery { position: relative; height: 180px; flex-shrink: 0; display: flex; gap: 3px; overflow: hidden; background: #1a1a1a; }
-    .imp-detail-gallery-main { flex: 2.2; background: #2a2a2a; overflow: hidden; position: relative; }
-    .imp-detail-gallery-main img { width: 100%; height: 100%; object-fit: cover; }
-    .imp-detail-gallery-grid { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 3px; }
-    .imp-detail-gallery-thumb { background: #3a3a3a; overflow: hidden; position: relative; }
-    .imp-detail-gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .imp-detail-gallery-btn { position: absolute; bottom: 12px; right: 12px; }
-
-    /* Title bar */
-    .imp-detail-title-bar { height: 44px; flex-shrink: 0; background: #fff; border-bottom: 1px solid #F0F0F0; display: flex; align-items: center; gap: 12px; padding: 0 24px; }
-    .imp-detail-name { font-size: 15px; font-weight: 600; color: rgba(0,0,0,0.88); }
-
-    /* Body */
-    .imp-detail-body { flex: 1; min-height: 0; display: flex; overflow: hidden; }
-
-    /* Sidebar */
-    .imp-detail-sidebar { width: 240px; flex-shrink: 0; background: #fff; border-right: 1px solid #F0F0F0; overflow-y: auto; display: flex; flex-direction: column; }
-    .imp-detail-map-mini { height: 140px; background: #E8EEF4; overflow: hidden; position: relative; flex-shrink: 0; }
-    .imp-detail-map-mini svg { width: 100%; height: 100%; }
-    .imp-detail-addr { padding: 10px 16px 0; font-size: 12px; color: rgba(0,0,0,0.55); display: flex; align-items: flex-start; gap: 6px; }
-    .imp-detail-sidebar-section { padding: 16px 16px 8px; }
-    .imp-detail-sidebar-label { font-size: 11px; font-weight: 600; color: rgba(0,0,0,0.35); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-
-    /* Main */
-    .imp-detail-main { flex: 1; min-width: 0; overflow-y: auto; display: flex; flex-direction: column; }
-
-    /* Info cards */
-    .imp-detail-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-bottom: 1px solid #F0F0F0; background: #fff; flex-shrink: 0; }
-    .imp-detail-card { padding: 14px 20px; border-right: 1px solid #F0F0F0; }
-    .imp-detail-card:last-child { border-right: none; }
-    .imp-detail-card-label { font-size: 11px; color: rgba(0,0,0,0.40); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
-    .imp-detail-card-value { font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.88); display: flex; align-items: center; gap: 6px; }
-    .imp-detail-card-sub { font-size: 12px; color: rgba(0,0,0,0.45); margin-top: 2px; }
-
-    /* Tabs & content */
-    .imp-detail-tabs-wrap { padding: 0 24px; background: #fff; border-bottom: 1px solid #F0F0F0; flex-shrink: 0; }
-    .imp-detail-tabs-wrap .ant-tabs-nav { margin-bottom: 0 !important; }
-    .imp-detail-tab-content { flex: 1; padding: 0 24px 24px; overflow-y: auto; }
-
-    /* Event log */
-    .imp-detail-event-filters { display: flex; align-items: center; gap: 8px; padding: 16px 0 12px; flex-wrap: wrap; }
-    .imp-detail-timeline { display: flex; flex-direction: column; gap: 0; }
+    /* ── Impianto Detail Page ───────────────────────────────── */
+    .imp-detail-page { flex: 1; min-height: 0; overflow-y: auto; background: #f5f5f5; }
+    .imp-detail-cover { height: 200px; display: flex; gap: 3px; overflow: hidden; background: #111; position: relative; flex-shrink: 0; }
+    .imp-detail-content { padding: 0 24px 40px; }
+    .imp-detail-card-wrap { background: #fff; border-radius: 8px; margin-top: -80px; position: relative; z-index: 10; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .info-card { border: 1px solid #F0F0F0; border-radius: 8px; padding: 12px 24px; height: 131px; background: #fff; display: flex; flex-direction: column; justify-content: center; gap: 10px; overflow: hidden; }
+    .info-card-title { font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.88); display: block; line-height: 22px; }
+    .info-card-metric { font-size: 14px; font-weight: 500; line-height: 1.4; color: rgba(0,0,0,0.88); display: flex; align-items: center; gap: 8px; }
+    .info-card-subtitle { font-size: 12px; color: rgba(0,0,0,0.45); display: block; line-height: 20px; }
+    .float-bar { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #fff; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 20px; z-index: 1000; min-width: 380px; }
+    .grant-selected > .ant-collapse-header { background-color: #f9f7ff !important; }
+    .readonly-input.ant-input:hover, .readonly-input.ant-input:focus { border-color: #d9d9d9 !important; box-shadow: none !important; }
+    .input-modified .ant-input { border-color: #3E00FB !important; background-color: #f9f7ff !important; }
+    .tab-section { margin-bottom: 24px; }
+    .field-col { display: flex; flex-direction: column; gap: 8px; }
     .imp-detail-tl-item { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid #F5F5F5; }
     .imp-detail-tl-item:last-child { border-bottom: none; }
-    .imp-detail-tl-date { width: 76px; flex-shrink: 0; }
-    .imp-detail-tl-date-d { font-size: 12px; color: rgba(0,0,0,0.55); font-weight: 500; }
-    .imp-detail-tl-date-t { font-size: 11px; color: rgba(0,0,0,0.35); margin-top: 1px; display: flex; align-items: center; gap: 3px; }
-    .imp-detail-tl-dot { width: 8px; height: 8px; border-radius: 50%; background: #3E00FB; margin-top: 5px; flex-shrink: 0; }
-    .imp-detail-tl-body { flex: 1; min-width: 0; }
-    .imp-detail-tl-title { font-size: 13px; font-weight: 600; color: rgba(0,0,0,0.88); margin-bottom: 3px; }
-    .imp-detail-tl-desc { font-size: 12px; color: rgba(0,0,0,0.55); line-height: 1.5; }
-    .imp-detail-tl-user { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; color: rgba(0,0,0,0.45); }
-    .imp-detail-sub-label { font-size: 11px; font-weight: 600; color: rgba(0,0,0,0.35); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; margin-top: 4px; }
+    .ant-tabs .ant-tabs-nav::before { border-bottom: none !important; }
   </style>
 </head>
 <body>
 <div id="root"></div>
 <script>
 const { useState, useEffect, useRef, useCallback, useMemo } = React;
-const { ConfigProvider, Input, Tag, Badge, Avatar, Button, Empty, Drawer, InputNumber, Switch, Typography, Popover, Menu, Divider, Segmented, Table, Space, Cascader, Select, Dropdown, Form, AutoComplete, DatePicker, Upload, Modal, Tabs, Descriptions, Tooltip } = antd;
+const { ConfigProvider, Input, Tag, Badge, Avatar, Button, Empty, Drawer, InputNumber, Switch, Typography, Popover, Menu, Divider, Segmented, Table, Space, Cascader, Select, Dropdown, Form, AutoComplete, DatePicker, Upload, Modal, Tabs, Descriptions, Tooltip, Collapse, Pagination, Checkbox, Carousel, Row, Col, Card } = antd;
 const { Text } = Typography;
 const {
   SearchOutlined, BellOutlined, PlusOutlined, AppstoreOutlined, SendOutlined,
@@ -411,6 +370,10 @@ const {
   EnvironmentOutlined, CloseOutlined, BarsOutlined,
   ClockCircleOutlined, CopyOutlined,
   BulbOutlined, InboxOutlined, SlidersOutlined, TagOutlined, EllipsisOutlined,
+  ExpandOutlined, SaveOutlined, EyeOutlined, PictureOutlined,
+  InfoCircleOutlined, CompassOutlined, CheckCircleFilled, MoreOutlined,
+  SwapOutlined, DeleteOutlined, TagsOutlined, ThunderboltOutlined, FileTextOutlined,
+  CalendarOutlined, SyncOutlined,
 } = icons;
 
 // ─────────────────────────────────────────────────────────
@@ -911,6 +874,66 @@ const clusterColor = (n) => {
   return               { bg: '#2600B0', fg: '#fff' };
 };
 
+function ImpiantoMapCard({ imp, onClose, onDetail }) {
+  const cfg = STATO_AMM_CONFIG[imp.stato_amm] || STATO_AMM_CONFIG['Attivo'];
+
+  return React.createElement('div', {
+    style: { position: 'relative', background: '#fff', borderRadius: 8, boxShadow: '0 6px 16px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.04)', overflow: 'hidden', fontFamily: '-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif' }
+  },
+    // ── Close ──
+    React.createElement('button', {
+      onClick: onClose,
+      style: { position: 'absolute', top: 8, right: 8, background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(0,0,0,0.25)', padding: 4, display: 'inline-flex', alignItems: 'center', borderRadius: 4 }
+    }, React.createElement(icons.CloseOutlined, { style: { fontSize: 12 } })),
+
+    React.createElement('div', { style: { padding: '12px 12px 0' } },
+      // Nome impianto
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, paddingRight: 20, marginBottom: 10 } },
+        React.createElement('span', { style: { width: 8, height: 8, borderRadius: '50%', background: cfg.dot, flexShrink: 0, display: 'inline-block' } }),
+        React.createElement('span', { style: { fontSize: 15, fontWeight: 600, lineHeight: '22px', color: 'rgba(0,0,0,0.88)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, imp.tipo ? imp.tipo.replace(/\s/g, '_') + '_' + (imp.citta || 'PA').replace(/\s/g, '').slice(0, 6).toUpperCase() + '01' : (imp.id || '—')),
+      ),
+
+      // Indirizzo
+      React.createElement('div', { style: { display: 'flex', alignItems: 'flex-start', gap: 7, marginBottom: 6 } },
+        React.createElement(icons.EnvironmentOutlined, { style: { fontSize: 13, color: 'rgba(0,0,0,0.35)', marginTop: 1, flexShrink: 0 } }),
+        React.createElement('span', { style: { fontSize: 12, lineHeight: '18px', color: 'rgba(0,0,0,0.65)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, imp.indirizzo || '—'),
+      ),
+
+      // Formato
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 7, marginBottom: 6 } },
+        React.createElement(icons.GatewayOutlined, { style: { fontSize: 13, color: 'rgba(0,0,0,0.35)', flexShrink: 0 } }),
+        React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.88)' } }, imp.formato || '—'),
+      ),
+
+      // Facce
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 7, marginBottom: 6 } },
+        React.createElement(icons.AppstoreOutlined, { style: { fontSize: 13, color: 'rgba(0,0,0,0.35)', flexShrink: 0 } }),
+        React.createElement('span', { style: { fontSize: 12, color: 'rgba(0,0,0,0.88)' } },
+          React.createElement('span', { style: { fontWeight: 600 } }, imp.faces),
+          imp.faces === 1 ? ' faccia' : ' facce',
+        ),
+      ),
+
+      // Illuminato
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 7, marginBottom: 12 } },
+        React.createElement(icons.BulbOutlined, { style: { fontSize: 13, color: imp.illuminato ? 'rgba(0,0,0,0.35)' : 'rgba(0,0,0,0.2)', flexShrink: 0 } }),
+        React.createElement('span', { style: { fontSize: 12, color: imp.illuminato ? 'rgba(0,0,0,0.88)' : 'rgba(0,0,0,0.35)' } },
+          imp.illuminato ? 'Illuminato' : 'Non illuminato'
+        ),
+      ),
+    ),
+
+    // Footer con divider
+    React.createElement('div', { style: { borderTop: '1px solid rgba(0,0,0,0.06)', padding: '10px 12px 12px' } },
+      React.createElement(antd.Button, {
+        block: true,
+        icon: React.createElement(icons.EyeOutlined),
+        onClick: () => onDetail && onDetail(imp),
+      }, 'Vedi'),
+    ),
+  );
+}
+
 const MAP_STYLES = [
   { elementType: 'geometry',            stylers: [{ color: '#f5f5f5' }] },
   { elementType: 'labels.icon',         stylers: [{ visibility: 'off' }] },
@@ -927,17 +950,27 @@ const MAP_STYLES = [
   { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#555' }] },
 ];
 
-const makeMarkerIcon = (tipo, stato, isHighlighted, isSelected) => {
+const _svgCache = new Map();
+const _addOutline = (svgText, w, h) => {
+  let s = svgText.replace(/stroke="white"/g, 'stroke="#3E00FB"').replace(/stroke-width="3"/g, 'stroke-width="6"');
+  s = s.replace(/<svg([^>]*)>/, (_, a) => {
+    a = a.replace(/\swidth="[^"]*"/, '').replace(/\sheight="[^"]*"/, '');
+    return `<svg${a} width="${w}" height="${h}">`;
+  });
+  return s;
+};
+
+const makeMarkerIcon = (tipo, stato_amm, isHighlighted, isSelected) => {
   const folder = TIPO_TO_FOLDER[tipo] || 'OOH/palina';
-  const file   = STATO_TO_FILE[stato] || 'available';
-  const scale  = isHighlighted ? 0.62 : isSelected ? 0.55 : 0.46;
+  const file   = (STATO_AMM_CONFIG[stato_amm] || STATO_AMM_CONFIG['Attivo']).file;
+  const scale  = 0.46;
   const w = Math.round(78 * scale);
   const h = Math.round(119 * scale);
-  return {
-    url:        `../assets/${folder}/${file}.svg`,
-    scaledSize: new google.maps.Size(w, h),
-    anchor:     new google.maps.Point(w / 2, h),
-  };
+  const key = `${folder}/${file}`;
+  if (isHighlighted && _svgCache.has(key)) {
+    return { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(_addOutline(_svgCache.get(key), w, h)), scaledSize: new google.maps.Size(w, h), anchor: new google.maps.Point(w / 2, h) };
+  }
+  return { url: `../assets/${folder}/${file}.svg`, scaledSize: new google.maps.Size(w, h), anchor: new google.maps.Point(w / 2, h) };
 };
 
 const makeClusterSvg = (count) => {
@@ -956,12 +989,44 @@ const makeClusterSvg = (count) => {
   return { url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg), size: s };
 };
 
-function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect, flyToTarget }) {
+function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect, onMarkerClick, cardImp, onCardClose, onDetail, flyToTarget }) {
   const containerRef  = useRef(null);
   const mapRef        = useRef(null);
   const clustererRef  = useRef(null);
   const markersRef    = useRef({});   // id → { marker, imp, infoWindow }
   const openInfoRef   = useRef(null); // InfoWindow aperta
+  const cardImpRef         = useRef(null);
+  const highlightMarkerRef = useRef(null);
+  const [cardPx, setCardPx] = useState(null);
+
+  const recalcCardPx = React.useCallback(() => {
+    const imp = cardImpRef.current;
+    const map = mapRef.current;
+    if (!imp || !map) { setCardPx(null); return; }
+    const proj = map.getProjection();
+    const bounds = map.getBounds();
+    if (!proj || !bounds) { setCardPx(null); return; }
+    const scale = Math.pow(2, map.getZoom());
+    const nw = proj.fromLatLngToPoint(new google.maps.LatLng(bounds.getNorthEast().lat(), bounds.getSouthWest().lng()));
+    const entry = markersRef.current[imp.id];
+    const lat = entry ? entry.imp.lat : imp.lat;
+    const lng = entry ? entry.imp.lng : imp.lng;
+    const pt = proj.fromLatLngToPoint(new google.maps.LatLng(lat, lng));
+    setCardPx({ x: Math.floor((pt.x - nw.x) * scale), y: Math.floor((pt.y - nw.y) * scale) });
+  }, []);
+
+  useEffect(() => {
+    const seen = new Set();
+    impianti.forEach(imp => {
+      const folder = TIPO_TO_FOLDER[imp.tipo] || 'OOH/palina';
+      const file = (STATO_AMM_CONFIG[imp.stato_amm] || STATO_AMM_CONFIG['Attivo']).file;
+      const key = `${folder}/${file}`;
+      if (!seen.has(key) && !_svgCache.has(key)) {
+        seen.add(key);
+        fetch(`../assets/${key}.svg`).then(r => r.text()).then(text => _svgCache.set(key, text)).catch(() => {});
+      }
+    });
+  }, []);
 
   // ── Init mappa + marker ───────────────────────────────
   useEffect(() => {
@@ -1001,7 +1066,7 @@ function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect
         infoWindow.close();
         openInfoRef.current = null;
       });
-      marker.addListener('click', () => onSelect(imp.id));
+      marker.addListener('click', () => { if (onMarkerClick) onMarkerClick(imp); else onSelect(imp.id); });
 
       markersRef.current[imp.id] = { marker, imp, infoWindow };
       return marker;
@@ -1027,6 +1092,8 @@ function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect
         },
       },
     });
+
+    google.maps.event.addListener(map, 'bounds_changed', recalcCardPx);
 
     mapRef.current   = map;
     clustererRef.current = clusterer;
@@ -1064,8 +1131,9 @@ function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect
       const inFilter      = !filteredIds || filteredIds.has(id);
       const visible       = inFilter;
 
-      marker.setIcon(makeMarkerIcon(imp.tipo, imp.stato_amm, isHighlighted, isSelected));
+      marker.setIcon(makeMarkerIcon(imp.tipo, imp.stato_amm, false, isSelected));
       marker.setZIndex(isHighlighted ? 9999 : isSelected ? 500 : 1);
+      marker.setOpacity(isHighlighted ? 0 : (cardImp ? 0.3 : 1));
 
       if (visible) visibleMarkers.push(marker);
     });
@@ -1078,7 +1146,55 @@ function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect
       mapRef.current.panTo({ lat: imp.lat, lng: imp.lng });
       if (mapRef.current.getZoom() < 15) mapRef.current.setZoom(16);
     }
-  }, [highlightedId, selectedIds, filteredIds]);
+  }, [highlightedId, selectedIds, filteredIds, cardImp]);
+
+  // ── Overlay marker highlighted (bypass clusterer) ────────
+  useEffect(() => {
+    if (highlightMarkerRef.current) {
+      highlightMarkerRef.current.setMap(null);
+      highlightMarkerRef.current = null;
+    }
+    if (!highlightedId || !mapRef.current) return;
+    const entry = markersRef.current[highlightedId];
+    if (!entry) return;
+    const { imp } = entry;
+    const folder = TIPO_TO_FOLDER[imp.tipo] || 'OOH/palina';
+    const file   = (STATO_AMM_CONFIG[imp.stato_amm] || STATO_AMM_CONFIG['Attivo']).file;
+    const key    = `${folder}/${file}`;
+    const w = Math.round(78 * 0.46), h = Math.round(119 * 0.46);
+    let alive = true;
+
+    // Crea subito l'overlay con l'icona normale — così il marker è sempre visibile
+    highlightMarkerRef.current = new google.maps.Marker({
+      position: { lat: imp.lat, lng: imp.lng },
+      icon: { url: `../assets/${folder}/${file}.svg`, scaledSize: new google.maps.Size(w, h), anchor: new google.maps.Point(w / 2, h) },
+      map: mapRef.current,
+      zIndex: 10000,
+      clickable: false,
+    });
+
+    // Poi aggiorna a outlined non appena il testo SVG è disponibile
+    const applyOutline = (text) => {
+      if (!alive || !highlightMarkerRef.current) return;
+      _svgCache.set(key, text);
+      highlightMarkerRef.current.setIcon({
+        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(_addOutline(text, w, h)),
+        scaledSize: new google.maps.Size(w, h),
+        anchor: new google.maps.Point(w / 2, h),
+      });
+    };
+
+    if (_svgCache.has(key)) applyOutline(_svgCache.get(key));
+    else fetch(`../assets/${folder}/${file}.svg`).then(r => r.text()).then(applyOutline).catch(() => {});
+
+    return () => { alive = false; };
+  }, [highlightedId]);
+
+  // ── Posizione card sul marker ────────────────────────
+  useEffect(() => {
+    cardImpRef.current = cardImp;
+    setCardPx(null);
+  }, [cardImp]);
 
   // ── Fly to zona cercata ───────────────────────────────
   useEffect(() => {
@@ -1088,7 +1204,12 @@ function GoogleMap({ impianti, highlightedId, selectedIds, filteredIds, onSelect
   }, [flyToTarget]);
 
 
-  return React.createElement('div', { ref: containerRef, id: 'ooh-map' });
+  return React.createElement('div', { id: 'ooh-map', style: { position: 'relative' } },
+    React.createElement('div', { ref: containerRef, style: { width: '100%', height: '100%' } }),
+    cardImp && React.createElement('div', {
+      style: { position: 'absolute', left: cardPx ? cardPx.x - 125 : 'calc(50% - 125px)', top: cardPx ? cardPx.y + 8 : 'calc(50% + 8px)', zIndex: 500, width: 250, pointerEvents: 'auto' }
+    }, React.createElement(ImpiantoMapCard, { key: cardImp.id, imp: cardImp, onClose: onCardClose, onDetail: onDetail || null }))
+  );
 }
 
 // ─────────────────────────────────────────────────────────
@@ -1705,7 +1826,7 @@ const ALL_COLUMNS = {
     },
   };
 
-function ListView({ impianti, viewMode, setViewMode }) {
+function ListView({ impianti, viewMode, setViewMode, onDetail }) {
   const [visibleCols, setVisibleCols] = useState(DEFAULT_COLS);
 
   const cascaderOptions = COLUMN_GROUPS.map(g => ({
@@ -1803,6 +1924,7 @@ function ListView({ impianti, viewMode, setViewMode }) {
         columns,
         rowKey: 'id',
         size: 'small',
+        onRow: onDetail ? (record) => ({ onClick: () => onDetail(record), style: { cursor: 'pointer' } }) : undefined,
         pagination: { pageSize: 50, showSizeChanger: false, showTotal: total => `${total} impianti` },
         scroll: { x: totalWidth },
       })
@@ -2141,210 +2263,824 @@ function NewImpiantoDrawer({ open, onClose }) {
 // ─────────────────────────────────────────────────────────
 // IMPIANTO DETAIL PAGE
 // ─────────────────────────────────────────────────────────
-const MOCK_EVENTS = [
-  { date: '02/02/2025', time: '11:25', dot: '#3E00FB', title: 'Nuova squadra assegnata', desc: "La squadra 'Publiposter' è stata assegnata all'impianto. Incarichi: Affissione e Incollaggio.", user: 'Marco Bianchi' },
-  { date: '02/02/2025', time: '11:25', dot: '#FA8C16', title: 'Nuovo incarico assegnato', desc: "Manutenzione e Installazione/Assemblaggio assegnati a START Affissioni.", user: 'Marco Bianchi' },
-  { date: '12/11/2024', time: '09:10', dot: '#52C41A', title: 'Stato cambiato in Attivo', desc: "L'impianto è ora disponibile per la pianificazione.", user: 'Admin Sistema' },
-  { date: '05/10/2024', time: '14:30', dot: '#D48806', title: 'Impianto inizializzato', desc: "Inserimento dati tecnici e amministrativi completato.", user: 'Admin Sistema' },
-  { date: '01/10/2024', time: '10:00', dot: '#3E00FB', title: 'Impianto creato', desc: "Nuovo impianto registrato nel sistema.", user: 'Admin Sistema' },
+const antdMsg = antd.message;
+
+const GRANTS_DATA = [
+  { key: '1', grantType: 'Pubblico', documentType: 'Atto Amministrativo', documentId: 'Pos. 74322 del 15/04/2004', issuingAuthority: 'Comune di Catania', registrationNumber: '47294664857', totalPropertyTax: '1.000,00 €', issueDate: '10/12/2021', expirationDate: '10/12/2031', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'DB45PL', propertyTax: '1.050,60 €', connectedTo: ['PalinaButterfly_10LaMatla', '+20'], cimasaCode: 'P5847', expirationDate: '10/12/2031' },
+  ]},
+  { key: '2', grantType: 'Pubblico', documentType: 'Determinazione Dirigenziale', documentId: 'Det. 74322 del 15/04/2004', issuingAuthority: 'Comune di Messina', registrationNumber: '47294664857', totalPropertyTax: '2.000,00 €', issueDate: '15/06/2020', expirationDate: '15/06/2030', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'PF569KJ', propertyTax: '920,00 €', cimasaCode: 'P6021', expirationDate: '15/06/2030' },
+    { utilityNumber: 'RT257IL9', propertyTax: '190,00 €', cimasaCode: 'Non specificata', expirationDate: '15/06/2030' },
+  ]},
+  { key: '3', grantType: 'Pubblico', documentType: 'Atto Amministrativo', documentId: 'Det. 74322 del 15/04/2004', issuingAuthority: 'Comune di Trapani', registrationNumber: '', totalPropertyTax: '3.500,00 €', issueDate: '22/03/2019', status: 'Scaduta', isActive: false, utilities: [
+    { utilityNumber: 'UT-004-2024', propertyTax: '1.500,00 €', cimasaCode: 'P7342' },
+    { utilityNumber: 'UT-005-2024', propertyTax: '2.000,00 €', cimasaCode: 'P7343' },
+  ]},
+  { key: '4', grantType: 'Pubblico', documentType: 'Atto Notarile', documentId: 'N. 74322 del 15/04/2004', issuingAuthority: 'Comune di Agrigento', registrationNumber: '', totalPropertyTax: '4.750,00 €', issueDate: '08/09/2018', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-006-2024', propertyTax: '2.250,00 €', cimasaCode: 'Non specificata' },
+    { utilityNumber: 'UT-007-2024', propertyTax: '1.500,00 €', cimasaCode: 'P8901' },
+    { utilityNumber: 'UT-008-2024', propertyTax: '1.000,00 €', connectedTo: ['ImplantoCT_01'], cimasaCode: 'P8902' },
+  ]},
+  { key: '5', grantType: 'Privato', documentType: 'Delibera', documentId: 'N. 74322 del 15/04/2004', issuingAuthority: 'Condominio "Alba"', registrationNumber: '47294664857', totalPropertyTax: '5.200,00 €', status: 'Scaduta', isActive: false, utilities: [
+    { utilityNumber: 'UT-009-2024', propertyTax: '5.200,00 €', cimasaCode: 'Non specificata' },
+  ]},
+  { key: '6', grantType: 'Pubblico', documentType: 'Atto Amministrativo', documentId: 'Pos. 74322 del 15/04/2004', issuingAuthority: 'Comune di Siracusa', registrationNumber: '', totalPropertyTax: '6.300,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-010-2024', propertyTax: '3.000,00 €', cimasaCode: 'P9245' },
+    { utilityNumber: 'UT-011-2024', propertyTax: '3.300,00 €', cimasaCode: 'P9246' },
+  ]},
+  { key: '7', grantType: 'Privato', documentType: 'Delibera', documentId: 'N. 74322 del 15/04/2004', issuingAuthority: 'Condominio "Nenni"', registrationNumber: '57295473958', totalPropertyTax: '7.800,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-012-2024', propertyTax: '2.600,00 €', cimasaCode: 'P1023' },
+    { utilityNumber: 'UT-013-2024', propertyTax: '2.600,00 €', cimasaCode: 'Non specificata' },
+    { utilityNumber: 'UT-014-2024', propertyTax: '2.600,00 €', cimasaCode: 'P1025' },
+  ]},
+  { key: '8', grantType: 'Pubblico', documentType: 'Determinazione Dirigenziale', documentId: 'Det. 74322 del 15/04/2004', issuingAuthority: 'Comune di Enna', registrationNumber: '47294664857', totalPropertyTax: '8.900,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-015-2024', propertyTax: '4.000,00 €', cimasaCode: 'P2134' },
+    { utilityNumber: 'UT-016-2024', propertyTax: '4.900,00 €', cimasaCode: 'P2135' },
+  ]},
+  { key: '9', grantType: 'Pubblico', documentType: 'Atto Amministrativo', documentId: 'Pos. 74322 del 15/04/2004', issuingAuthority: 'Comune di Ragusa', registrationNumber: '47294664857', totalPropertyTax: '9.999,99 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-017-2024', propertyTax: '9.999,99 €', cimasaCode: 'Non specificata' },
+  ]},
+  { key: '10', grantType: 'Privato', documentType: 'Contratto di Locazione', documentId: 'N. 74322 del 15/04/2004', issuingAuthority: 'Mauro Pezzati', registrationNumber: '47385377483', totalPropertyTax: '10.500,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-018-2024', propertyTax: '5.000,00 €', cimasaCode: 'P3456' },
+    { utilityNumber: 'UT-019-2024', propertyTax: '3.500,00 €', cimasaCode: 'P3457' },
+    { utilityNumber: 'UT-020-2024', propertyTax: '2.000,00 €', cimasaCode: 'Non specificata' },
+  ]},
+  { key: '11', grantType: 'Pubblico', documentType: 'Atto Amministrativo', documentId: 'Pos. 82145 del 22/08/2005', issuingAuthority: 'Comune di Palermo', registrationNumber: '48395738274', totalPropertyTax: '11.250,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-021-2024', propertyTax: '6.000,00 €', cimasaCode: 'P4567' },
+    { utilityNumber: 'UT-022-2024', propertyTax: '5.250,00 €', cimasaCode: 'P4568' },
+  ]},
+  { key: '12', grantType: 'Pubblico', documentType: 'Determinazione Dirigenziale', documentId: 'Det. 93847 del 10/11/2006', issuingAuthority: 'Comune di Caltanissetta', registrationNumber: '49284738294', totalPropertyTax: '12.400,00 €', status: 'Scaduta', isActive: false, utilities: [
+    { utilityNumber: 'UT-023-2024', propertyTax: '7.200,00 €', cimasaCode: 'Non specificata' },
+    { utilityNumber: 'UT-024-2024', propertyTax: '5.200,00 €', cimasaCode: 'P5678' },
+  ]},
+  { key: '13', grantType: 'Privato', documentType: 'Delibera', documentId: 'N. 38475 del 18/03/2007', issuingAuthority: 'Condominio "Sole"', registrationNumber: '50293847562', totalPropertyTax: '13.600,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-025-2024', propertyTax: '13.600,00 €', cimasaCode: 'P6789' },
+  ]},
+  { key: '14', grantType: 'Pubblico', documentType: 'Atto Amministrativo', documentId: 'Pos. 47583 del 05/06/2008', issuingAuthority: 'Comune di Marsala', registrationNumber: '51384756294', totalPropertyTax: '14.750,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-026-2024', propertyTax: '8.000,00 €', cimasaCode: 'Non specificata' },
+    { utilityNumber: 'UT-027-2024', propertyTax: '4.000,00 €', cimasaCode: 'P7890' },
+    { utilityNumber: 'UT-028-2024', propertyTax: '2.750,00 €', cimasaCode: 'P7891' },
+  ]},
+  { key: '15', grantType: 'Pubblico', documentType: 'Atto Notarile', documentId: 'N. 65432 del 14/09/2009', issuingAuthority: 'Comune di Gela', registrationNumber: '52475836294', totalPropertyTax: '15.900,00 €', status: 'Scaduta', isActive: false, utilities: [
+    { utilityNumber: 'UT-029-2024', propertyTax: '9.500,00 €', cimasaCode: 'P8912' },
+    { utilityNumber: 'UT-030-2024', propertyTax: '6.400,00 €', cimasaCode: 'Non specificata' },
+  ]},
+  { key: '16', grantType: 'Privato', documentType: 'Contratto di Locazione', documentId: 'N. 74829 del 20/12/2010', issuingAuthority: 'Rossi Immobiliare S.r.l.', registrationNumber: '53584736291', totalPropertyTax: '16.500,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-031-2024', propertyTax: '8.500,00 €', cimasaCode: 'P9123' },
+    { utilityNumber: 'UT-032-2024', propertyTax: '8.000,00 €', cimasaCode: 'P9124' },
+  ]},
+  { key: '17', grantType: 'Pubblico', documentType: 'Determinazione Dirigenziale', documentId: 'Det. 58392 del 07/04/2011', issuingAuthority: 'Comune di Alcamo', registrationNumber: '54673829102', totalPropertyTax: '17.800,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-033-2024', propertyTax: '10.000,00 €', cimasaCode: 'P1234' },
+    { utilityNumber: 'UT-034-2024', propertyTax: '4.800,00 €', cimasaCode: 'Non specificata' },
+    { utilityNumber: 'UT-035-2024', propertyTax: '3.000,00 €', cimasaCode: 'P1236' },
+  ]},
+  { key: '18', grantType: 'Pubblico', documentType: 'Atto Amministrativo', documentId: 'Pos. 69384 del 16/07/2012', issuingAuthority: 'Comune di Vittoria', registrationNumber: '55748392014', totalPropertyTax: '18.900,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-036-2024', propertyTax: '11.000,00 €', cimasaCode: 'P2345' },
+    { utilityNumber: 'UT-037-2024', propertyTax: '7.900,00 €', cimasaCode: 'P2346' },
+  ]},
+  { key: '19', grantType: 'Privato', documentType: 'Delibera', documentId: 'N. 81234 del 25/10/2013', issuingAuthority: 'Condominio "Mare"', registrationNumber: '56839201475', totalPropertyTax: '19.500,00 €', status: 'Scaduta', isActive: false, utilities: [
+    { utilityNumber: 'UT-038-2024', propertyTax: '19.500,00 €', cimasaCode: 'Non specificata' },
+  ]},
+  { key: '20', grantType: 'Pubblico', documentType: 'Atto Amministrativo', documentId: 'Pos. 92847 del 08/01/2014', issuingAuthority: 'Comune di Bagheria', registrationNumber: '57920384756', totalPropertyTax: '20.750,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-039-2024', propertyTax: '12.000,00 €', cimasaCode: 'P3456' },
+    { utilityNumber: 'UT-040-2024', propertyTax: '8.750,00 €', cimasaCode: 'Non specificata' },
+  ]},
+  { key: '21', grantType: 'Pubblico', documentType: 'Determinazione Dirigenziale', documentId: 'Det. 73948 del 19/05/2015', issuingAuthority: 'Comune di Modica', registrationNumber: '58103948572', totalPropertyTax: '21.900,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-041-2024', propertyTax: '13.500,00 €', cimasaCode: 'P4567' },
+    { utilityNumber: 'UT-042-2024', propertyTax: '5.400,00 €', cimasaCode: 'P4568' },
+    { utilityNumber: 'UT-043-2024', propertyTax: '3.000,00 €', cimasaCode: 'Non specificata' },
+  ]},
+  { key: '22', grantType: 'Privato', documentType: 'Contratto di Locazione', documentId: 'N. 64829 del 28/08/2016', issuingAuthority: 'Bianchi Giuseppe', registrationNumber: '59284756301', totalPropertyTax: '22.500,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-044-2024', propertyTax: '15.000,00 €', cimasaCode: 'P5678' },
+    { utilityNumber: 'UT-045-2024', propertyTax: '7.500,00 €', cimasaCode: 'P5679' },
+  ]},
+  { key: '23', grantType: 'Pubblico', documentType: 'Atto Notarile', documentId: 'N. 85764 del 11/11/2017', issuingAuthority: 'Comune di Acireale', registrationNumber: '60395847261', totalPropertyTax: '23.800,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-046-2024', propertyTax: '14.000,00 €', cimasaCode: 'Non specificata' },
+    { utilityNumber: 'UT-047-2024', propertyTax: '9.800,00 €', cimasaCode: 'P6789' },
+  ]},
+  { key: '24', grantType: 'Pubblico', documentType: 'Atto Amministrativo', documentId: 'Pos. 97562 del 23/02/2018', issuingAuthority: 'Comune di Mazara del Vallo', registrationNumber: '61485937402', totalPropertyTax: '24.950,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-048-2024', propertyTax: '16.000,00 €', cimasaCode: 'P7890' },
+    { utilityNumber: 'UT-049-2024', propertyTax: '5.950,00 €', cimasaCode: 'P7891' },
+    { utilityNumber: 'UT-050-2024', propertyTax: '3.000,00 €', cimasaCode: 'Non specificata' },
+  ]},
+  { key: '25', grantType: 'Privato', documentType: 'Delibera', documentId: 'N. 78453 del 05/06/2019', issuingAuthority: 'Condominio "Giardino"', registrationNumber: '62594837561', totalPropertyTax: '25.600,00 €', status: 'Attiva', isActive: true, utilities: [
+    { utilityNumber: 'UT-051-2024', propertyTax: '25.600,00 €', cimasaCode: 'P8901' },
+  ]},
 ];
 
-function ImpiantoDetailPage({ imp, onBack }) {
-  const [activeTab, setActiveTab] = useState('dati-admin');
-  const stateColor = STATO_COLORS[imp.stato_amm] || STATO_AMM_CONFIG[imp.stato_amm]?.dot || '#8C8C8C';
-  const displayName = imp.tipo
-    ? `${(imp.tipo||'').replace(' ','_')}_${(imp.citta||'PA').replace(/\s/g,'').slice(0,6).toUpperCase()}01`
-    : imp.id || 'Impianto';
-  const address = [imp.via, imp.civico, imp.citta].filter(Boolean).join(', ') || imp.indirizzo || 'Palermo, PA';
+const AUTHORIZATIONS_DATA = [
+  { key: '1', authorizationCategory: 'Autorizzazione Comunale', issuingAuthority: 'Comune di Palermo', protocolNumber: 'Prot. 23456/2023', stipulationDate: '15/01/2023', expirationDate: '30/06/2025', cup: 'J39D23000450001', status: 'Attiva', isActive: true },
+  { key: '2', authorizationCategory: 'Autorizzazione Comunale', issuingAuthority: 'Soprintendenza Belle Arti', protocolNumber: 'Prot. 34567/2022', stipulationDate: '10/03/2022', expirationDate: '15/03/2024', cup: 'J38C22001230001', status: 'Scaduta', isActive: false },
+  { key: '3', authorizationCategory: 'Autorizzazione Comunale', issuingAuthority: 'Comando Provinciale VVF Palermo', protocolNumber: 'Prot. 45678/2023', stipulationDate: '05/06/2023', expirationDate: '20/09/2025', cup: 'J37D23000890002', status: 'Attiva', isActive: true },
+  { key: '4', authorizationCategory: 'Autorizzazione Comunale', issuingAuthority: 'ARPA Sicilia', protocolNumber: 'Prot. 56789/2023', stipulationDate: '20/08/2023', expirationDate: '31/12/2027', cup: 'J36D23001120003', status: 'Attiva', isActive: true },
+  { key: '5', authorizationCategory: 'Autorizzazione Comunale', issuingAuthority: 'E-Distribuzione', protocolNumber: 'Prot. 67890/2022', stipulationDate: '12/11/2022', expirationDate: '28/02/2025', cup: 'J35C22000780004', status: 'Attiva', isActive: true },
+  { key: '6', authorizationCategory: 'Autorizzazione Comunale', issuingAuthority: 'Comune di Palermo', protocolNumber: 'Prot. 78901/2021', stipulationDate: '18/09/2021', expirationDate: '10/01/2024', cup: 'J35C21000340004', status: 'Scaduta', isActive: false },
+  { key: '7', authorizationCategory: 'Autorizzazione Comunale', issuingAuthority: 'Città Metropolitana di Palermo', protocolNumber: 'Prot. 89012/2023', stipulationDate: '22/04/2023', expirationDate: '31/08/2026', cup: 'J34D23000670005', status: 'Attiva', isActive: true },
+  { key: '8', authorizationCategory: 'Autorizzazione Comunale', issuingAuthority: 'Comune di Palermo', protocolNumber: 'Prot. 01234/2024', stipulationDate: '08/01/2024', expirationDate: '15/05/2024', cup: 'J33C24000120007', status: 'Scaduta', isActive: false },
+  { key: '9', authorizationCategory: 'Genio Civile', issuingAuthority: 'Ufficio del Genio Civile di Palermo', protocolNumber: 'Prot. 11223/2023', stipulationDate: '30/05/2023', expirationDate: '31/12/2026', cup: 'J33D23000920006', status: 'Attiva', isActive: true },
+];
 
-  const cards1 = [
-    { label: 'Owner',        value: imp.titolare || 'Comune di Palermo', icon: React.createElement('div', { style: { width: 20, height: 20, borderRadius: 4, background: '#3E00FB', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginRight: 4 } }, React.createElement('span', { style: { color: '#fff', fontSize: 9, fontWeight: 700 } }, 'P')) },
-    { label: 'System Type',  value: imp.tipo || '—', sub: `${imp.faces || 1} face${(imp.faces||1)>1?'s':''}` },
-    { label: 'Status',       value: imp.stato_amm || 'Attivo', dot: stateColor, sub: 'dal 12/11/2024' },
-    { label: 'Sizes',        value: imp.formato || '—', sub: imp.illuminato ? 'Illuminato' : 'Non illuminato' },
-  ];
-  const cards2 = [
-    { label: 'Account Number', value: imp.id || '—',          big: true },
-    { label: 'Cimasa Code',    value: imp.cimasa || 'A2398',  big: true, copy: true },
-    { label: 'Land',           value: 'Privato', sub: 'Categoria: Normale', big: true },
-    { label: 'Area Code',      value: imp.zona?.slice(0,2)||'2', big: true },
-  ];
+const MOCK_EVENTS = [
+  { date: '02/02/2025', time: '11:25', title: 'Stato cambiato in', desc: "Alcuni componenti sono danneggiati. In attesa dell'assegnazione di una squadra per la riparazione.", badge: { label: 'In Manutenzione', status: 'warning' }, agent: 'Marco Picceri', agentInitial: 'MP' },
+  { date: '02/02/2025', time: '11:10', title: 'Nuova squadra assegnata', desc: "La squadra 'Publiposter' è stata assegnata. Incarichi di affissione e incollaggio.", agent: 'Marco Picceri', agentInitial: 'MP' },
+  { date: '02/02/2025', time: '10:45', title: 'Nuovo incarico assegnato', desc: 'Incarichi di manutenzione e installazione assegnati a START Affissioni.', agent: 'Marco Picceri', agentInitial: 'MP' },
+  { date: '12/11/2024', time: '09:10', title: 'Stato cambiato in', desc: "L'impianto è ora disponibile per la pianificazione.", badge: { label: 'Attivo', status: 'success' }, agent: 'Marco Picceri', agentInitial: 'MP' },
+  { date: '01/10/2024', time: '10:00', title: 'Stato cambiato in', desc: "Nuova concessione ottenuta. L'impianto deve essere reinstallato.", badge: { label: 'Inizializzato', status: 'processing' }, agent: 'System Admin', agentInitial: 'SA' },
+  { date: '20/09/2024', time: '16:00', title: 'Stato cambiato in', desc: "L'impianto è operativo e disponibile per la pianificazione.", badge: { label: 'Attivo', status: 'success' }, agent: 'Marco Picceri', agentInitial: 'MP' },
+  { date: '20/09/2024', time: '14:30', title: 'Nuova squadra assegnata', desc: "La squadra 'START Affissioni' è stata assegnata per l'installazione.", agent: 'Gloria Russo', agentInitial: 'GR' },
+  { date: '15/09/2024', time: '10:00', title: 'Nuovo incarico assegnato', desc: 'Incarico di installazione assegnato. Sopralluogo programmato.', agent: 'Gloria Russo', agentInitial: 'GR' },
+  { date: '01/09/2024', time: '09:30', title: 'Stato cambiato in', desc: "L'impianto è stato registrato e inizializzato nel sistema.", badge: { label: 'Inizializzato', status: 'processing' }, agent: 'System Admin', agentInitial: 'SA' },
+  { date: '01/09/2024', time: '09:00', title: 'Sistema creato', desc: 'Nuovo impianto registrato nella piattaforma.', agent: 'System Admin', agentInitial: 'SA' },
+];
 
-  const tabItems = [
-    {
-      key: 'dati-admin', label: 'Dati Amministrativi',
-      children: React.createElement('div', null,
-        React.createElement('div', { className: 'imp-detail-event-filters' },
-          React.createElement(DatePicker.RangePicker, { size: 'small', placeholder: ['Inizio', 'Fine'] }),
-          React.createElement(Select, { size: 'small', placeholder: 'Tipo evento', style: { width: 150 }, options: [{value:'all',label:'Tutti i tipi'},{value:'assign',label:'Assegnazione'},{value:'status',label:'Cambio stato'},{value:'duty',label:'Incarico'}] }),
-          React.createElement(Select, { size: 'small', placeholder: 'Agente', style: { width: 140 }, options: [{value:'all',label:'Tutti'},{value:'mb',label:'Marco Bianchi'},{value:'admin',label:'Admin'}] }),
-          React.createElement(Input, { size: 'small', placeholder: 'Cerca evento…', prefix: React.createElement(SearchOutlined, { style: { color: 'rgba(0,0,0,0.3)' } }), style: { width: 180 } }),
-          React.createElement('div', { style: { flex: 1 } }),
-          React.createElement(Button, { size: 'small', type: 'primary', icon: React.createElement(PlusOutlined) }, 'New Event'),
+const COVER_STRIPS = [
+  { flex: 2.5, bg: 'linear-gradient(160deg,#2d3e1e 0%,#3d5228 100%)' },
+  { flex: 1.2, bg: 'linear-gradient(160deg,#8B1A1A 0%,#C41E3A 100%)' },
+  { flex: 1.0, bg: 'linear-gradient(160deg,#2a3a4a 0%,#3a4a5a 100%)' },
+  { flex: 0.9, bg: 'linear-gradient(160deg,#3a2010 0%,#5a3018 100%)' },
+  { flex: 0.9, bg: 'linear-gradient(160deg,#0a1020 0%,#1a2030 100%)' },
+];
+const FOTO_IMPIANTO = [
+  '../assets/Foto%20impianto/6x3-poster-asti-1024x731.jpg',
+  '../assets/Foto%20impianto/Affissioni-poster-Milano.jpg',
+  '../assets/Foto%20impianto/Pescara_Piccola.jpg',
+  '../assets/Foto%20impianto/Realizzazione-Grandi-Impianti-pubblicitari-e-Cartellonistica-Lecce-scaled.jpg',
+  '../assets/Foto%20impianto/europemedia_affissioni_pubblicitarie_arredo_urbano_neovision.avif',
+  '../assets/Foto%20impianto/quali-sono-le-regole-del-codice-della-strada-per-la-pubblicita-lungo-le-strade-e-sui-veicoli.jpg',
+];
+
+
+const FACCE = [
+  { id: 1, tipo: 'anteriore', formato: '140x200 cm', slot: '1', orientamento: 'Nord-Est', conoVisibilita: '180°', illuminazione: 'LED' },
+  { id: 2, tipo: 'posteriore', formato: '140x200 cm', slot: '2', orientamento: 'Sud-Ovest', conoVisibilita: '120°', illuminazione: 'Non illuminato' },
+];
+
+function InfoCard({ title, value, subtitle }) {
+  return React.createElement('div', { className: 'info-card' },
+    React.createElement('div', { className: 'info-card-title' }, title),
+    React.createElement('div', { className: 'info-card-metric' }, value),
+    subtitle != null ? React.createElement('div', { style: { height: 1, backgroundColor: 'rgba(0,0,0,0.06)', margin: '4px 0' } }) : null,
+    subtitle != null ? React.createElement('div', { className: 'info-card-subtitle' }, subtitle) : null,
+  );
+}
+
+function PermitCard({ permitType, documentType, documentId, accountNumber, authorizationCategory, state, isActive, onReplace, onRemove }) {
+  const menuItems = [
+    { key: 'view', label: 'Visualizza', icon: React.createElement(EyeOutlined) },
+    ...(permitType === 'concessione' ? [{ key: 'replace', label: 'Sostituisci', icon: React.createElement(SwapOutlined), onClick: onReplace }] : []),
+    { key: 'remove', label: 'Scollega', icon: React.createElement(DeleteOutlined), danger: true, onClick: onRemove },
+  ];
+  return React.createElement(Card, { style: { borderRadius: 8, border: '1px solid #d9d9d9' }, styles: { body: { padding: '16px 12px' } } },
+    React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 } },
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+        React.createElement('span', { style: { fontSize: 13, fontWeight: 600 } }, permitType === 'concessione' ? 'Concessione' : 'Autorizzazione'),
+        React.createElement('span', { style: { color: 'rgba(0,0,0,0.25)', fontSize: 13 } }, '|'),
+        React.createElement(Tag, { style: { margin: 0, border: '1px solid #d9d9d9', color: 'rgba(0,0,0,0.65)', backgroundColor: '#fafafa', fontSize: 12 } }, documentId),
+      ),
+      React.createElement(Dropdown, { menu: { items: menuItems }, trigger: ['click'] },
+        React.createElement(MoreOutlined, { style: { fontSize: 16, color: '#595959', cursor: 'pointer' } }),
+      ),
+    ),
+    React.createElement('div', { style: { display: 'flex', alignItems: 'stretch' } },
+      permitType === 'autorizzazione' && authorizationCategory
+        ? React.createElement(React.Fragment, null,
+            React.createElement('div', { style: { flex: 1 } },
+              React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4, color: 'rgba(0,0,0,0.45)', fontSize: 13 } },
+                React.createElement(TagsOutlined, { style: { fontSize: 14 } }),
+                React.createElement('span', null, 'Tipologia:'),
+              ),
+              React.createElement('div', { style: { fontSize: 15, color: 'rgba(0,0,0,0.85)', fontWeight: 500 } }, authorizationCategory),
+            ),
+            React.createElement('div', { style: { width: 1, backgroundColor: '#f0f0f0', margin: '0 12px', alignSelf: 'stretch' } }),
+          )
+        : null,
+      permitType === 'concessione' && accountNumber
+        ? React.createElement(React.Fragment, null,
+            React.createElement('div', { style: { flex: 1 } },
+              React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4, color: 'rgba(0,0,0,0.45)', fontSize: 13 } },
+                React.createElement(FileTextOutlined, { style: { fontSize: 14 } }),
+                React.createElement('span', null, 'Numero Utenza:'),
+              ),
+              React.createElement('div', { style: { fontSize: 15, color: 'rgba(0,0,0,0.85)', fontWeight: 500 } }, accountNumber),
+            ),
+            React.createElement('div', { style: { width: 1, backgroundColor: '#f0f0f0', margin: '0 12px', alignSelf: 'stretch' } }),
+          )
+        : null,
+      React.createElement('div', { style: { flex: 1 } },
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4, color: 'rgba(0,0,0,0.45)', fontSize: 13 } },
+          React.createElement(ThunderboltOutlined, { style: { fontSize: 14 } }),
+          React.createElement('span', null, 'Stato'),
         ),
-        React.createElement('div', { className: 'imp-detail-timeline' },
-          ...MOCK_EVENTS.map((ev, i) =>
-            React.createElement('div', { key: i, className: 'imp-detail-tl-item' },
-              React.createElement('div', { className: 'imp-detail-tl-date' },
-                React.createElement('div', { className: 'imp-detail-tl-date-d' }, ev.date),
-                React.createElement('div', { className: 'imp-detail-tl-date-t' }, React.createElement(ClockCircleOutlined, { style: { fontSize: 10 } }), ' ', ev.time),
-              ),
-              React.createElement('div', { className: 'imp-detail-tl-dot', style: { background: ev.dot } }),
-              React.createElement('div', { className: 'imp-detail-tl-body' },
-                React.createElement('div', { className: 'imp-detail-tl-title' }, ev.title),
-                React.createElement('div', { className: 'imp-detail-tl-desc' }, ev.desc),
-                React.createElement('div', { className: 'imp-detail-tl-user' },
-                  React.createElement(Avatar, { size: 16, style: { background: '#3E00FB', fontSize: 8, flexShrink: 0 } }, ev.user.split(' ').map(w=>w[0]).join('')),
-                  ev.user,
-                ),
-              ),
-            )
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+          React.createElement('div', { style: { width: 8, height: 8, borderRadius: '50%', backgroundColor: isActive ? '#52c41a' : '#d9d9d9' } }),
+          React.createElement('span', { style: { fontSize: 15, color: 'rgba(0,0,0,0.85)', fontWeight: 500 } }, state),
+        ),
+      ),
+    ),
+  );
+}
+
+function GrantsAccordion({ data, selectedRowKey, onRowSelect }) {
+  const [searchText, setSearchText] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [activeKeys, setActiveKeys] = useState(data.length > 0 ? [data[0].key] : []);
+  const pageSize = 5;
+
+  const filtered = !searchText ? data : data.filter(g => {
+    const s = searchText.toLowerCase();
+    return g.documentType.toLowerCase().includes(s) || g.documentId.toLowerCase().includes(s) || g.issuingAuthority.toLowerCase().includes(s);
+  });
+  const paginated = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const collapseItems = paginated.map(grant => {
+    const isGrantSelected = grant.utilities.some(u => selectedRowKey === grant.key + '-' + u.utilityNumber);
+    return {
+      key: grant.key,
+      label: React.createElement('div', { style: { width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' } },
+        React.createElement('div', { style: { flex: 1 } },
+          React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 12, fontSize: 14, marginBottom: 8 } },
+            React.createElement('span', { style: { fontWeight: 500 } }, grant.documentType),
+            React.createElement(Tag, { style: { margin: 0, border: '1px solid #d9d9d9', color: 'rgba(0,0,0,0.65)', backgroundColor: '#fafafa', fontSize: 13, padding: '2px 8px' } }, grant.documentId),
+          ),
+          React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 24, fontSize: 13 } },
+            React.createElement('span', null, React.createElement('span', { style: { color: 'rgba(0,0,0,0.45)' } }, 'Ente Emittente: '), grant.issuingAuthority),
+            grant.expirationDate ? React.createElement('span', null, React.createElement('span', { style: { color: 'rgba(0,0,0,0.45)' } }, 'Scadenza: '), grant.expirationDate) : null,
+            grant.status ? React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 4 } },
+              React.createElement('div', { style: { width: 6, height: 6, borderRadius: '50%', backgroundColor: grant.status === 'Attiva' ? '#52c41a' : '#ff4d4f' } }),
+              React.createElement('span', null, grant.status),
+            ) : null,
           ),
         ),
+        isGrantSelected ? React.createElement('div', { style: { paddingLeft: 16, display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#3E00FB', fontWeight: 500 } },
+          React.createElement(CheckCircleFilled, { style: { fontSize: 16 } }),
+          React.createElement('span', null, 'Selezionata'),
+        ) : null,
       ),
-    },
-    {
-      key: 'dati-tecnici', label: 'Dati Tecnici',
-      children: React.createElement(Descriptions, { column: 2, size: 'small', bordered: true, style: { marginTop: 16 },
-        items: [
-          { key:'t1', label:'Tipologia',   children: imp.tipo||'—' },
-          { key:'t2', label:'Formato',     children: imp.formato||'—' },
-          { key:'t3', label:'Faces',       children: String(imp.faces||1) },
-          { key:'t4', label:'Illuminato',  children: imp.illuminato ? 'Sì' : 'No' },
-          { key:'t5', label:'Canale',      children: imp.canale||'OOH' },
-          { key:'t6', label:'Latitudine',  children: String(imp.lat||'—') },
-          { key:'t7', label:'Longitudine', children: String(imp.lng||'—') },
-        ],
-      }),
-    },
-    { key:'asset',      label:'Asset e Dispositivi',   children: React.createElement(Empty, { description:'Nessun asset registrato', image:Empty.PRESENTED_IMAGE_SIMPLE, style:{marginTop:48} }) },
-    { key:'ops',        label:'Operazioni e Squadre',  children: React.createElement(Empty, { description:'Nessuna operazione registrata', image:Empty.PRESENTED_IMAGE_SIMPLE, style:{marginTop:48} }) },
-    {
-      key: 'vendita', label: 'Profilo Vendita',
-      children: React.createElement(Descriptions, { column: 2, size: 'small', bordered: true, style: { marginTop: 16 },
-        items: [
-          { key:'v1', label:'Modalità',     children: imp.vendita||'—' },
-          { key:'v2', label:'Proprietario', children: imp.titolare||'—' },
-          { key:'v3', label:'Cimasa',       children: imp.cimasa||'—' },
-        ],
-      }),
-    },
-    { key:'accounting', label:'Contabilità', children: React.createElement(Empty, { description:'Nessun dato contabile', image:Empty.PRESENTED_IMAGE_SIMPLE, style:{marginTop:48} }) },
-  ];
+      children: React.createElement('div', { style: { padding: '8px 0' } },
+        React.createElement('div', { style: { border: '1px solid #d9d9d9', borderRadius: 6, overflow: 'hidden' } },
+          React.createElement('div', { style: { display: 'grid', gridTemplateColumns: '2fr 2fr 2fr 4fr 40px', padding: '8px 16px', fontWeight: 500, fontSize: 12, color: 'rgba(0,0,0,0.65)', backgroundColor: '#fafafa', borderBottom: '1px solid #f0f0f0' } },
+            React.createElement('div', null, 'Numero Utenza'),
+            React.createElement('div', null, 'Codice Cimasa'),
+            React.createElement('div', null, 'Canone Patrimoniale'),
+            React.createElement('div', null, 'Aggiunta a:'),
+            React.createElement('div'),
+          ),
+          grant.utilities.map((utility, idx) => {
+            const uKey = grant.key + '-' + utility.utilityNumber;
+            const isSel = selectedRowKey === uKey;
+            return React.createElement('div', {
+              key: uKey,
+              style: { display: 'grid', gridTemplateColumns: '2fr 2fr 2fr 4fr 40px', padding: '12px 16px', borderBottom: idx < grant.utilities.length - 1 ? '1px solid #f0f0f0' : 'none', backgroundColor: isSel ? '#f9f7ff' : 'transparent', cursor: 'pointer', alignItems: 'center', transition: 'background-color 0.2s' },
+              onClick: () => onRowSelect(isSel ? null : uKey),
+            },
+              React.createElement('div', { style: { fontSize: 13 } }, utility.utilityNumber),
+              React.createElement('div', { style: { fontSize: 13, color: (!utility.cimasaCode || utility.cimasaCode === 'Non specificata') ? '#bfbfbf' : 'rgba(0,0,0,0.85)' } }, (utility.cimasaCode && utility.cimasaCode !== 'Non specificata') ? utility.cimasaCode : 'N/D'),
+              React.createElement('div', { style: { fontSize: 13 } }, utility.propertyTax + ' / anno'),
+              React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' } },
+                utility.connectedTo && utility.connectedTo.length > 0
+                  ? utility.connectedTo.map((tag, i) => React.createElement(Tag, { key: i, style: { margin: 0, border: '1px solid #d9d9d9', fontSize: 12, padding: '2px 8px' } }, tag))
+                  : React.createElement('span', { style: { color: 'rgba(0,0,0,0.45)', fontSize: 13 } }, 'Nessun impianto aggiunto'),
+              ),
+              React.createElement('div', { style: { display: 'flex', justifyContent: 'flex-end' } },
+                React.createElement(Checkbox, { checked: isSel, onChange: e => { e.stopPropagation(); onRowSelect(isSel ? null : uKey); } }),
+              ),
+            );
+          }),
+        ),
+      ),
+    };
+  });
 
-  return React.createElement('div', { className: 'imp-detail-page' },
+  return React.createElement('div', null,
+    React.createElement(Input, { placeholder: 'Cerca concessione...', prefix: React.createElement(SearchOutlined, { style: { color: 'rgba(0,0,0,0.45)' } }), value: searchText, onChange: e => { setSearchText(e.target.value); setCurrentPage(1); }, style: { marginBottom: 16 }, allowClear: true }),
+    React.createElement('div', { style: { marginBottom: 16, padding: '12px 16px', backgroundColor: '#f6f7f9', borderRadius: 6, fontSize: 13, color: 'rgba(0,0,0,0.65)' } }, "Seleziona una concessione e scegli il numero utenza che vuoi collegare all'impianto"),
+    React.createElement(Collapse, { items: collapseItems, ghost: false, style: { backgroundColor: '#fff', border: '1px solid #d9d9d9', borderRadius: 6 }, activeKey: activeKeys, onChange: keys => setActiveKeys(keys) }),
+    filtered.length > pageSize ? React.createElement('div', { style: { display: 'flex', justifyContent: 'flex-end', padding: '16px 0', borderTop: '1px solid #f0f0f0', marginTop: 16 } },
+      React.createElement(Pagination, { current: currentPage, total: filtered.length, pageSize: pageSize, onChange: setCurrentPage, size: 'small' }),
+    ) : null,
+  );
+}
 
-    // ── Topbar
-    React.createElement('div', { className: 'imp-detail-topbar' },
-      React.createElement(Button, { type:'text', size:'small', icon:React.createElement(ArrowLeftOutlined), onClick:onBack, style:{color:'rgba(0,0,0,0.45)',marginRight:4} }),
-      React.createElement(Text, { style:{color:'rgba(0,0,0,0.45)',fontSize:13} }, 'Systems Map'),
-      React.createElement('span', { style:{color:'rgba(0,0,0,0.2)',margin:'0 6px',fontSize:13} }, '/'),
-      React.createElement(Text, { style:{color:'rgba(0,0,0,0.45)',fontSize:13} }, 'Inventory'),
-      React.createElement('span', { style:{color:'rgba(0,0,0,0.2)',margin:'0 6px',fontSize:13} }, '/'),
-      React.createElement(Text, { strong:true, style:{fontSize:13} }, displayName),
+function AuthorizationsList({ data, selectedKeys, onSelectionChange }) {
+  const [searchText, setSearchText] = useState('');
+  const [showOnlySelected, setShowOnlySelected] = useState(false);
+
+  const filtered = data.filter(a => {
+    const s = searchText.toLowerCase();
+    const matchSearch = !searchText || a.authorizationCategory.toLowerCase().includes(s) || a.issuingAuthority.toLowerCase().includes(s) || a.protocolNumber.toLowerCase().includes(s) || (a.expirationDate && a.expirationDate.toLowerCase().includes(s));
+    return matchSearch && (!showOnlySelected || selectedKeys.includes(a.key));
+  });
+
+  const handleToggle = key => {
+    if (selectedKeys.includes(key)) onSelectionChange(selectedKeys.filter(k => k !== key));
+    else onSelectionChange([...selectedKeys, key]);
+  };
+
+  return React.createElement('div', null,
+    React.createElement('div', { style: { marginBottom: 16, padding: '12px 16px', backgroundColor: '#f6f7f9', borderRadius: 6, fontSize: 13, color: 'rgba(0,0,0,0.65)' } }, "Seleziona tutte le autorizzazioni da collegare a questo impianto"),
+    React.createElement(Input, { placeholder: 'Cerca autorizzazione', prefix: React.createElement(SearchOutlined, { style: { color: 'rgba(0,0,0,0.45)' } }), value: searchText, onChange: e => setSearchText(e.target.value), style: { marginBottom: 16 }, allowClear: true }),
+    React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 } },
+      React.createElement('div', { style: { fontSize: 14 } }, React.createElement('span', { style: { fontWeight: 600 } }, 'Totale:'), ' ' + filtered.length),
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+        React.createElement('span', { style: { fontSize: 13, color: 'rgba(0,0,0,0.65)' } }, 'Mostra solo i selezionati'),
+        React.createElement(Switch, { size: 'small', checked: showOnlySelected, onChange: setShowOnlySelected }),
+      ),
     ),
+    React.createElement('div', { style: { border: '1px solid #d9d9d9', borderRadius: 6, overflow: 'hidden' } },
+      filtered.length > 0
+        ? filtered.map((auth, idx) => {
+            const isSel = selectedKeys.includes(auth.key);
+            return React.createElement('div', {
+              key: auth.key,
+              style: { padding: 16, borderBottom: idx < filtered.length - 1 ? '1px solid #f0f0f0' : 'none', backgroundColor: isSel ? '#f9f7ff' : 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, transition: 'background-color 0.2s' },
+              onClick: () => handleToggle(auth.key),
+            },
+              React.createElement('div', { style: { flex: 1 } },
+                React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 12, fontSize: 14, marginBottom: 8 } },
+                  React.createElement('span', { style: { fontWeight: 500, color: 'rgba(0,0,0,0.85)' } }, auth.authorizationCategory),
+                  React.createElement(Tag, { style: { margin: 0, border: '1px solid #d9d9d9', color: 'rgba(0,0,0,0.65)', backgroundColor: '#fafafa', fontSize: 13, padding: '2px 8px' } }, auth.protocolNumber),
+                ),
+                React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 24, fontSize: 12, color: 'rgba(0,0,0,0.45)', flexWrap: 'wrap' } },
+                  React.createElement('span', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement('span', null, 'Ente Emittente:'), React.createElement('span', { style: { color: 'rgba(0,0,0,0.85)' } }, auth.issuingAuthority)),
+                  auth.stipulationDate ? React.createElement('span', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement('span', null, 'Data Stipula:'), React.createElement('span', { style: { color: 'rgba(0,0,0,0.85)' } }, auth.stipulationDate)) : null,
+                  auth.expirationDate ? React.createElement('span', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement('span', null, 'Data Scadenza:'), React.createElement('span', { style: { color: 'rgba(0,0,0,0.85)' } }, auth.expirationDate)) : null,
+                  auth.cup ? React.createElement('span', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement('span', null, 'CUP:'), React.createElement('span', { style: { color: 'rgba(0,0,0,0.85)' } }, auth.cup)) : null,
+                ),
+              ),
+              React.createElement('div', { style: { display: 'flex', alignItems: 'flex-start', paddingTop: 2 } },
+                React.createElement(Checkbox, { checked: isSel, onChange: e => { e.stopPropagation(); handleToggle(auth.key); } }),
+              ),
+            );
+          })
+        : React.createElement('div', { style: { padding: '24px 16px', textAlign: 'center', color: 'rgba(0,0,0,0.45)', fontSize: 13 } }, showOnlySelected ? 'Nessuna autorizzazione selezionata' : 'Nessuna autorizzazione disponibile'),
+    ),
+  );
+}
 
-    // ── Gallery
-    React.createElement('div', { className: 'imp-detail-gallery' },
-      React.createElement('div', { className: 'imp-detail-gallery-main', style:{ background:'linear-gradient(160deg,#1a2540 0%,#2a3a5a 100%)', display:'flex', alignItems:'center', justifyContent:'center' } },
-        React.createElement('img', { src:`../../assets/${TIPO_TO_FOLDER[imp.tipo]||'OOH/palina'}/active.svg`, style:{height:'75%',opacity:0.55,filter:'drop-shadow(0 4px 12px rgba(0,0,0,0.4))'}, onError:e=>{e.target.style.display='none';} }),
+function ImpiantoDetailPage({ imp, onBack }) {
+  const [activeTab,         setActiveTab]         = useState('2');
+  const [visibleCount,      setVisibleCount]      = useState(5);
+  const [isEditingIdentityCard, setIsEditingIdentityCard] = useState(false);
+  const [isEditingProject,      setIsEditingProject]      = useState(false);
+  const [galleryOpen,       setGalleryOpen]       = useState(false);
+  const [mapOpen,           setMapOpen]           = useState(false);
+  const [drawerOpen,        setDrawerOpen]        = useState(false);
+  const [drawerType,        setDrawerType]        = useState(null);
+  const [isReplaceMode,     setIsReplaceMode]     = useState(false);
+  const [selectedRowKey,    setSelectedRowKey]    = useState(null);
+  const [selectedAuthKeys,  setSelectedAuthKeys]  = useState([]);
+  const [addedPermits,      setAddedPermits]      = useState([]);
+  const [accountNumber,     setAccountNumber]     = useState('DB45PL');
+  const [expDate,           setExpDate]           = useState('10/12/2031');
+
+  const displayName = imp.tipo
+    ? (imp.tipo.replace(/\s/g, '_') + '_' + (imp.citta || 'PA').replace(/\s/g, '').slice(0, 6).toUpperCase() + '01')
+    : (imp.id || 'Impianto');
+  const address = [imp.via, imp.civico, imp.citta].filter(Boolean).join(', ') || 'Via Libertà, 36, Palermo (PA)';
+  const ownerName = imp.titolare || 'AMAT S.p.A.';
+  const ownerInitial = (ownerName[0] || 'A').toUpperCase();
+  const stateColor = (imp.stato_amm === 'Attivo' || !imp.stato_amm) ? '#52c41a' : imp.stato_amm === 'Non disponibile' ? '#ff4d4f' : '#faad14';
+  const statusTagColor = (imp.stato_amm === 'Attivo' || !imp.stato_amm) ? 'success' : imp.stato_amm === 'Non disponibile' ? 'error' : 'warning';
+  const mapLng = imp.lng || 13.3615;
+  const mapLat = imp.lat || 38.1155;
+  const mapSrc = 'https://www.openstreetmap.org/export/embed.html?bbox=' + (mapLng - 0.001) + '%2C' + (mapLat - 0.0005) + '%2C' + (mapLng + 0.001) + '%2C' + (mapLat + 0.0005) + '&layer=mapnik';
+
+  const [cimasaCode,        setCimasaCode]        = useState(imp.cimasa || 'CIM-2024-00847');
+  const [tipoSuolo,         setTipoSuolo]         = useState('Privato');
+  const [progettista,       setProgettista]       = useState('Studio Tecnico Associato Rossi & Partners');
+  const [acciaoArmatura,    setAcciaoArmatura]    = useState('8450C fa44a - ø12~16mm');
+  const [laboratorio,       setLaboratorio]       = useState('Lab. Prova Materiali Sicilia - Cert. 2024/PA0145');
+  const [calcestruzzo,      setCalcestruzzo]      = useState('C30/37 - Rck 37 N/mm²');
+  const [dataInstallazione, setDataInstallazione] = useState('20/11/2023');
+  const [cse,               setCse]               = useState('Ing. Laura Conti');
+  const [tecnicheUtilizzate,setTecnicheUtilizzate]= useState('Fondazioni profonde, struttura in c.a.');
+  const [acciaoStrutturale, setAcciaoStrutturale] = useState('S355JR - IPE 200');
+  const [geologo,           setGeologo]           = useState('Dott. Geol. Giuseppe Marino');
+  const [direttoreLavori,   setDirettoreLavori]   = useState('Ing. Alessandro Bianchi');
+  const [collaudatore,      setCollaudatore]      = useState('Ing. Stefano Messina');
+  const [larghezzaTotale,   setLarghezzaTotale]   = useState('12.5');
+  const [altezzaTotale,     setAltezzaTotale]     = useState('18.0');
+  const [profonditaTotale,  setProfonditaTotale]  = useState('2.8');
+  const [minimaAltezzaTerra,setMinimaAltezzaTerra]= useState('3.5');
+  const [areaEspositiva,    setAreaEspositiva]    = useState('225');
+  const [modifiedFields,    setModifiedFields]    = useState(new Set());
+
+  const origRef = useRef({
+    cimasaCode: imp.cimasa || '', tipoSuolo: 'Privato', progettista: 'Studio Tecnico Associato Rossi & Partners',
+    acciaoArmatura: '8450C fa44a - ø12~16mm', laboratorio: 'Lab. Prova Materiali Sicilia - Cert. 2024/PA0145',
+    calcestruzzo: 'C30/37 - Rck 37 N/mm²', dataInstallazione: '20/11/2023', cse: 'Ing. Laura Conti',
+    tecnicheUtilizzate: 'Fondazioni profonde, struttura in c.a.', acciaoStrutturale: 'S355JR - IPE 200',
+    geologo: 'Dott. Geol. Giuseppe Marino', direttoreLavori: 'Ing. Alessandro Bianchi',
+    collaudatore: 'Ing. Stefano Messina', larghezzaTotale: '12.5', altezzaTotale: '18.0',
+    profonditaTotale: '2.8', minimaAltezzaTerra: '3.5', areaEspositiva: '225',
+  });
+
+  const trackChange = (fieldName, value, setter) => {
+    setter(value);
+    setModifiedFields(prev => { const next = new Set(prev); if (value !== origRef.current[fieldName]) next.add(fieldName); else next.delete(fieldName); return next; });
+  };
+
+  const IDENT_FIELDS = ['cimasaCode','tipoSuolo'];
+  const PROJ_FIELDS  = ['progettista','acciaoArmatura','laboratorio','calcestruzzo','dataInstallazione','cse','tecnicheUtilizzate','acciaoStrutturale','geologo','direttoreLavori','collaudatore'];
+
+  const handleSaveIdentity = () => {
+    setIsEditingIdentityCard(false);
+    setModifiedFields(prev => { const n = new Set(prev); IDENT_FIELDS.forEach(k => n.delete(k)); return n; });
+    origRef.current = { ...origRef.current, cimasaCode, tipoSuolo };
+    antdMsg.success('Modifiche salvate con successo');
+  };
+  const handleSaveProject = () => {
+    setIsEditingProject(false);
+    setModifiedFields(prev => { const n = new Set(prev); PROJ_FIELDS.forEach(k => n.delete(k)); return n; });
+    origRef.current = { ...origRef.current, progettista, acciaoArmatura, laboratorio, calcestruzzo, dataInstallazione, cse, tecnicheUtilizzate, acciaoStrutturale, geologo, direttoreLavori, collaudatore };
+    antdMsg.success('Modifiche salvate con successo');
+  };
+
+  const handleCancelIdentity = () => {
+    const o = origRef.current;
+    setCimasaCode(o.cimasaCode); setTipoSuolo(o.tipoSuolo);
+    setModifiedFields(prev => { const n = new Set(prev); IDENT_FIELDS.forEach(k => n.delete(k)); return n; });
+    setIsEditingIdentityCard(false);
+  };
+  const handleCancelProject = () => {
+    const o = origRef.current;
+    setProgettista(o.progettista); setAcciaoArmatura(o.acciaoArmatura); setLaboratorio(o.laboratorio);
+    setCalcestruzzo(o.calcestruzzo); setDataInstallazione(o.dataInstallazione); setCse(o.cse);
+    setTecnicheUtilizzate(o.tecnicheUtilizzate); setAcciaoStrutturale(o.acciaoStrutturale);
+    setGeologo(o.geologo); setDirettoreLavori(o.direttoreLavori); setCollaudatore(o.collaudatore);
+    setModifiedFields(prev => { const n = new Set(prev); PROJ_FIELDS.forEach(k => n.delete(k)); return n; });
+    setIsEditingProject(false);
+  };
+
+  const ef = (label, value, setter, fieldName, isEditSection) => {
+    const editing = isEditSection !== undefined ? isEditSection : false;
+    return React.createElement('div', { className: 'field-col' },
+      React.createElement(Text, { type: 'secondary', style: { fontSize: 13 } }, label),
+      React.createElement(Input, {
+        value, readOnly: !editing, variant: editing ? 'outlined' : 'borderless',
+        onChange: e => trackChange(fieldName, e.target.value, setter),
+        style: { cursor: editing ? 'text' : 'default', backgroundColor: '#fff' },
+        className: 'readonly-input' + (modifiedFields.has(fieldName) ? ' input-modified' : ''),
+      }),
+    );
+  };
+
+  const closePermitDrawer = () => { setDrawerOpen(false); setSelectedRowKey(null); setSelectedAuthKeys([]); setIsReplaceMode(false); };
+
+  const handleAddPermit = () => {
+    if (drawerType === 'autorizzazione') {
+      if (!selectedAuthKeys.length) { antdMsg.warning("Seleziona almeno un'autorizzazione"); return; }
+      const newPerms = selectedAuthKeys.map(k => {
+        const a = AUTHORIZATIONS_DATA.find(x => x.key === k);
+        return a ? { id: k, permitType: 'autorizzazione', documentType: a.authorizationCategory, documentId: a.protocolNumber, authorizationCategory: a.authorizationCategory, state: a.status, isActive: a.isActive } : null;
+      }).filter(Boolean);
+      setAddedPermits(prev => [...prev, ...newPerms]);
+      closePermitDrawer();
+      antdMsg.success(newPerms.length + (newPerms.length > 1 ? ' autorizzazioni aggiunte' : ' autorizzazione aggiunta'));
+      return;
+    }
+    if (!selectedRowKey) { antdMsg.warning("Seleziona un'utenza"); return; }
+    let sg = null, su = null;
+    for (const g of GRANTS_DATA) {
+      const u = g.utilities.find(u => g.key + '-' + u.utilityNumber === selectedRowKey);
+      if (u) { sg = g; su = u; break; }
+    }
+    if (!sg) return;
+    const np = { id: selectedRowKey, permitType: 'concessione', documentType: sg.documentType, documentId: sg.documentId, accountNumber: su.utilityNumber, state: sg.status || 'Attiva', isActive: sg.isActive !== false };
+    setAddedPermits(prev => isReplaceMode ? [np] : [...prev, np]);
+    setAccountNumber(su.utilityNumber);
+    setCimasaCode(su.cimasaCode && su.cimasaCode !== 'Non specificata' ? su.cimasaCode : '');
+    setExpDate(su.expirationDate || null);
+    closePermitDrawer();
+    antdMsg.success(isReplaceMode ? 'Concessione sostituita' : 'Concessione aggiunta');
+  };
+
+  const handleRemovePermit = id => {
+    const p = addedPermits.find(x => x.id === id);
+    if (!p) return;
+    setAddedPermits(prev => prev.filter(x => x.id !== id));
+    if (p.permitType === 'concessione') { setAccountNumber(null); setCimasaCode(imp.cimasa || ''); setExpDate(null); }
+    antdMsg.success('Permesso scollegato');
+  };
+
+  const tabEvents = (() => {
+    const isDateFuture = dateStr => { const [d,m,y] = dateStr.split('/').map(Number); return new Date(y,m-1,d) > new Date(); };
+    const items = MOCK_EVENTS.slice(0, visibleCount).map((ev, i, arr) => ({ ...ev, isFirstOfDate: i === 0 || arr[i-1].date !== ev.date }));
+    return React.createElement('div', { style: { padding: '0' } },
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, flexWrap: 'wrap' } },
+        React.createElement(DatePicker.RangePicker, { style: { flex: 'none' }, placeholder: ['Data inizio', 'Data fine'] }),
+        React.createElement(Select, { placeholder: 'Tipo evento', style: { width: 160 }, allowClear: true, options: [
+          { value: 'status', label: 'Cambio stato' },
+          { value: 'squad', label: 'Squadra' },
+          { value: 'duty', label: 'Incarico' },
+          { value: 'create', label: 'Creazione' },
+        ]}),
+        React.createElement(Select, { placeholder: 'Agente', style: { width: 160 }, allowClear: true, options: [
+          { value: 'marco', label: 'Marco Picceri' },
+          { value: 'admin', label: 'System Admin' },
+        ]}),
+        React.createElement(Input, { placeholder: 'Cerca evento…', prefix: React.createElement(SearchOutlined, { style: { color: 'rgba(0,0,0,0.3)' } }), style: { width: 180 }, allowClear: true }),
+        React.createElement(Button, { type: 'primary', icon: React.createElement(PlusOutlined) }, 'Nuovo Evento'),
       ),
-      React.createElement('div', { className: 'imp-detail-gallery-grid' },
-        ...[['#1e2e3a','#1a283a'],['#243244','#22304a']].flat().map((bg,i)=>
-          React.createElement('div', { key:i, className:'imp-detail-gallery-thumb', style:{background:`linear-gradient(135deg,${bg} 0%,${bg}bb 100%)`} },
-            i===3 ? React.createElement('div', { style:{position:'absolute',inset:0,background:'rgba(0,0,0,0.5)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer'} },
-              React.createElement('span', { style:{color:'#fff',fontSize:11,fontWeight:600} }, '+ Vedi tutte')
-            ) : null
+      React.createElement('div', null,
+        items.map((ev, i) =>
+          React.createElement('div', { key: i, style: { display: 'flex', flexDirection: 'row', alignItems: 'stretch', gap: 16, minHeight: 110, background: '#FFFFFF' } },
+            React.createElement('div', { style: { width: 223, flexShrink: 0, textAlign: 'right', paddingTop: 6 } },
+              ev.isFirstOfDate
+                ? React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4, fontSize: 13, color: 'rgba(0,0,0,0.88)', marginBottom: 4, lineHeight: '20px' } },
+                    React.createElement(CalendarOutlined, { style: { fontSize: 14 } }),
+                    ev.date,
+                  )
+                : React.createElement('div', { style: { fontSize: 13, color: 'rgba(0,0,0,0.88)', marginBottom: 4, lineHeight: '20px' } }, ev.date),
+              React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 4, fontSize: 13, color: 'rgba(0,0,0,0.88)', lineHeight: '20px' } },
+                React.createElement(ClockCircleOutlined, { style: { fontSize: 14 } }),
+                ev.time,
+              ),
+            ),
+            React.createElement('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', width: 13, flexShrink: 0 } },
+              React.createElement('div', { style: { width: 10, height: 10, borderRadius: '50%', backgroundColor: isDateFuture(ev.date) ? '#d9d9d9' : '#3E00FB', flexShrink: 0, marginTop: 8 } }),
+              i < items.length - 1
+                ? React.createElement('div', { style: { width: 2, flex: 1, backgroundColor: '#d9d9d9', marginTop: 4 } })
+                : null,
+            ),
+            React.createElement('div', { style: { flex: 1, paddingBottom: 24 } },
+              React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, flexWrap: 'wrap' } },
+                React.createElement(Text, { strong: true, style: { fontSize: 14, lineHeight: '22px', color: 'rgba(0,0,0,0.88)' } }, ev.title),
+                ev.badge ? React.createElement(Badge, { status: ev.badge.status, text: ev.badge.label }) : null,
+              ),
+              React.createElement(Text, { style: { fontSize: 13, display: 'block', marginBottom: 16, lineHeight: '20px', color: 'rgba(0,0,0,0.88)' } }, ev.desc),
+              React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+                React.createElement(Avatar, { size: 24, style: { backgroundColor: '#3E00FB', fontSize: 11, flexShrink: 0 } }, ev.agentInitial),
+                React.createElement(Text, { strong: true, style: { fontSize: 13 } }, ev.agent),
+              ),
+            ),
           )
         ),
       ),
-    ),
+      visibleCount < MOCK_EVENTS.length
+        ? React.createElement('div', { style: { paddingLeft: 245, marginTop: 8 } },
+            React.createElement(Button, { icon: React.createElement(SyncOutlined), onClick: () => setVisibleCount(c => Math.min(c + 5, MOCK_EVENTS.length)) }, 'Carica altri'),
+          )
+        : null,
+    );
+  })();
 
-    // ── Title bar
-    React.createElement('div', { className: 'imp-detail-title-bar' },
-      React.createElement(Button, { type:'link', size:'small', icon:React.createElement(ArrowLeftOutlined), onClick:onBack, style:{paddingLeft:0,color:'rgba(0,0,0,0.45)'} }, 'Torna alla mappa'),
-      React.createElement('div', { style:{width:1,height:16,background:'#E8E8E8',flexShrink:0} }),
-      React.createElement('span', { className:'imp-detail-name' }, displayName),
-      React.createElement('div', { style:{flex:1} }),
-      React.createElement(Button, { icon:React.createElement(EditOutlined) }, 'Modifica'),
-    ),
-
-    // ── Body
-    React.createElement('div', { className: 'imp-detail-body' },
-
-      // Sidebar
-      React.createElement('div', { className: 'imp-detail-sidebar' },
-        React.createElement('div', { className: 'imp-detail-map-mini' },
-          React.createElement('svg', { viewBox:'0 0 240 140', xmlns:'http://www.w3.org/2000/svg', style:{width:'100%',height:'100%'} },
-            React.createElement('rect', { width:240, height:140, fill:'#E8EEF4' }),
-            React.createElement('line', { x1:0,y1:65,x2:240,y2:65,   stroke:'#fff', strokeWidth:10 }),
-            React.createElement('line', { x1:115,y1:0,x2:115,y2:140, stroke:'#fff', strokeWidth:7 }),
-            React.createElement('line', { x1:0,y1:30,x2:240,y2:18,   stroke:'#EEF2F7', strokeWidth:4 }),
-            React.createElement('line', { x1:0,y1:105,x2:240,y2:118, stroke:'#EEF2F7', strokeWidth:4 }),
-            React.createElement('line', { x1:55,y1:0,x2:70,y2:140,   stroke:'#D8E2EC', strokeWidth:2 }),
-            React.createElement('line', { x1:168,y1:0,x2:158,y2:140, stroke:'#D8E2EC', strokeWidth:2 }),
-            React.createElement('rect', { x:18,y:15,width:48,height:32,rx:3,fill:'#C5D4E2' }),
-            React.createElement('rect', { x:155,y:72,width:58,height:38,rx:3,fill:'#C5D4E2' }),
-            React.createElement('rect', { x:128,y:18,width:36,height:32,rx:3,fill:'#C5D4E2' }),
-            React.createElement('rect', { x:18,y:75,width:34,height:28,rx:3,fill:'#D4DEEA' }),
-            React.createElement('circle', { cx:115, cy:60, r:11, fill:'#3E00FB', stroke:'white', strokeWidth:2.5 }),
-            React.createElement('circle', { cx:115, cy:60, r:4,  fill:'white' }),
+  const sectionEditButtons = (isEdit, onEdit, onSave, onCancel) =>
+    React.createElement('div', { style: { display: 'flex', gap: 8 } },
+      !isEdit
+        ? React.createElement(Button, { icon: React.createElement(EditOutlined), size: 'small', onClick: onEdit }, 'Modifica')
+        : React.createElement(Space, { size: 8 },
+            React.createElement(Button, { size: 'small', onClick: onCancel }, 'Annulla'),
+            React.createElement(Button, { type: 'primary', size: 'small', icon: React.createElement(SaveOutlined), onClick: onSave }, 'Salva'),
           ),
-        ),
-        React.createElement('div', { className:'imp-detail-addr' },
-          React.createElement(EnvironmentOutlined, { style:{fontSize:12,color:'#3E00FB',marginTop:1,flexShrink:0} }),
-          address,
-        ),
-        React.createElement('div', { className:'imp-detail-sidebar-section' },
-          React.createElement('div', { className:'imp-detail-sidebar-label' }, 'Event History'),
-          React.createElement(DatePicker.RangePicker, { size:'small', style:{width:'100%'}, placeholder:['Inizio','Fine'] }),
-        ),
+    );
+
+  const tabAmm = React.createElement('div', null,
+
+    React.createElement('div', { className: 'tab-section' },
+      React.createElement('div', { style: { marginBottom: 12 } },
+        React.createElement(Typography.Title, { level: 5, style: { margin: 0 } }, 'Scheda identificativa'),
       ),
+      React.createElement(Row, { gutter: [16, 16] },
+        React.createElement(Col, { span: 6 }, ef('Codice Cimasa', cimasaCode, setCimasaCode, 'cimasaCode', isEditingIdentityCard)),
+        React.createElement(Col, { span: 6 }, ef('Tipo suolo', tipoSuolo, setTipoSuolo, 'tipoSuolo', isEditingIdentityCard)),
+      ),
+    ),
 
-      // Main
-      React.createElement('div', { className: 'imp-detail-main' },
+    React.createElement(Divider),
 
-        // Info cards row 1
-        React.createElement('div', { className:'imp-detail-cards' },
-          ...cards1.map((c,i)=>
-            React.createElement('div', { key:i, className:'imp-detail-card' },
-              React.createElement('div', { className:'imp-detail-card-label' }, c.label),
-              React.createElement('div', { className:'imp-detail-card-value' },
-                c.dot && React.createElement('span', { style:{width:8,height:8,borderRadius:'50%',background:c.dot,flexShrink:0} }),
-                c.icon,
-                c.value||'—',
-              ),
-              c.sub && React.createElement('div', { className:'imp-detail-card-sub' }, c.sub),
-            )
-          ),
-        ),
+    React.createElement('div', { className: 'tab-section' },
+      React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 } },
+        React.createElement(Typography.Title, { level: 5, style: { margin: 0 } }, 'Permessi'),
+        React.createElement(Dropdown, {
+          menu: { items: [
+            { key: 'concessione', label: 'Aggiungi Concessione', disabled: accountNumber !== null, onClick: () => { setDrawerType('concessione'); setDrawerOpen(true); } },
+            { key: 'autorizzazione', label: 'Aggiungi Autorizzazione', onClick: () => { setDrawerType('autorizzazione'); setDrawerOpen(true); } },
+          ]},
+        }, React.createElement(Button, { icon: React.createElement(PlusOutlined) }, 'Collega Permesso')),
+      ),
+      addedPermits.length > 0
+        ? React.createElement(Row, { gutter: [16, 16] },
+            addedPermits.map(p => React.createElement(Col, { span: 8, key: p.id },
+              React.createElement(PermitCard, {
+                permitType: p.permitType, documentType: p.documentType, documentId: p.documentId,
+                accountNumber: p.accountNumber, authorizationCategory: p.authorizationCategory,
+                state: p.state, isActive: p.isActive,
+                onReplace: () => { setDrawerType('concessione'); setIsReplaceMode(true); setDrawerOpen(true); },
+                onRemove: () => handleRemovePermit(p.id),
+              }),
+            )),
+          )
+        : React.createElement(Empty, { description: "Aggiungi un permesso per collegarlo all'impianto", image: Empty.PRESENTED_IMAGE_SIMPLE, style: { padding: '24px 0' } }),
+    ),
 
-        // Info cards row 2
-        React.createElement('div', { className:'imp-detail-cards' },
-          ...cards2.map((c,i)=>
-            React.createElement('div', { key:i, className:'imp-detail-card' },
-              React.createElement('div', { className:'imp-detail-card-label' }, c.label),
-              React.createElement('div', { className:'imp-detail-card-value', style:{fontSize:c.big?18:14, fontWeight:c.big?700:600} },
-                c.value||'—',
-                c.copy && React.createElement(Tooltip, { title:'Copia' },
-                  React.createElement(Button, { type:'text', size:'small', icon:React.createElement(CopyOutlined), style:{color:'rgba(0,0,0,0.3)',marginLeft:2} })
+    React.createElement(Divider),
+
+    React.createElement('div', { className: 'tab-section' },
+      React.createElement('div', { style: { marginBottom: 12 } },
+        React.createElement(Typography.Title, { level: 5, style: { margin: 0 } }, 'Progetto'),
+      ),
+      React.createElement(Row, { gutter: [24, 16] },
+        React.createElement(Col, { span: 6 }, ef('Progettista', progettista, setProgettista, 'progettista', isEditingProject)),
+        React.createElement(Col, { span: 6 }, ef('Geologo', geologo, setGeologo, 'geologo', isEditingProject)),
+        React.createElement(Col, { span: 6 }, ef('D.L. (Direttore Lavori)', direttoreLavori, setDirettoreLavori, 'direttoreLavori', isEditingProject)),
+        React.createElement(Col, { span: 6 }, ef('C.S.E.', cse, setCse, 'cse', isEditingProject)),
+      ),
+      React.createElement(Row, { gutter: [24, 16], style: { marginTop: 16 } },
+        React.createElement(Col, { span: 6 }, ef('Laboratorio', laboratorio, setLaboratorio, 'laboratorio', isEditingProject)),
+        React.createElement(Col, { span: 6 }, ef('Tecniche utilizzate', tecnicheUtilizzate, setTecnicheUtilizzate, 'tecnicheUtilizzate', isEditingProject)),
+        React.createElement(Col, { span: 6 }, ef('Acciaio armatura', acciaoArmatura, setAcciaoArmatura, 'acciaoArmatura', isEditingProject)),
+        React.createElement(Col, { span: 6 }, ef('Acciaio strutturale', acciaoStrutturale, setAcciaoStrutturale, 'acciaoStrutturale', isEditingProject)),
+      ),
+      React.createElement(Row, { gutter: [24, 16], style: { marginTop: 16 } },
+        React.createElement(Col, { span: 6 }, ef('Calcestruzzo', calcestruzzo, setCalcestruzzo, 'calcestruzzo', isEditingProject)),
+        React.createElement(Col, { span: 6 }, ef('Data installazione', dataInstallazione, setDataInstallazione, 'dataInstallazione', isEditingProject)),
+        React.createElement(Col, { span: 6 }, ef('Collaudatore', collaudatore, setCollaudatore, 'collaudatore', isEditingProject)),
+      ),
+    ),
+  );
+
+  const tabTecnici = React.createElement('div', null,
+    React.createElement('div', { className: 'tab-section' },
+      React.createElement(Typography.Title, { level: 5, style: { marginBottom: 12 } }, 'Dimensioni'),
+      React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 } },
+        React.createElement(InfoCircleOutlined, { style: { fontSize: 13, color: '#8c8c8c' } }),
+        React.createElement(Text, { type: 'secondary', style: { fontSize: 13 } }, "Le informazioni riguardano l'area occupata dall'impianto"),
+      ),
+      React.createElement(Row, { gutter: [24, 16] },
+        React.createElement(Col, { span: 6 }, ef('Larghezza totale (m)', larghezzaTotale, setLarghezzaTotale, 'larghezzaTotale')),
+        React.createElement(Col, { span: 6 }, ef('Altezza totale (m)', altezzaTotale, setAltezzaTotale, 'altezzaTotale')),
+        React.createElement(Col, { span: 6 }, ef('Profondità totale (m)', profonditaTotale, setProfonditaTotale, 'profonditaTotale')),
+        React.createElement(Col, { span: 6 }, ef('Minima altezza da terra (m)', minimaAltezzaTerra, setMinimaAltezzaTerra, 'minimaAltezzaTerra')),
+      ),
+      React.createElement(Row, { gutter: [24, 16], style: { marginTop: 16 } },
+        React.createElement(Col, { span: 6 }, ef('Area espositiva (m²)', areaEspositiva, setAreaEspositiva, 'areaEspositiva')),
+      ),
+    ),
+    React.createElement(Divider),
+    React.createElement('div', { className: 'tab-section' },
+      React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 } },
+        React.createElement(Typography.Title, { level: 5, style: { margin: 0 } }, 'Facce (' + (imp.faces || FACCE.length) + ')'),
+        React.createElement(Button, { icon: React.createElement(PlusOutlined) }, 'Aggiungi Faccia'),
+      ),
+      React.createElement(Row, { gutter: [16, 16] },
+        FACCE.map(faccia => React.createElement(Col, { span: 12, key: faccia.id },
+          React.createElement(Card, null,
+            React.createElement(Row, { gutter: 16 },
+              React.createElement(Col, { span: 12 },
+                React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 12 } },
+                  React.createElement('div', { style: { width: '100%', aspectRatio: '4/3', backgroundColor: '#f0f0f0', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+                    React.createElement(PictureOutlined, { style: { fontSize: 32, color: '#d9d9d9' } }),
+                  ),
+                  React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+                    React.createElement(ExpandOutlined, { style: { fontSize: 14 } }),
+                    React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Formato: '),
+                    React.createElement(Text, { style: { fontSize: 13 } }, faccia.formato),
+                  ),
                 ),
               ),
-              c.sub && React.createElement('div', { className:'imp-detail-card-sub' }, c.sub),
-            )
+              React.createElement(Col, { span: 12 },
+                React.createElement('div', null,
+                  React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 } },
+                    React.createElement(Typography.Title, { level: 5, style: { margin: 0 } }, 'Faccia ' + faccia.id),
+                    React.createElement(Tag, { style: faccia.tipo === 'anteriore' ? { backgroundColor: '#E6FFFB', borderColor: '#87E8DE', color: '#13C2C2' } : { backgroundColor: '#FFF2E8', borderColor: '#FFBB96', color: '#FA541C' } }, faccia.tipo === 'anteriore' ? 'Faccia Anteriore' : 'Faccia Posteriore'),
+                  ),
+                  React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 14 } },
+                    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement(AppstoreOutlined, { style: { fontSize: 14 } }), React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Slot: '), React.createElement(Text, { style: { fontSize: 13 } }, faccia.slot)),
+                    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement(CompassOutlined, { style: { fontSize: 14 } }), React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Orientamento: '), React.createElement(Text, { style: { fontSize: 13 } }, faccia.orientamento)),
+                    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement(EyeOutlined, { style: { fontSize: 14 } }), React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Cono di visibilità: '), React.createElement(Text, { style: { fontSize: 13 } }, faccia.conoVisibilita)),
+                    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement(BulbOutlined, { style: { fontSize: 14 } }), React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Illuminazione: '), React.createElement(Text, { style: { fontSize: 13 } }, faccia.illuminazione)),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        )),
+      ),
+    ),
+  );
+
+  return React.createElement('div', { className: 'imp-detail-page' },
+
+    // Cover filmstrip
+    React.createElement('div', { className: 'imp-detail-cover' },
+      COVER_STRIPS.map((s, i) =>
+        React.createElement('div', { key: i, style: { flex: s.flex, backgroundImage: 'url(' + FOTO_IMPIANTO[i] + ')', backgroundSize: 'cover', backgroundPosition: 'center' } })
+      ),
+      React.createElement(Button, {
+        style: { position: 'absolute', top: 16, left: 16 },
+        icon: React.createElement(ExpandOutlined),
+        onClick: () => setGalleryOpen(true),
+      }, 'Visualizza Gallery'),
+    ),
+
+    // Main content
+    React.createElement('div', { className: 'imp-detail-content' },
+      React.createElement('div', { className: 'imp-detail-card-wrap' },
+
+        // Header: back | title+tag | actions
+        React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px' } },
+          React.createElement('div', { style: { flex: 1 } },
+            React.createElement(Button, { type: 'link', icon: React.createElement(ArrowLeftOutlined), onClick: onBack, style: { padding: 0, height: 'auto', color: '#3E00FB' } }, 'Torna al Parco Impianti'),
+          ),
+          React.createElement('div', { style: { flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 } },
+            React.createElement(Typography.Title, { level: 4, style: { margin: 0 } }, displayName),
+            React.createElement(Tag, { color: imp.canale === 'DOOH' ? 'magenta' : 'green' }, imp.canale || 'OOH'),
+          ),
+          React.createElement('div', { style: { flex: 1, display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'flex-end' } },
+            React.createElement(Button, { icon: React.createElement(EditOutlined) }, 'Edit'),
           ),
         ),
 
-        // Tabs
-        React.createElement('div', { className:'imp-detail-tabs-wrap' },
-          React.createElement(Tabs, { items:tabItems.map(t=>({key:t.key,label:t.label})), activeKey:activeTab, onChange:setActiveTab, size:'small' }),
+        // Info row: map 25% + 8 cards 75%
+        React.createElement('div', { style: { padding: '0 24px 20px' } },
+          React.createElement(Row, { gutter: 24, style: { alignItems: 'stretch' } },
+            React.createElement(Col, { span: 6, style: { display: 'flex', flexDirection: 'column' } },
+              React.createElement('div', { style: { borderRadius: 8, overflow: 'hidden', cursor: 'pointer', flex: 1, background: '#E8EEF4', position: 'relative' }, onClick: () => setMapOpen(true) },
+                React.createElement('iframe', { width: '100%', height: '100%', style: { border: 0, display: 'block', filter: 'grayscale(1) brightness(1.1) contrast(0.9) hue-rotate(200deg) saturate(0.2)', pointerEvents: 'none' }, src: mapSrc, title: 'Mappa impianto' }),
+              ),
+              React.createElement('div', { style: { marginTop: 8, display: 'flex', alignItems: 'center', gap: 6 } },
+                React.createElement(EnvironmentOutlined, { style: { fontSize: 12, color: '#8c8c8c', flexShrink: 0 } }),
+                React.createElement(Text, { style: { fontSize: 12 } }, address),
+                React.createElement(CopyOutlined, { style: { fontSize: 12, color: '#8c8c8c', cursor: 'pointer', marginLeft: 2, flexShrink: 0 }, onClick: () => antdMsg.success('Indirizzo copiato') }),
+              ),
+            ),
+            React.createElement(Col, { span: 18 },
+              React.createElement(Row, { gutter: [12, 12] },
+                React.createElement(Col, { span: 6 }, React.createElement(InfoCard, { title: 'Proprietario', value: React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement('div', { style: { width: 22, height: 22, borderRadius: '50%', backgroundColor: '#E6E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 10, flexShrink: 0 } }, ownerInitial), React.createElement('span', { style: { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' } }, ownerName)), subtitle: 'P.IVA IT02576420817' })),
+                React.createElement(Col, { span: 6 }, React.createElement(InfoCard, { title: 'Tipo Impianto', value: imp.tipo || '—', subtitle: React.createElement('span', null, React.createElement('span', { style: { color: '#3E00FB', fontWeight: 600 } }, imp.faces || 1), ' facc' + ((imp.faces || 1) > 1 ? 'e' : 'ia')) })),
+                React.createElement(Col, { span: 6 }, React.createElement(InfoCard, { title: 'Stato', value: React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement('div', { style: { width: 9, height: 9, borderRadius: '50%', backgroundColor: stateColor, flexShrink: 0 } }), React.createElement('span', null, imp.stato_amm || 'Attivo')), subtitle: 'Dal ' + (MOCK_EVENTS.find(e => e.badge) ? MOCK_EVENTS.find(e => e.badge).date : '—') })),
+                React.createElement(Col, { span: 6 }, React.createElement(InfoCard, { title: 'Formato', value: imp.formato || '—', subtitle: imp.canale || 'OOH' })),
+                React.createElement(Col, { span: 6 }, React.createElement(InfoCard, { title: 'Codice Cimasa', value: cimasaCode || '—', subtitle: cimasaCode ? 'Scade il 10/12/2031' : undefined })),
+                React.createElement(Col, { span: 6 }, React.createElement(InfoCard, { title: 'Numero Utenza', value: accountNumber || '—', subtitle: expDate ? 'Scade il ' + expDate : undefined })),
+                React.createElement(Col, { span: 6 }, React.createElement(InfoCard, { title: 'Suolo', value: tipoSuolo, subtitle: 'Categoria: Speciale' })),
+                React.createElement(Col, { span: 6 }, React.createElement(InfoCard, { title: 'Codice Area', value: imp.zona ? String(imp.zona).slice(0, 2) : '2', subtitle: 'Classe Municipale: II' })),
+              ),
+            ),
+          ),
         ),
 
-        // Tab content
-        React.createElement('div', { className:'imp-detail-tab-content' },
-          tabItems.find(t=>t.key===activeTab)?.children,
+
+        // Tabs
+        React.createElement('div', { style: { padding: '0 24px 24px' } },
+          React.createElement(Tabs, {
+            activeKey: activeTab, onChange: setActiveTab, style: { marginBottom: 16 }, tabBarStyle: { borderBottom: 'none' },
+            items: [
+              { key: '2', label: React.createElement(Badge, { dot: true, status: 'error', offset: [4, -2], style: { display: modifiedFields.size > 0 ? 'inline-block' : 'none' } }, 'Dati Amministrativi') },
+              { key: '3', label: 'Dati Tecnici' },
+              { key: '4', label: 'Cespiti e Dispositivi' },
+              { key: '5', label: 'Assegnazione Squadre' },
+              { key: '1', label: 'Storico Eventi' },
+            ],
+          }),
+          activeTab === '1' ? tabEvents
+          : activeTab === '2' ? tabAmm
+          : activeTab === '3' ? tabTecnici
+          : React.createElement(Empty, { description: 'Nessun dato disponibile', image: Empty.PRESENTED_IMAGE_SIMPLE, style: { marginTop: 48 } }),
         ),
       ),
+    ),
+
+
+
+    // Gallery modal
+    React.createElement(Modal, { title: 'Galleria Foto Impianto', open: galleryOpen, onCancel: () => setGalleryOpen(false), footer: null, width: 840 },
+      React.createElement(antd.Image.PreviewGroup, null,
+        React.createElement('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 } },
+          FOTO_IMPIANTO.map((src, i) =>
+            React.createElement(antd.Image, { key: i, src: src, width: '100%', height: 200, style: { objectFit: 'cover', borderRadius: 6, display: 'block' } })
+          )
+        )
+      ),
+    ),
+
+    // Map modal
+    React.createElement(Modal, { title: 'Mappa — ' + displayName, open: mapOpen, onCancel: () => setMapOpen(false), footer: null, width: 1000 },
+      React.createElement('div', { style: { height: 580, borderRadius: 8, overflow: 'hidden', background: '#fafafa' } },
+        React.createElement('iframe', { width: '100%', height: '100%', style: { border: 0, display: 'block', filter: 'grayscale(1) brightness(1.1) contrast(0.9) hue-rotate(200deg) saturate(0.2)' }, src: mapSrc, title: 'Mappa ingrandita' }),
+      ),
+    ),
+
+    // Permits drawer
+    React.createElement(Drawer, {
+      title: drawerType === 'concessione' ? (isReplaceMode ? 'Sostituisci Concessione' : 'Aggiungi Concessione') : 'Aggiungi Autorizzazione',
+      placement: 'right',
+      styles: { wrapper: { width: '70%' }, body: { padding: 24 } },
+      onClose: closePermitDrawer, open: drawerOpen,
+      extra: React.createElement(Space, null,
+        React.createElement(Button, { onClick: closePermitDrawer }, 'Annulla'),
+        React.createElement(Button, {
+          type: ((drawerType === 'concessione' && selectedRowKey) || (drawerType === 'autorizzazione' && selectedAuthKeys.length > 0)) ? 'primary' : 'default',
+          icon: React.createElement(PlusOutlined),
+          disabled: (drawerType === 'concessione' && !selectedRowKey) || (drawerType === 'autorizzazione' && selectedAuthKeys.length === 0),
+          onClick: handleAddPermit,
+        }, 'Aggiungi'),
+      ),
+    },
+      drawerType === 'concessione'
+        ? React.createElement(GrantsAccordion, { data: GRANTS_DATA, selectedRowKey, onRowSelect: setSelectedRowKey })
+        : React.createElement(AuthorizationsList, { data: AUTHORIZATIONS_DATA, selectedKeys: selectedAuthKeys, onSelectionChange: setSelectedAuthKeys }),
     ),
   );
 }
@@ -2665,7 +3401,8 @@ function NewImpiantoPage({ onClose, initialValues = {} }) {
 
   // ── Note
   const [noteRif, setNoteRif] = useState('');
-  const [noteGen, setNoteGen] = useState('');
+  const [selConcessioni,    setSelConcessioni]    = useState([]);
+  const [selAutorizzazioni, setSelAutorizzazioni] = useState([]);
 
   const debRef      = useRef(null);
   const scrollRef   = useRef(null);
@@ -2677,13 +3414,11 @@ function NewImpiantoPage({ onClose, initialValues = {} }) {
     { id: 'localizzazione',  label: 'Localizzazione' },
     { id: 'caratteristiche', label: 'Caratteristiche' },
     { id: 'commerciale',     label: 'Commerciale' },
-    { id: 'autorizzazione',  label: 'Autorizzazione' },
-    { id: 'genio-civile',    label: 'Genio Civile' },
+    { id: 'permessi',        label: 'Permessi' },
     { id: 'struttura',       label: 'Struttura' },
     { id: 'manutenzione',    label: 'Manutenzione' },
     { id: 'contabilita',     label: 'Contabilità' },
     { id: 'galleria',        label: 'Galleria' },
-    { id: 'dooh',            label: 'Config. DOOH' },
     { id: 'note',            label: 'Note' },
   ];
 
@@ -2878,15 +3613,12 @@ function NewImpiantoPage({ onClose, initialValues = {} }) {
             cs('Latitudine', false,  inp(lat,     setLat,     '—')),
             cs('Longitudine', false, inp(lng,     setLng,     '—')),
           ),
-          g3(
-            cs('Tipo suolo', false,     sel(tipoSuolo,    setTipoSuolo,    TIPO_SUOLO_OPTS)),
-            cs('Categoria suolo', false, sel(catSuolo,    setCatSuolo,     CAT_SUOLO_OPTS)),
-            cs('Codice Area', false,    inp(codiceArea,   setCodiceArea,   '—')),
+          g2(
+            cs('Tipo suolo', false,      sel(tipoSuolo, setTipoSuolo, TIPO_SUOLO_OPTS)),
+            cs('Categoria suolo', false,  sel(catSuolo,  setCatSuolo,  CAT_SUOLO_OPTS)),
           ),
-          g3(
-            cs('Classe comunale', false, sel(classeComune, setClasseComune, CLASSE_COMUNE_OPTS)),
-            cs('Utenza', false,          inp(utenza,       setUtenza,       '—')),
-            cs('ZN', false,              inp(zn,           setZn,           '—')),
+          g2(
+            cs('Utenza', false, inp(utenza, setUtenza, '—')),
           ),
         ),
 
@@ -2904,9 +3636,7 @@ function NewImpiantoPage({ onClose, initialValues = {} }) {
             cs('Alt. da terra (cm)', false, num(altTerra, setAltTerra, { min: 0 })),
             cs('Alt. totale (cm)',   false, num(altTotale,setAltTotale,{ min: 0 })),
           ),
-          g4(
-            cs('FC',          false, inp(fc,      setFc,      '—')),
-            cs('ILL./Spe.',   false, inp(illSpe,  setIllSpe,  '—')),
+          g2(
             cs('Illuminato',  false, sw(illuminato, setIlluminato)),
             cs('Esposizione', false, sel(riparato, setRiparato, RIPARATO_OPTS)),
           ),
@@ -2923,52 +3653,50 @@ function NewImpiantoPage({ onClose, initialValues = {} }) {
             ),
           ),
           g2(
-            cs('Modalità vendita', false, sel(vendita,        setVendita,        VENDITA_OPTS)),
-            cs('Modello vendita',  false, sel(modelloVendita, setModelloVendita, MODELLO_VENDITA_OPTS)),
+            cs('Modalità vendita', false, sel(vendita, setVendita, VENDITA_OPTS)),
           ),
-          g4(
+          g3(
             cs('Prezzo netto (€)', false, num(prezzoNetto, setPrezzoNetto, { min: 0, precision: 2 })),
             cs('Prezzo lordo (€)', false, num(prezzoLordo, setPrezzoLordo, { min: 0, precision: 2 })),
-            cs('Cimasa',          false, inp(cimasa,       setCimasa,      'Es. CIM-2024-001')),
-            cs('ID Contratto',    false, inp(idContratto,  setIdContratto, '—')),
-          ),
-          g4(
-            cs('Circuiti',           false, inp(circuiti,     setCircuiti,     '—')),
-            cs('Squadra Affissione', false, inp(squadraAff,   setSquadraAff,   '—')),
-            cs('PRB / MDL',          false, sel(prbMdl,       setPrbMdl,       PRB_MDL_OPTS)),
-            cs('Codice Squadra',     false, inp(codiceSquadra,setCodiceSquadra,'—')),
-          ),
-        ),
-
-        // ── 5. Autorizzazione
-        sec('autorizzazione', 'Autorizzazione',
-          g3(
-            cs('N° Protocollo', false, inp(numProtocollo, setNumProtocollo, '—')),
-            cs('Data rilascio', false, dp(dataRilascio,   setDataRilascio)),
-            cs('Data scadenza', false, dp(dataScadenza,   setDataScadenza)),
+            cs('Cimasa',          false, inp(cimasa, setCimasa, 'Es. CIM-2024-001')),
           ),
           g2(
-            cs('N° Gara', false, inp(numGara, setNumGara, '—')),
-            cs('Note', false,
-              React.createElement(Input.TextArea, { value: noteAut, onChange: e => setNoteAut(e.target.value), placeholder: '—', autoSize: { minRows: 2, maxRows: 4 } })
-            ),
+            cs('Squadra Affissione', false, inp(squadraAff,    setSquadraAff,    '—')),
+            cs('Codice Squadra',     false, inp(codiceSquadra, setCodiceSquadra, '—')),
           ),
         ),
 
-        // ── 6. Genio Civile
-        sec('genio-civile', 'Genio Civile',
-          g3(
-            cs('Stato',         false, sel(statoGc,      setStatoGc,      STATO_GC_OPTS)),
-            cs('Protocollo NO', false, inp(protocolloNo, setProtocolloNo, '—')),
-            cs('Data collaudo', false, dp(dataCollaudo,  setDataCollaudo)),
+        // ── 5. Permessi
+        sec('permessi', 'Permessi',
+          cs('Concessioni', false,
+            React.createElement(Select, {
+              mode: 'multiple',
+              value: selConcessioni,
+              onChange: setSelConcessioni,
+              options: GRANTS_DATA.map(g => ({
+                value: g.key,
+                label: g.documentType + ' — ' + g.documentId + ' (' + g.issuingAuthority + ')',
+              })),
+              placeholder: 'Seleziona concessioni…',
+              style: { width: '100%' },
+              showSearch: true,
+              filterOption: (input, opt) => (opt && opt.label ? opt.label.toLowerCase().includes(input.toLowerCase()) : false),
+            })
           ),
-          g3(
-            cs('Materiali',            false, inp(materialiGc, setMaterialiGc, '—')),
-            cs('Figure professionali', false, inp(figureProf,  setFigureProf,  '—')),
-            cs('Data verifica',        false, dp(dataVerifica, setDataVerifica)),
-          ),
-          g3(
-            cs('Responsabile verifica', false, inp(respVerifica, setRespVerifica, '—')),
+          cs('Autorizzazioni', false,
+            React.createElement(Select, {
+              mode: 'multiple',
+              value: selAutorizzazioni,
+              onChange: setSelAutorizzazioni,
+              options: AUTHORIZATIONS_DATA.map(a => ({
+                value: a.key,
+                label: a.authorizationCategory + ' — ' + a.protocolNumber + ' (' + a.issuingAuthority + ')',
+              })),
+              placeholder: 'Seleziona autorizzazioni…',
+              style: { width: '100%' },
+              showSearch: true,
+              filterOption: (input, opt) => (opt && opt.label ? opt.label.toLowerCase().includes(input.toLowerCase()) : false),
+            })
           ),
         ),
 
@@ -3059,27 +3787,11 @@ function NewImpiantoPage({ onClose, initialValues = {} }) {
           ),
         ),
 
-        // ── 11. Config. DOOH
-        sec('dooh', 'Configurazione DOOH',
-          cs('Configurazione', false,
-            React.createElement(Input.TextArea, {
-              value: configDooh, onChange: e => setConfigDooh(e.target.value),
-              placeholder: 'Inserisci la configurazione del player, rete, playlist…',
-              autoSize: { minRows: 4, maxRows: 12 },
-              style: { fontFamily: 'monospace', fontSize: 12 },
-            })
-          ),
-        ),
 
-        // ── 12. Note
+        // ── 10. Note
         sec('note', 'Note',
-          g2(
-            cs('Note aggiuntive / Riferimento', false,
-              React.createElement(Input.TextArea, { value: noteRif, onChange: e => setNoteRif(e.target.value), placeholder: 'Es. angolo con Via Bandiera, fronte semaforo…', autoSize: { minRows: 3, maxRows: 6 } })
-            ),
-            cs('Note generiche', false,
-              React.createElement(Input.TextArea, { value: noteGen, onChange: e => setNoteGen(e.target.value), placeholder: 'Visibili solo agli operatori interni…', autoSize: { minRows: 3, maxRows: 6 } })
-            ),
+          cs('Note aggiuntive', false,
+            React.createElement(Input.TextArea, { value: noteRif, onChange: e => setNoteRif(e.target.value), placeholder: 'Es. angolo con Via Bandiera, fronte semaforo…', autoSize: { minRows: 3, maxRows: 6 } })
           ),
         ),
 
@@ -3097,6 +3809,7 @@ function App() {
   const [modalOpen,      setModalOpen]      = useState(false);
   const [prefillData,    setPrefillData]    = useState({});
   const [detailImpianto, setDetailImpianto] = useState(null);
+  const [cardImp,        setCardImp]        = useState(null);
   const [highlightedId, setHighlightedId] = useState(null);
   const [selectedIds,   setSelectedIds]   = useState(new Set());
   const [expandedIds,   setExpandedIds]   = useState(new Set());
@@ -3374,6 +4087,11 @@ function App() {
     setHighlightedId(prev => prev === id ? null : id);
   }, []);
 
+  const handleMarkerClick = useCallback((imp) => {
+    setHighlightedId(prev => prev === imp.id ? null : imp.id);
+    setCardImp(prev => prev?.id === imp.id ? null : imp);
+  }, []);
+
   const handleToggleAdd = useCallback((id) => {
     if (id === null) {
       setSelectedIds(new Set());
@@ -3493,8 +4211,8 @@ function App() {
               React.createElement(Dropdown, {
                 menu: {
                   items: [
-                    { key: 'nuova-tipologia', label: 'Nuova tipologia' },
-                    { key: 'nuovo-formato',   label: 'Nuovo formato' },
+                    { key: 'nuova-tipologia', label: 'Aggiungi tipologia' },
+                    { key: 'nuovo-formato',   label: 'Aggiungi formato' },
                   ],
                 },
                 trigger: ['click'],
@@ -3502,7 +4220,7 @@ function App() {
               },
                 React.createElement(Button, {
                   icon: React.createElement(PlusOutlined),
-                }, 'Nuovo'),
+                }, 'Aggiungi'),
               ),
               React.createElement(Button, {
                 type: 'primary',
@@ -3538,6 +4256,10 @@ function App() {
               selectedIds,
               filteredIds,
               onSelect:         handleHighlight,
+              onMarkerClick:    handleMarkerClick,
+              cardImp,
+              onCardClose:      () => { setCardImp(null); setHighlightedId(null); },
+              onDetail:         (imp) => { setDetailImpianto(imp); setPage('detail'); },
               flyToTarget,
             }),
 
@@ -3553,23 +4275,9 @@ function App() {
               )
             ),
 
-            React.createElement(MapInfobox, {
+            !cardImp && React.createElement(MapInfobox, {
               total:             filteredImpianti.length,
               filteredImpianti,
-            }),
-
-            highlightedId && React.createElement(MapFloatingCard, {
-              imp:               geocodedImpianti.find(i => i.id === highlightedId),
-              added:             selectedIds.has(highlightedId),
-              expanded:          expandedIds.has(highlightedId),
-              onToggleAdd:       handleToggleAdd,
-              onToggleExpand:    handleToggleExpand,
-              onClose:           () => setHighlightedId(null),
-              impLabel:          implantiLabels[highlightedId]?.[0] || null,
-              availableLabels,
-              pickerOpenId,
-              onPickerOpenChange: setPickerOpenId,
-              renderLabelPicker,
             }),
 
             // View toggle — floating top-right
@@ -3587,7 +4295,7 @@ function App() {
               })
             ),
           )
-        : React.createElement(ListView, { impianti: filteredImpianti, viewMode, setViewMode })
+        : React.createElement(ListView, { impianti: filteredImpianti, viewMode, setViewMode, onDetail: (imp) => { setDetailImpianto(imp); setPage('detail'); } })
     ),
 
     React.createElement(Drawer, {
