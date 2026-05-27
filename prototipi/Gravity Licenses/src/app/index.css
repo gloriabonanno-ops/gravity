@@ -1,0 +1,71 @@
+@import 'antd/dist/reset.css';
+@import 'leaflet/dist/leaflet.css';
+
+/* Override Ant Design primary color */
+:root {
+  --ant-color-primary: #3E00FB;
+  --ant-color-primary-hover: #5218FF;
+  --ant-color-primary-active: #3200D9;
+}
+
+.ant-btn-primary {
+  background-color: #3E00FB !important;
+  border-color: #3E00FB !important;
+}
+
+.ant-btn-primary:hover {
+  background-color: #5218FF !important;
+  border-color: #5218FF !important;
+}
+
+.ant-btn-primary:active {
+  background-color: #3200D9 !important;
+  border-color: #3200D9 !important;
+}
+
+.ant-switch-checked {
+  background-color: #3E00FB !important;
+}
+
+.ant-tabs-ink-bar {
+  background-color: #3E00FB !important;
+}
+
+.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #3E00FB !important;
+}
+
+/* Map styles */
+.map-clickable {
+  cursor: pointer;
+}
+
+.map-clickable:hover {
+  opacity: 0.9;
+}
+
+/* Hide attribution in small map view */
+.leaflet-container .leaflet-control-attribution {
+  display: none;
+}
+
+/* Show attribution only in modal */
+.map-modal .leaflet-container .leaflet-control-attribution {
+  display: block;
+}
+
+/* Read-only input with no hover effects */
+.readonly-input:hover,
+.readonly-input:focus {
+  border-color: #d9d9d9 !important;
+  box-shadow: none !important;
+}
+
+/* Highlight selected grant row */
+.grant-row-selected {
+  background-color: #f0e6ff !important;
+}
+
+.grant-row-selected:hover > td {
+  background-color: #f0e6ff !important;
+}
