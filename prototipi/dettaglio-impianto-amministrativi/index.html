@@ -13,6 +13,8 @@
   <script src="https://unpkg.com/@ant-design/icons@5/dist/index.umd.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="../tokens.js"></script>
+  <script>window.GRAVITY_NAV = { section: 'Inventory', item: 'Systems' };</script>
+  <script src="../navbar.js"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -568,17 +570,7 @@ function AppContent() {
     <>
       <Layout style={{ minHeight:'100vh', background:'#f5f5f5' }}>
         <Layout>
-          {/* Navbar */}
-          <Header style={{ background:'#fff', padding:'0 24px', borderBottom:'1px solid #f0f0f0', display:'flex', alignItems:'center', justifyContent:'space-between', height:'56px', position:'sticky', top:0, zIndex:99 }}>
-            <div style={{ display:'flex', alignItems:'center', gap:'32px' }}>
-              <img src="../../brand/Gravity_type.svg" alt="GRAVITY" style={{ height:'24px' }} />
-              <Tabs activeKey="header-tab-2" items={[{ key:'header-tab-1', label:'Panoramica' },{ key:'header-tab-2', label:'Inventario' }]} style={{ marginBottom:0 }} />
-            </div>
-            <div style={{ display:'flex', alignItems:'center', gap:'16px' }}>
-              <Badge dot><BellOutlined style={{ fontSize:'18px', color:'#595959' }} /></Badge>
-              <Avatar size={32} src="https://i.pravatar.cc/150?img=33" />
-            </div>
-          </Header>
+          {React.createElement(window.GravityNavbar, null)}
 
           <Content style={{ background:'#f5f5f5' }}>
             {/* Cover */}

@@ -12,6 +12,8 @@
   <script src="https://unpkg.com/antd@5/dist/antd.min.js"></script>
   <script src="https://unpkg.com/@ant-design/icons@5/dist/index.umd.js"></script>
   <script src="../tokens.js"></script>
+  <script>window.GRAVITY_NAV = { section: 'Inventory', item: 'Systems' };</script>
+  <script src="../navbar.js"></script>
 
   <!-- Google Maps + MarkerClusterer -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeN8PAeuZkOtG8uyRzvXP2rOzP37HMBdI&libraries=places"></script>
@@ -1023,100 +1025,6 @@ const PLANNER = {
   provinces: ['Palermo', 'Trapani', 'Agrigento', 'Caltanissetta'],
   channels:  ['OOH', 'DOOH'],
 };
-
-// ─────────────────────────────────────────────────────────
-// NAVBAR
-// ─────────────────────────────────────────────────────────
-function Navbar() {
-  const [avatarOpen, setAvatarOpen] = useState(false);
-
-  const navItems = [
-    {
-      key: 'overview',
-      icon: React.createElement(AppstoreOutlined),
-      label: 'Panoramica',
-    },
-    {
-      key: 'inventory',
-      icon: React.createElement(InboxOutlined),
-      label: 'Inventario',
-    },
-    {
-      key: 'espletamento',
-      icon: React.createElement(SendOutlined),
-      label: 'Espletamento',
-      children: [
-        { key: 'campaigns',  label: 'Campagne' },
-        { key: 'plannings',  label: 'Pianificazioni' },
-      ],
-    },
-  ];
-
-  const plannerCard = React.createElement('div', { style: { width: 220, padding: '4px 0' } },
-    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 } },
-      React.createElement('div', {
-        style: { width: 40, height: 40, borderRadius: '50%', background: '#3E00FB', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-      },
-        React.createElement('span', { style: { color: '#fff', fontWeight: 700, fontSize: 14 } }, PLANNER.initials)
-      ),
-      React.createElement('div', null,
-        React.createElement('div', { style: { fontWeight: 600, fontSize: 14 } }, PLANNER.name),
-        React.createElement('div', { style: { fontSize: 12, color: 'rgba(0,0,0,0.45)' } }, PLANNER.role),
-      ),
-    ),
-    React.createElement('div', { style: { fontSize: 12, color: 'rgba(0,0,0,0.65)', marginBottom: 4 } }, PLANNER.area),
-    React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 } },
-      PLANNER.channels.map(ch =>
-        React.createElement('span', {
-          key: ch,
-          style: { fontSize: 11, padding: '1px 7px', borderRadius: 4, background: '#F0EAFF', color: '#3E00FB', fontWeight: 500 },
-        }, ch)
-      ),
-    ),
-    React.createElement('div', { style: { fontSize: 12, color: 'rgba(0,0,0,0.4)' } }, PLANNER.provinces.join(' · ')),
-    React.createElement(Divider, { style: { margin: '12px 0 8px' } }),
-    React.createElement(Button, { type: 'text', size: 'small', danger: true, style: { padding: 0 } }, 'Esci')
-  );
-
-  return React.createElement('nav', { className: 'top-nav' },
-    React.createElement('div', { className: 'top-nav-logo' },
-      React.createElement('img', {
-        src: '../../brand/Gravity_type.svg',
-        alt: 'Gravity',
-        style: { height: 28, width: 'auto' },
-        onError: e => { e.target.style.display = 'none'; },
-      })
-    ),
-    React.createElement('div', { className: 'top-nav-menu-wrap' },
-      React.createElement(Menu, {
-        mode: 'horizontal',
-        selectedKeys: ['plannings'],
-        items: navItems,
-        style: { flex: 1, border: 'none', height: 73, lineHeight: '73px' },
-        theme: 'light',
-      })
-    ),
-    React.createElement('div', { className: 'top-nav-right' },
-      React.createElement('button', { className: 'top-nav-bell' },
-        React.createElement(BellOutlined, { style: { fontSize: 20, color: 'rgba(0,0,0,0.65)' } })
-      ),
-      React.createElement(Popover, {
-        open: avatarOpen,
-        onOpenChange: setAvatarOpen,
-        content: plannerCard,
-        placement: 'bottomRight',
-        trigger: 'click',
-        arrow: false,
-      },
-        React.createElement('div', {
-          style: { width: 32, height: 32, borderRadius: '50%', background: '#3E00FB', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, cursor: 'pointer' },
-        },
-          React.createElement('span', { style: { color: '#fff', fontWeight: 700, fontSize: 12 } }, PLANNER.initials)
-        )
-      )
-    )
-  );
-}
 
 // ─────────────────────────────────────────────────────────
 // GOOGLE MAP
@@ -2366,7 +2274,7 @@ function App() {
 
 
   return React.createElement('div', { className: 'app-shell' },
-    React.createElement(Navbar),
+    React.createElement(window.GravityNavbar, null),
 
     React.createElement('div', { className: 'ooh-workspace' },
 
