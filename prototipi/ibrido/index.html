@@ -373,7 +373,7 @@ const {
   ExpandOutlined, SaveOutlined, EyeOutlined, PictureOutlined,
   InfoCircleOutlined, CompassOutlined, CheckCircleFilled, MoreOutlined,
   SwapOutlined, DeleteOutlined, TagsOutlined, ThunderboltOutlined, FileTextOutlined,
-  CalendarOutlined, SyncOutlined,
+  CalendarOutlined, SyncOutlined, AimOutlined, EuroCircleOutlined,
 } = icons;
 
 // ─────────────────────────────────────────────────────────
@@ -2412,8 +2412,9 @@ const FOTO_IMPIANTO = [
 
 
 const FACCE = [
-  { id: 1, tipo: 'anteriore', formato: '140x200 cm', slot: '1', orientamento: 'Nord-Est', conoVisibilita: '180°', illuminazione: 'LED' },
-  { id: 2, tipo: 'posteriore', formato: '140x200 cm', slot: '2', orientamento: 'Sud-Ovest', conoVisibilita: '120°', illuminazione: 'Non illuminato' },
+  { id: 1, tipo: 'anteriore',  formato: '1,40 x 2,00 m', slot: 4, orientamento: '45°',  conoVisibilita: 'r 40 m', illuminazione: '2 faretti',     prezzo: 300 },
+  { id: 2, tipo: 'posteriore', formato: '1,40 x 2,00 m', slot: 4, orientamento: '225°', conoVisibilita: 'r 30 m', illuminazione: 'Non illuminata', prezzo: 200 },
+  { id: 3, tipo: 'anteriore',  formato: '1,40 x 2,00 m', slot: 4, orientamento: '135°', conoVisibilita: 'r 35 m', illuminazione: '1 faretto',     prezzo: 250 },
 ];
 
 function InfoCard({ title, value, subtitle }) {
@@ -2618,9 +2619,13 @@ function AuthorizationsList({ data, selectedKeys, onSelectionChange }) {
   );
 }
 
-function ImpiantoDetailPage({ imp, onBack }) {
+function ImpiantoDetailPage({ imp, onBack, onEdit }) {
   const [activeTab,         setActiveTab]         = useState('2');
   const [visibleCount,      setVisibleCount]      = useState(5);
+  const [filterDateRange,   setFilterDateRange]   = useState(null);
+  const [filterType,        setFilterType]        = useState(null);
+  const [filterAgent,       setFilterAgent]       = useState(null);
+  const [filterSearch,      setFilterSearch]      = useState('');
   const [isEditingIdentityCard, setIsEditingIdentityCard] = useState(false);
   const [isEditingProject,      setIsEditingProject]      = useState(false);
   const [galleryOpen,       setGalleryOpen]       = useState(false);
@@ -2630,7 +2635,7 @@ function ImpiantoDetailPage({ imp, onBack }) {
   const [isReplaceMode,     setIsReplaceMode]     = useState(false);
   const [selectedRowKey,    setSelectedRowKey]    = useState(null);
   const [selectedAuthKeys,  setSelectedAuthKeys]  = useState([]);
-  const [addedPermits,      setAddedPermits]      = useState([]);
+  const [addedPermits,      setAddedPermits]      = useState([{ id: '1', permitType: 'concessione', documentType: 'Atto Amministrativo', documentId: 'Pos. 74322 del 15/04/2004', accountNumber: 'DB45PL', state: 'Attiva', isActive: true }]);
   const [accountNumber,     setAccountNumber]     = useState('DB45PL');
   const [expDate,           setExpDate]           = useState('10/12/2031');
 
@@ -2640,8 +2645,8 @@ function ImpiantoDetailPage({ imp, onBack }) {
   const address = [imp.via, imp.civico, imp.citta].filter(Boolean).join(', ') || 'Via Libertà, 36, Palermo (PA)';
   const ownerName = imp.titolare || 'AMAT S.p.A.';
   const ownerInitial = (ownerName[0] || 'A').toUpperCase();
-  const stateColor = (imp.stato_amm === 'Attivo' || !imp.stato_amm) ? '#52c41a' : imp.stato_amm === 'Non disponibile' ? '#ff4d4f' : '#faad14';
-  const statusTagColor = (imp.stato_amm === 'Attivo' || !imp.stato_amm) ? 'success' : imp.stato_amm === 'Non disponibile' ? 'error' : 'warning';
+  const stateColor = STATO_COLORS[imp.stato_amm] || STATO_COLORS['Attivo'];
+  const statusTagColor = imp.stato_amm === 'Attivo' || !imp.stato_amm ? 'success' : imp.stato_amm === 'Rimosso' ? 'default' : 'warning';
   const mapLng = imp.lng || 13.3615;
   const mapLat = imp.lat || 38.1155;
   const mapSrc = 'https://www.openstreetmap.org/export/embed.html?bbox=' + (mapLng - 0.001) + '%2C' + (mapLat - 0.0005) + '%2C' + (mapLng + 0.001) + '%2C' + (mapLat + 0.0005) + '&layer=mapnik';
@@ -2766,22 +2771,47 @@ function ImpiantoDetailPage({ imp, onBack }) {
 
   const tabEvents = (() => {
     const isDateFuture = dateStr => { const [d,m,y] = dateStr.split('/').map(Number); return new Date(y,m-1,d) > new Date(); };
-    const items = MOCK_EVENTS.slice(0, visibleCount).map((ev, i, arr) => ({ ...ev, isFirstOfDate: i === 0 || arr[i-1].date !== ev.date }));
+    const parseDate = dateStr => { const [d,m,y] = dateStr.split('/').map(Number); return new Date(y,m-1,d); };
+    const typeMatches = (ev, type) => {
+      if (!type) return true;
+      if (type === 'status') return !!ev.badge;
+      if (type === 'squad') return ev.title.toLowerCase().includes('squadra');
+      if (type === 'duty') return ev.title.toLowerCase().includes('incarico');
+      if (type === 'create') return ev.title.toLowerCase().includes('creat');
+      return true;
+    };
+    const agentMap = { marco: 'Marco Picceri', admin: 'System Admin', gloria: 'Gloria Russo' };
+    const filtered = MOCK_EVENTS.filter(ev => {
+      if (filterDateRange && filterDateRange[0] && filterDateRange[1]) {
+        const evDate = parseDate(ev.date);
+        const start = filterDateRange[0].toDate(); start.setHours(0,0,0,0);
+        const end   = filterDateRange[1].toDate(); end.setHours(23,59,59,999);
+        if (evDate < start || evDate > end) return false;
+      }
+      if (!typeMatches(ev, filterType)) return false;
+      if (filterAgent && ev.agent !== agentMap[filterAgent]) return false;
+      if (filterSearch && filterSearch.trim()) {
+        const q = filterSearch.trim().toLowerCase();
+        if (!ev.title.toLowerCase().includes(q) && !ev.desc.toLowerCase().includes(q)) return false;
+      }
+      return true;
+    });
+    const items = filtered.slice(0, visibleCount).map((ev, i, arr) => ({ ...ev, isFirstOfDate: i === 0 || arr[i-1].date !== ev.date }));
     return React.createElement('div', { style: { padding: '0' } },
       React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, flexWrap: 'wrap' } },
-        React.createElement(DatePicker.RangePicker, { style: { flex: 'none' }, placeholder: ['Data inizio', 'Data fine'] }),
-        React.createElement(Select, { placeholder: 'Tipo evento', style: { width: 160 }, allowClear: true, options: [
+        React.createElement(DatePicker.RangePicker, { style: { flex: 'none' }, placeholder: ['Data inizio', 'Data fine'], onChange: val => { setFilterDateRange(val); setVisibleCount(5); }, format: 'DD/MM/YYYY' }),
+        React.createElement(Select, { placeholder: 'Tipo evento', style: { width: 160 }, allowClear: true, value: filterType, onChange: val => { setFilterType(val || null); setVisibleCount(5); }, options: [
           { value: 'status', label: 'Cambio stato' },
           { value: 'squad', label: 'Squadra' },
           { value: 'duty', label: 'Incarico' },
           { value: 'create', label: 'Creazione' },
         ]}),
-        React.createElement(Select, { placeholder: 'Agente', style: { width: 160 }, allowClear: true, options: [
+        React.createElement(Select, { placeholder: 'Agente', style: { width: 160 }, allowClear: true, value: filterAgent, onChange: val => { setFilterAgent(val || null); setVisibleCount(5); }, options: [
           { value: 'marco', label: 'Marco Picceri' },
+          { value: 'gloria', label: 'Gloria Russo' },
           { value: 'admin', label: 'System Admin' },
         ]}),
-        React.createElement(Input, { placeholder: 'Cerca evento…', prefix: React.createElement(SearchOutlined, { style: { color: 'rgba(0,0,0,0.3)' } }), style: { width: 180 }, allowClear: true }),
-        React.createElement(Button, { type: 'primary', icon: React.createElement(PlusOutlined) }, 'Nuovo Evento'),
+        React.createElement(Input, { placeholder: 'Cerca evento…', prefix: React.createElement(SearchOutlined, { style: { color: 'rgba(0,0,0,0.3)' } }), style: { width: 180 }, allowClear: true, value: filterSearch, onChange: e => { setFilterSearch(e.target.value); setVisibleCount(5); } }),
       ),
       React.createElement('div', null,
         items.map((ev, i) =>
@@ -2818,9 +2848,9 @@ function ImpiantoDetailPage({ imp, onBack }) {
           )
         ),
       ),
-      visibleCount < MOCK_EVENTS.length
+      visibleCount < filtered.length
         ? React.createElement('div', { style: { paddingLeft: 245, marginTop: 8 } },
-            React.createElement(Button, { icon: React.createElement(SyncOutlined), onClick: () => setVisibleCount(c => Math.min(c + 5, MOCK_EVENTS.length)) }, 'Carica altri'),
+            React.createElement(Button, { icon: React.createElement(SyncOutlined), onClick: () => setVisibleCount(c => Math.min(c + 5, filtered.length)) }, 'Carica altri'),
           )
         : null,
     );
@@ -2839,18 +2869,6 @@ function ImpiantoDetailPage({ imp, onBack }) {
   const tabAmm = React.createElement('div', null,
 
     React.createElement('div', { className: 'tab-section' },
-      React.createElement('div', { style: { marginBottom: 12 } },
-        React.createElement(Typography.Title, { level: 5, style: { margin: 0 } }, 'Scheda identificativa'),
-      ),
-      React.createElement(Row, { gutter: [16, 16] },
-        React.createElement(Col, { span: 6 }, ef('Codice Cimasa', cimasaCode, setCimasaCode, 'cimasaCode', isEditingIdentityCard)),
-        React.createElement(Col, { span: 6 }, ef('Tipo suolo', tipoSuolo, setTipoSuolo, 'tipoSuolo', isEditingIdentityCard)),
-      ),
-    ),
-
-    React.createElement(Divider),
-
-    React.createElement('div', { className: 'tab-section' },
       React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 } },
         React.createElement(Typography.Title, { level: 5, style: { margin: 0 } }, 'Permessi'),
         React.createElement(Dropdown, {
@@ -2862,7 +2880,7 @@ function ImpiantoDetailPage({ imp, onBack }) {
       ),
       addedPermits.length > 0
         ? React.createElement(Row, { gutter: [16, 16] },
-            addedPermits.map(p => React.createElement(Col, { span: 8, key: p.id },
+            addedPermits.map(p => React.createElement(Col, { span: 6, key: p.id },
               React.createElement(PermitCard, {
                 permitType: p.permitType, documentType: p.documentType, documentId: p.documentId,
                 accountNumber: p.accountNumber, authorizationCategory: p.authorizationCategory,
@@ -2918,45 +2936,67 @@ function ImpiantoDetailPage({ imp, onBack }) {
         React.createElement(Col, { span: 6 }, ef('Area espositiva (m²)', areaEspositiva, setAreaEspositiva, 'areaEspositiva')),
       ),
     ),
-    React.createElement(Divider),
     React.createElement('div', { className: 'tab-section' },
       React.createElement('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 } },
-        React.createElement(Typography.Title, { level: 5, style: { margin: 0 } }, 'Facce (' + (imp.faces || FACCE.length) + ')'),
+        React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+          React.createElement(Typography.Title, { level: 5, style: { margin: 0 } }, 'Facce'),
+          React.createElement(Text, { type: 'secondary', style: { fontSize: 14 } }, '|'),
+          React.createElement('span', { style: { fontSize: 14 } },
+            React.createElement('span', { style: { fontWeight: 600, color: '#3E00FB', fontSize: 16 } }, imp.faces || FACCE.length),
+            React.createElement('span', { style: { color: 'rgba(0,0,0,0.45)', fontSize: 12 } }, ' facce'),
+          ),
+        ),
         React.createElement(Button, { icon: React.createElement(PlusOutlined) }, 'Aggiungi Faccia'),
       ),
-      React.createElement(Row, { gutter: [16, 16] },
-        FACCE.map(faccia => React.createElement(Col, { span: 12, key: faccia.id },
-          React.createElement(Card, null,
-            React.createElement(Row, { gutter: 16 },
-              React.createElement(Col, { span: 12 },
-                React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 12 } },
-                  React.createElement('div', { style: { width: '100%', aspectRatio: '4/3', backgroundColor: '#f0f0f0', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' } },
+      React.createElement(Row, { gutter: [24, 24] },
+        FACCE.slice(0, imp.faces || FACCE.length).map(faccia => {
+          const isAnt = faccia.tipo === 'anteriore';
+          const tagStyle = isAnt
+            ? { backgroundColor: '#E6FFFB', borderColor: '#87E8DE', color: '#13C2C2', margin: 0 }
+            : { backgroundColor: '#FFF2E8', borderColor: '#FFBB96', color: '#FA541C', margin: 0 };
+          const infoRow = (icon, label, value, action) =>
+            React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 20 } },
+              React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+                React.createElement(icon, { style: { fontSize: 14, color: 'rgba(0,0,0,0.45)' } }),
+                React.createElement('span', { style: { fontSize: 12, fontWeight: 600 } }, label),
+                React.createElement('span', { style: { fontSize: 13 } }, value),
+              ),
+              action || null,
+            );
+          return React.createElement(Col, { span: 8, key: faccia.id },
+            React.createElement(Badge.Ribbon, { text: 'Standard', color: '#F5222D' },
+              React.createElement(Card, { style: { borderRadius: 8, border: '1px solid #f0f0f0' }, styles: { body: { padding: '12px 24px 12px 0', display: 'flex', gap: 16, alignItems: 'flex-start' } } },
+                React.createElement('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, paddingLeft: 20, flexShrink: 0, width: 220 } },
+                  React.createElement('div', { style: { width: '100%', height: 140, backgroundColor: '#f5f5f5', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' } },
                     React.createElement(PictureOutlined, { style: { fontSize: 32, color: '#d9d9d9' } }),
                   ),
-                  React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } },
-                    React.createElement(ExpandOutlined, { style: { fontSize: 14 } }),
-                    React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Formato: '),
-                    React.createElement(Text, { style: { fontSize: 13 } }, faccia.formato),
+                  React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'rgba(0,0,0,0.88)' } },
+                    React.createElement(ExpandOutlined, { style: { fontSize: 14, color: 'rgba(0,0,0,0.45)' } }),
+                    React.createElement('span', { style: { fontWeight: 600 } }, 'Formato:'),
+                    React.createElement('span', null, faccia.formato),
                   ),
                 ),
-              ),
-              React.createElement(Col, { span: 12 },
-                React.createElement('div', null,
-                  React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 } },
-                    React.createElement(Typography.Title, { level: 5, style: { margin: 0 } }, 'Faccia ' + faccia.id),
-                    React.createElement(Tag, { style: faccia.tipo === 'anteriore' ? { backgroundColor: '#E6FFFB', borderColor: '#87E8DE', color: '#13C2C2' } : { backgroundColor: '#FFF2E8', borderColor: '#FFBB96', color: '#FA541C' } }, faccia.tipo === 'anteriore' ? 'Faccia Anteriore' : 'Faccia Posteriore'),
+                React.createElement('div', { style: { flex: 1, display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 } },
+                  React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6, paddingBottom: 4 } },
+                    React.createElement('span', { style: { fontSize: 16, fontWeight: 600 } }, 'Faccia ' + faccia.id),
+                    React.createElement(Tag, { style: tagStyle }, isAnt ? 'Anteriore' : 'Posteriore'),
                   ),
-                  React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 14 } },
-                    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement(AppstoreOutlined, { style: { fontSize: 14 } }), React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Slot: '), React.createElement(Text, { style: { fontSize: 13 } }, faccia.slot)),
-                    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement(CompassOutlined, { style: { fontSize: 14 } }), React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Orientamento: '), React.createElement(Text, { style: { fontSize: 13 } }, faccia.orientamento)),
-                    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement(EyeOutlined, { style: { fontSize: 14 } }), React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Cono di visibilità: '), React.createElement(Text, { style: { fontSize: 13 } }, faccia.conoVisibilita)),
-                    React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 6 } }, React.createElement(BulbOutlined, { style: { fontSize: 14 } }), React.createElement(Text, { strong: true, style: { fontSize: 13 } }, 'Illuminazione: '), React.createElement(Text, { style: { fontSize: 13 } }, faccia.illuminazione)),
+                  React.createElement('div', { style: { display: 'flex', flexDirection: 'column', gap: 10 } },
+                    infoRow(AppstoreOutlined, 'Slot:', React.createElement('span', { style: { color: '#3E00FB', fontWeight: 600, fontSize: 14 } }, faccia.slot)),
+                    infoRow(CompassOutlined, 'Orientamento:', faccia.orientamento),
+                    infoRow(AimOutlined, 'Cono visibilità:', faccia.conoVisibilita,
+                      React.createElement(Button, { type: 'link', size: 'small', icon: React.createElement(EyeOutlined), style: { padding: 0, fontSize: 12, height: 'auto' } }, 'Vedi su mappa'),
+                    ),
+                    infoRow(BulbOutlined, 'Illuminazione:', faccia.illuminazione,
+                      React.createElement(Button, { type: 'link', size: 'small', icon: React.createElement(AppstoreOutlined), style: { padding: 0, fontSize: 12, height: 'auto' } }, 'Asset'),
+                    ),
+                    infoRow(EuroCircleOutlined, 'Prezzo:', '€ ' + faccia.prezzo),
                   ),
                 ),
               ),
             ),
-          ),
-        )),
+          );
+        }),
       ),
     ),
   );
@@ -2989,7 +3029,7 @@ function ImpiantoDetailPage({ imp, onBack }) {
             React.createElement(Tag, { color: imp.canale === 'DOOH' ? 'magenta' : 'green' }, imp.canale || 'OOH'),
           ),
           React.createElement('div', { style: { flex: 1, display: 'flex', gap: 12, alignItems: 'center', justifyContent: 'flex-end' } },
-            React.createElement(Button, { icon: React.createElement(EditOutlined) }, 'Edit'),
+            React.createElement(Button, { type: 'primary', icon: React.createElement(EditOutlined), onClick: onEdit }, 'Edit'),
           ),
         ),
 
@@ -3287,7 +3327,7 @@ const TIPO_PANNELLI_OPTS   = ['Alluminio','Acciaio','Legno','Composito','PVC'].m
 const TIPO_MAN_OPTS        = ['Ordinaria','Straordinaria','Urgente','Preventiva'].map(v=>({value:v,label:v}));
 const TIPO_AMM_OPTS        = ['Lineare','Degress','A quote costanti'].map(v=>({value:v,label:v}));
 
-function NewImpiantoFullDrawer({ open, onClose, initialValues = {} }) {
+function NewImpiantoFullDrawer({ open, onClose, initialValues = {}, onSave }) {
   const iv = initialValues;
   // ── Identità
   const [canale,    setCanale]    = useState(iv.canale    || null);
@@ -3297,6 +3337,28 @@ function NewImpiantoFullDrawer({ open, onClose, initialValues = {} }) {
   const [moduli,    setModuli]    = useState(null);
   const [dimModuli, setDimModuli] = useState('');
   const [stato,     setStato]     = useState(iv.stato     || null);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const v = initialValues;
+    setCanale(v.canale || null);
+    setNome(v.nome || '');
+    setTipologia(v.tipologia || null);
+    setStato(v.stato || null);
+    setIlluminato(!!v.illuminato);
+    setVia(v.via || '');
+    setCivico(v.civico || '');
+    setCap(v.cap || '');
+    setCitta(v.citta || '');
+    setProvincia(v.provincia || '');
+    setRegione(v.regione || '');
+    setNazione(v.nazione || '');
+    setLat(v.lat || '');
+    setLng(v.lng || '');
+    setZn(v.zona || '');
+    // formato dopo tipologia perché useMemo(formatiOpts) dipende da tipologia
+    setTimeout(() => setFormato(v.formato || null), 0);
+  }, [open]);
 
   // ── Localizzazione
   const [addrSuggs,   setAddrSuggs]   = useState([]);
@@ -3455,6 +3517,26 @@ function NewImpiantoFullDrawer({ open, onClose, initialValues = {} }) {
 
   const canSave = canale && tipologia && formato && via.trim() && citta.trim() && stato;
 
+  const collectFormData = () => ({
+    canale, nome, tipologia, formato, moduli, dimModuli, stato,
+    via, civico, cap, citta, provincia, regione, nazione, lat, lng,
+    tipoSuolo, catSuolo, codiceArea, classeComune, utenza, zona: zn,
+    largImp, altImp, tipoFaccia, slot, orientamento, conoVis,
+    altTerra, altTotale, fc, illSpe, illuminato, riparato,
+    proprieta, mediaEsterno, vendita, modelloVendita,
+    prezzoNetto, prezzoLordo, cimasa, idContratto, circuiti,
+    squadraAff, prbMdl, codiceSquadra,
+    numProtocollo, dataRilascio, dataScadenza, numGara, noteAut,
+    statoGc, protocolloNo, dataCollaudo, materialiGc,
+    figureProf, dataVerifica, respVerifica,
+    tipoFond, noteFond, tipoPali, numPali, diametroPali,
+    altezzaPali, notePali, tipoCornice, noteCornice,
+    tipoPannelli, numPannelli, dimPannelli, pesoPannelli, notePannelli, pesoTotale,
+    dataMan, squadraMan, tipoMan, oggettoMan,
+    codCespite, dataCespite, valoreCespite, tipoAmm, anniAmm, valoreResiduo,
+    centroCosto, noteContabili,
+  });
+
   const applyAddr = (s) => {
     setVia(s.via); setCivico(s.civico || ''); setAddrSuggs([]);
     setCap(s.cap); setCitta(s.citta);
@@ -3548,7 +3630,7 @@ function NewImpiantoFullDrawer({ open, onClose, initialValues = {} }) {
     title: 'Nuovo Impianto',
     footer: React.createElement(Space, { style: { justifyContent: 'flex-end', display: 'flex' } },
       React.createElement(Button, { onClick: onClose }, 'Annulla'),
-      React.createElement(Button, { type: 'primary', disabled: !canSave, icon: React.createElement(PlusOutlined) }, 'Crea Impianto'),
+      React.createElement(Button, { type: 'primary', disabled: !canSave, icon: React.createElement(PlusOutlined), onClick: () => { if (onSave) { onSave(collectFormData()); onClose(); } } }, 'Crea Impianto'),
     ),
     styles: { body: { padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' } },
   },
@@ -3787,6 +3869,7 @@ function App() {
   const [modalOpen,      setModalOpen]      = useState(false);
   const [fullFormOpen,   setFullFormOpen]   = useState(false);
   const [prefillData,    setPrefillData]    = useState({});
+  const [savedFormData,  setSavedFormData]  = useState(null);
   const [detailImpianto, setDetailImpianto] = useState(null);
   const [cardImp,        setCardImp]        = useState(null);
   const [highlightedId, setHighlightedId] = useState(null);
@@ -4099,7 +4182,28 @@ function App() {
     React.createElement(Navbar),
 
     page === 'detail'
-      ? React.createElement(ImpiantoDetailPage, { imp: detailImpianto, onBack: () => setPage('map') })
+      ? React.createElement(ImpiantoDetailPage, { imp: detailImpianto, onBack: () => setPage('map'), onEdit: () => {
+          if (savedFormData) {
+            setPrefillData(savedFormData);
+          } else {
+            const imp = detailImpianto;
+            const [via, civico] = (() => { const parts = (imp.indirizzo || '').split(','); return [parts[0] || '', (parts[1] || '').trim()]; })();
+            const normalizeFormato = f => f ? f.replace(/([0-9])(cm|m)$/, '$1 $2') : null;
+            setPrefillData({
+              canale:    imp.canale    || 'OOH',
+              tipologia: imp.tipo      || null,
+              formato:   normalizeFormato(imp.formato),
+              stato:     imp.stato_amm || null,
+              illuminato: !!imp.illuminato,
+              via, civico,
+              citta: 'Palermo', provincia: 'PA',
+              lat:  imp.lat ? String(imp.lat) : '',
+              lng:  imp.lng ? String(imp.lng) : '',
+              zona: imp.zona || '',
+            });
+          }
+          setFullFormOpen(true);
+        } })
       : React.createElement('div', { className: 'ooh-workspace' },
 
       // ── SEARCH CARD (top) ──────────────────────────────
@@ -4249,7 +4353,7 @@ function App() {
               onMarkerClick:    handleMarkerClick,
               cardImp,
               onCardClose:      () => { setCardImp(null); setHighlightedId(null); },
-              onDetail:         (imp) => { setDetailImpianto(imp); setPage('detail'); },
+              onDetail:         (imp) => { setDetailImpianto(imp); setSavedFormData(null); setPage('detail'); },
               flyToTarget,
             }),
 
@@ -4285,7 +4389,7 @@ function App() {
               })
             ),
           )
-        : React.createElement(ListView, { impianti: filteredImpianti, viewMode, setViewMode, onDetail: (imp) => { setDetailImpianto(imp); setPage('detail'); } })
+        : React.createElement(ListView, { impianti: filteredImpianti, viewMode, setViewMode, onDetail: (imp) => { setDetailImpianto(imp); setSavedFormData(null); setPage('detail'); } })
     ),
 
     React.createElement(Drawer, {
@@ -4330,6 +4434,7 @@ function App() {
       open: fullFormOpen,
       onClose: () => setFullFormOpen(false),
       initialValues: prefillData,
+      onSave: (data) => { setSavedFormData(data); },
     }),
   );
 }
