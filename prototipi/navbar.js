@@ -112,8 +112,11 @@
 
   function GravityNavbar() {
     var cfg           = window.GRAVITY_NAV || {};
-    var activeSection = cfg.section || null;
-    var activeItem    = cfg.item    || null;
+    var activeSection = cfg.section  || null;
+    var activeItem    = cfg.item     || null;
+    var logoSrc       = cfg.logoSrc  || '../../brand/Gravity_type.svg';
+    var appHref       = cfg.appHref  || '../app/';
+    var cfgLinks      = cfg.links    || {};
 
     var _r1     = useState(function () { return localStorage.getItem('gravity_proto_role') || null; });
     var role    = _r1[0]; var setRole = _r1[1];
@@ -132,7 +135,7 @@
         key: sec,
         label: SECTION_LABEL[sec] || sec,
         children: conf.items.map(function (item) {
-          var link   = conf.links[item];
+          var link   = cfgLinks[item] !== undefined ? cfgLinks[item] : conf.links[item];
           var isAct  = item === activeItem;
           var lbl    = ITEM_LABEL[item] || item;
           return {
@@ -185,14 +188,14 @@
         // Sinistra: logo + menu
         h('div', { style: { display: 'flex', alignItems: 'stretch', height: '100%', flex: 1, minWidth: 0 } },
           h('a', {
-            href: '../app/',
+            href: appHref,
             style: {
               padding: '0 24px', display: 'flex', alignItems: 'center',
               textDecoration: 'none', flexShrink: 0,
             },
           },
             h('img', {
-              src: '../../brand/Gravity_type.svg',
+              src: logoSrc,
               alt: 'Gravity',
               style: { height: 26 },
               onError: function (e) { e.target.style.display = 'none'; },
