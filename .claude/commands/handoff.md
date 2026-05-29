@@ -1,5 +1,5 @@
 ---
-description: Crea un file di handoff Figma per Gravity MVP. Raccoglie user story, lingua e ruoli, esplora i template di schermata presenti nel file, poi costruisce ogni Section duplicando e compilando le schermate corrette per raccontare il flusso.
+description: Crea un file di handoff Figma per Gravity MVP. Raccoglie user story, lingua e ruoli, esplora il prototipo HTML, identifica le schermate del flusso, costruisce ogni schermata su Figma usando componenti della libreria o template atomici custom.
 ---
 
 # Handoff Gravity — Costruisci Flusso
@@ -26,10 +26,10 @@ Elenca le user story da disegnare. Per ognuna fornisci:
 In che lingua vanno scritti tutti i testi del canvas? (italiano / inglese / altra)
 
 **Domanda 4 — Prototipo HTML** *(opzionale ma molto utile)*
-Hai un prototipo HTML che implementa questo flusso? Se sì, fornisci il percorso del file (es. `prototipi/03-inventory/index.html`) oppure aprilo nel browser e condividi l'URL locale. Lo userò per navigare il flusso reale, capire gli stati UI, i dati mostrati e le interazioni prima di costruire le schermate.
+Hai un prototipo HTML che implementa questo flusso? Se sì, fornisci il percorso del file (es. `prototipi/03-inventory/index.html`) oppure aprilo nel browser e condividi l'URL locale. Lo userò per individuare le schermate reali del flusso prima di costruire su Figma.
 
 **Domanda 5 — Diagramma di flusso** *(opzionale)*
-Hai un diagramma di flusso (Figma, FigJam, immagine, o testo strutturato) che descrive la logica del flusso con branch, condizioni e percorsi alternativi? Se sì, condividi l'URL o il percorso. Lo userò per identificare tutti i path da raccontare (happy path + eccezioni).
+Hai un diagramma di flusso (Figma, FigJam, immagine, o testo strutturato) che descrive la logica del flusso con branch, condizioni e percorsi alternativi? Se sì, condividi l'URL o il percorso.
 
 **Ruoli supportati da Gravity:**
 | Ruolo | Colore label |
@@ -40,101 +40,152 @@ Hai un diagramma di flusso (Figma, FigJam, immagine, o testo strutturato) che de
 | Operation Manager | verde `#52C41A` |
 | Planner | viola `#722ED1` |
 
-Se una US coinvolge più ruoli in sequenza, specificalo — la label cambia a ogni cambio di ruolo nel flusso.
-
 Aspetta le risposte prima di procedere.
 
 ---
 
-## FASE 2 — Esplorazione delle fonti disponibili
+## FASE 2 — Individuazione schermate del flusso
 
 Carica obbligatoriamente la skill `figma:figma-use` prima di qualsiasi chiamata `use_figma`.
 
-Esplora **tutte le fonti disponibili in parallelo** prima di pianificare qualsiasi cosa.
-
-### 2a. Mappa i template nel file Figma
-1. Usa `get_metadata` sulla root del file di destinazione (node `0:1`) per vedere la struttura di pagine e sezioni
-2. Per ogni pagina o sezione che contiene template di schermata, fai `get_metadata` per listare i frame disponibili
-3. Costruisci una mappa: nome frame → cosa rappresenta (es. "Inventory List", "Space Detail Drawer", "Create Campaign Modal")
-4. Fai `get_design_context` sui frame rilevanti per le US in analisi, per capirne il contenuto e gli stati UI disponibili
-
-### 2b. Esplora il prototipo HTML (se fornito)
-Se l'utente ha fornito un prototipo HTML:
+### 2a. Esplora il prototipo HTML (se fornito)
 - Leggi il file con `Read` per capire la struttura dei componenti e gli stati UI implementati
-- Usa il browser via Playwright (`mcp__playwright__browser_navigate` + `browser_snapshot`) per navigare il prototipo interattivo:
-  - Percorri l'happy path della US click by click
-  - Prendi screenshot di ogni stato rilevante (pagina iniziale, form vuoto, form compilato, conferma, errore)
-  - Esplora anche i percorsi alternativi e gli stati di errore
-- Usa questi screenshot come **riferimento visivo diretto** per capire esattamente cosa mostrare in ogni schermata del flusso
-- Confronta i dati mostrati nel prototipo con quelli da usare nelle schermate Figma
+- Naviga il prototipo via Playwright (`mcp__playwright__browser_navigate` + `browser_snapshot`) percorrendo l'happy path e i percorsi alternativi click by click
+- Prendi screenshot di ogni stato distinto
 
-### 2c. Consulta il diagramma di flusso (se fornito)
-Se l'utente ha fornito un diagramma di flusso:
-- Se è un URL Figma/FigJam: usa `get_design_context` o `get_figjam` per leggerlo
-- Se è un'immagine: leggila con `Read` (tool immagini)
-- Se è testo strutturato: analizzalo direttamente
-- Estrai da esso:
-  - Tutti i nodi/stati del flusso (non solo l'happy path)
-  - Le condizioni di branching ("SE utente ha permesso X", "SE slot disponibile", ecc.)
-  - I percorsi di errore e le eccezioni esplicite
-  - I punti di cambio ruolo
-- Usa il diagramma come **mappa autoritativa** del flusso — se c'è contraddizione tra la descrizione narrativa e il diagramma, chiedi chiarimento all'utente
+### 2b. Inventario schermate
+Produce un elenco numerato di tutte le schermate del flusso:
+- Schermate principali (ogni vista che occupa tutto lo schermo)
+- Layer in sovrapposizione: modali, drawer, tooltip, popover, notifiche
+- Stati alternativi della stessa schermata (es. lista vuota vs lista popolata, form vuoto vs form in errore)
 
-**Non procedere alla costruzione finché non hai una comprensione chiara del flusso da tutte le fonti disponibili.**
+Per ogni schermata annota:
+- Nome descrittivo (es. "Lista spazi — popolata")
+- Tipo di layer: `schermata` / `modale` / `drawer` / `overlay`
+- Schermate su cui appare (per modali e drawer)
+
+**Non procedere finché l'inventario non è completo.**
 
 ---
 
-## FASE 3 — Pianificazione dei flussi
+## FASE 3 — Classificazione layout e assegnazione template
 
-Per ogni User Story, prima di toccare il canvas, pianifica:
+Per ogni schermata principale (non overlay), classifica il layout e assegna il template di riferimento.
 
-1. **Sequenza di schermate**: quali template corrispondono a ogni step della US?
-   - Abbina ogni passo della descrizione narrativa a un template di schermata esistente
-   - Se uno step richiede uno stato diverso dello stesso template (es. form vuoto vs form compilato, lista vuota vs lista con dati), pianifica di duplicare il template e modificarlo
-   - Se nessun template corrisponde a uno step, segnalalo all'utente e usa il template più vicino come base
+**File template:** `WqdTtaemaAOLk8eOfhEV1I` (Shaker UI — Components)
+**Container:** node `2529:56483` (frame "Template Screen")
 
-2. **Modifiche necessarie per ogni schermata**: cosa va cambiato nel template per raccontare quello specifico step?
-   - Testi (titoli, label, dati, messaggi di stato)
-   - Stato UI (loading, empty state, error, success, filled form, ecc.)
-   - Elementi visibili/nascosti (modal aperta, drawer aperto, badge, tooltip, ecc.)
-   - Dati di esempio coerenti con il contesto della US
+| Tipo | Node Figma | Caratteristiche | Struttura |
+|------|-----------|----------------|-----------|
+| **Lista** | `2529:56461` | Tabella o lista di item, filtri, paginazione, azioni bulk | Navbar → Header (titolo + azioni CTA) → Tabella/Lista |
+| **Dettaglio** | `2529:68281` | Vista singolo record, sezioni informative, azioni contestuali | Navbar → Header (back + titolo soggetto + CTA) → 4 System Cards → Tabs + slot contenuto |
+| **Ibrida** | `2529:56484` | Lista principale + sidebar contestuale | Navbar → Header (back + titolo + CTA) → Sidebar sinistra 320px (System Cards + Calendar) + area destra flessibile |
+| **Dashboard** | — | KPI, grafici, widget multipli | Template in arrivo — costruire atomicamente fino ad allora |
 
-3. **Cambio di ruolo** (se presente): a quale schermata cambia il protagonista?
+### Struttura dettagliata dei template
+
+**Type=Detail (`2529:68281`)**
+- `Navbar` — menu orizzontale + avatar + bell
+- `HeaderDetailScreen` — sx: link "Back to list" + titolo "Detail Screen | Subject Name"; dx: Button primary
+- Row di 4 `System Cards` affiancate (1/4 larghezza ciascuna) — KPI con icona, label, valore
+- `*Tabs* / Container` — barra tab (type=card) + slot "Slot component" espandibile
+
+**Type=Hybrid (`2529:56484`)**
+- `Navbar` — identica al Detail
+- `HeaderDetailScreen` — identica al Detail
+- Layout 2 colonne:
+  - Sinistra `Sidebar/Planning` (320px fissi): System Cards verticali + `Calendar` (Exposure Period con range date evidenziato)
+  - Destra `Table Card Wrapper` (flex-1): area bianca per tabella o contenuto principale
+
+**Type=List (`2529:56461`)**
+- Usa `get_design_context` su questo nodo per ispezionare la struttura prima di usarlo
+
+Riporta la classificazione all'utente prima di procedere.
 
 ---
 
-## FASE 4 — Costruzione del canvas
+## FASE 4 — Loop per schermata (ripeti per ogni schermata nell'ordine dell'inventario)
 
-### Template di riferimento per la Section
-- **File template:** `tMW8bcBYHSeJ9WyWzZqojL`
-- **Section node:** `1:16803` (nome `US#00`)
-- Struttura:
-  - `1:16804` — frame `US + User` (pannello sinistro)
-    - `1:16805` — istanza `Label` (striscia verticale colorata)
-    - `1:16806` — frame `User` (ruolo + avatar in basso)
-      - `1:16807` — rettangolo sfondo
-      - `1:16808` — testo nome ruolo
-      - `1:16809` — istanza `Avatar Gravity`
-    - `1:16810` — testo US numero + titolo
-    - `1:43729` — testo descrizione narrativa
-  - `1:43730..1:45553` — frame placeholder Screen 1–4 (da sostituire con le schermate reali)
+Per ogni schermata, esegui questi step in sequenza:
 
-### Per ogni User Story:
+### Step 1 — Mappatura componenti → libreria Figma
 
-**4a. Crea la Section**
-- Crea una nuova Section nel file di destinazione
-- Nome: `US#NN — Titolo` (es. `US#01 — Visualizza inventario spazi`)
-- Disponi le sections **in verticale** con gap 200px tra l'una e l'altra
+Analizza la schermata (da HTML/screenshot) e produce una lista di tutti i componenti presenti con il loro corrispondente Figma dalla libreria **Ant Design System for Gravity** (`uR6CBOh0Y7dUQvH30SyD0P`).
 
-**4b. Compila il pannello sinistro (US + User)**
-Duplica la struttura `1:16804` dal template e aggiorna:
-- `1:16810` → `US#NN` + titolo breve (nella lingua scelta)
-- `1:43729` → descrizione narrativa del flusso (nella lingua scelta)
-- `1:16808` → nome del ruolo primario
-- `1:16807` → fill con il colore del ruolo (vedi mappatura)
-- `1:16805` → fill della Label con il colore del ruolo
-- Testo `1:16808` → bianco `#FFFFFF`
-- `1:16809` → avatar del ruolo (cerca nella libreria `uR6CBOh0Y7dUQvH30SyD0P`; fallback: Avatar Ant Design con iniziali del ruolo)
+Formato:
+```
+- [ComponenteReact] → *NomeFigma* (varianti: Prop=Valore, ...)
+  es. <Button type="primary"> → *Button* (Type=Primary, Size=Default, State=Default)
+```
+
+Per componenti non presenti in libreria: annota "custom — costruire atomicamente" e specifica da quali particelle (Avatar, Button, Text, ecc.).
+
+Usa la mappa React→Figma in CLAUDE.md come riferimento principale.
+
+### Step 2 — Disegno su Figma
+
+Costruisci la schermata nel file Figma usando `use_figma`:
+- **Prima scelta:** duplica il template corrispondente (vedi FASE 3) dal file `WqdTtaemaAOLk8eOfhEV1I` e adattalo per la schermata corrente
+- **Se nessun template corrisponde:** costruisci un frame custom usando i componenti atomici del design system (Button, Text, Avatar, Icon, ecc.) — mai valori hard-coded, sempre token Gravity
+- Rispetta la struttura di layout classificata al FASE 3 (colonne, spacing, gerarchia)
+- Usa lo spacing del design system: `8px` base unit, multipli di 4/8/16/24/32/48px
+- Dimensioni schermata standard: **1728 × 1117px**, sfondo `#F5F5F5`
+
+### Step 3 — Iterazioni manuali
+
+Dopo aver piazzato la struttura principale, elenca le rifiniture necessarie e applica quelle realizzabili via `use_figma`. Per quelle che richiedono intervento manuale (es. allineamenti complessi, auto layout annidati profondi), segnalale esplicitamente all'utente con descrizione precisa di cosa aggiustare.
+
+### Step 4 — Compilazione con dati mock
+
+Popola tutti i testi e i campi della schermata con dati realistici coerenti con il dominio OOH/DOOH di Gravity:
+- Nomi spazi: "Billboard Palermo Centro", "Schermo LED Via Roma 12", "Pensilina Bus Politeama"
+- Campagne: "Campagna Primavera 2026 — TIM", "Awareness Q2 — Vodafone"
+- Date nel formato `DD/MM/YYYY`
+- Budget in euro (es. `€ 12.400`, `€ 8.750`)
+- Indirizzi siciliani/palermitani quando contestuali
+
+Non lasciare placeholder "Lorem ipsum" o "Label" generici.
+
+### Step 5 — Traduzione
+
+Traduci **tutti** i testi dell'interfaccia nella lingua scelta in FASE 1 (se inglese: label, titoli, voci di menu, placeholder, messaggi di stato). I dati mock (nomi propri, indirizzi) possono rimanere contestuali.
+
+Dopo la traduzione, fai uno screenshot di verifica della schermata completata.
+
+---
+
+## FASE 5 — Costruzione overlay (modali e drawer)
+
+Dopo aver completato tutte le schermate principali, disegna i layer in sovrapposizione seguendo gli stessi step 1–5 del FASE 4.
+
+Per ogni overlay:
+- Piazzalo sopra la schermata su cui appare nel flusso reale
+- Usa `*Modal*`, `*Drawer*` dalla libreria con le varianti corrette
+- Se il contenuto dell'overlay è un form o una lista, mappa i suoi componenti separatamente
+
+---
+
+## FASE 6 — Struttura canvas e annotazioni
+
+Dopo aver completato tutte le schermate e gli overlay:
+
+### 6a. Disposizione del flusso
+- Disponi le schermate **in sequenza orizzontale** nell'ordine del flusso, con gap 80px
+- Aggiungi frecce `→` tra le schermate con etichetta dell'azione che le collega (es. "Clic su Crea campagna")
+- Posiziona gli overlay sovrapposti (o affianati con freccia tratteggiata) rispetto alla schermata che li attiva
+
+### 6b. Annotazioni
+Aggiungi Post-it gialli (`#FFF7CD`) sopra ogni schermata per:
+- Regole di business ("Solo se ruolo = Sales", "Richiede almeno 1 spazio selezionato")
+- Condizioni di branching
+- Vincoli tecnici da comunicare al developer
+
+### 6c. Panel US + User (facoltativo se richiesto dall'utente)
+Se il file di destinazione usa la struttura handoff con Section e pannello sinistro, aggiungi:
+- Label verticale colorata con il colore del ruolo
+- Nome ruolo + avatar
+- Numero e titolo US
+- Descrizione narrativa
 
 **Mappatura ruolo → colore:**
 ```
@@ -145,79 +196,27 @@ Operation Manager → #52C41A
 Planner           → #722ED1
 ```
 
-**4c. Costruisci il flusso principale (sunny case) — Riga 1**
-
-Il sunny case è sempre la **prima riga orizzontale** della Section, quella che racconta l'happy path dall'inizio alla fine.
-
-Per ogni step del sunny case:
-1. **Duplica** il template di schermata corrispondente dal file
-2. **Rinomina** con il formato: `RuoloAttivo: NomeSchermata` (es. `Inventory Manager: Lista Spazi`)
-3. **Modifica** per rappresentare lo step specifico (testi, stato UI, dati di esempio)
-4. **Posiziona** da sinistra a destra con gap ~80px tra le schermate
-5. **Aggiungi frecce** (`→`) tra le schermate, con etichetta dell'azione che le collega
-6. **Post-it gialli** sopra ogni schermata per regole di business rilevanti a quello step
-
-**4d. Costruisci ogni edge case — Righe successive (verticale)**
-
-Ogni edge case occupa una **riga orizzontale dedicata**, posizionata sotto la riga precedente con gap di 160px.
-
-Per ogni edge case:
-1. **Aggiungi un'etichetta di riga** sul lato sinistro, appena prima delle schermate, con:
-   - Sfondo colorato `#FF4A1C` (rosso accento Gravity)
-   - Testo bianco: nome dell'edge case in maiuscolo (es. `CREDENZIALI ERRATE`)
-   - Dimensioni: ~240px × 80px, posizionato in verticale a fianco delle schermate
-2. **Replica le schermate necessarie** per raccontare il flusso completo di quell'edge case:
-   - **Non scrivere solo il nome dell'eccezione** — mostra visivamente ogni step con le schermate reali duplicate e modificate
-   - Includi sempre la schermata di partenza del branch (anche se è la stessa del sunny case) per mantenere leggibilità autonoma di ogni riga
-   - Se il path non ha una schermata UI (es. redirect automatico), crea un frame placeholder `[→ Redirect automatico]` con sfondo neutro e testo descrittivo
-3. **Posiziona le schermate** da sinistra a destra nella riga, con lo stesso gap del sunny case (~80px)
-4. **Frecce** tra le schermate dell'edge case con etichette che spiegano la condizione (es. "SE 1 tenant")
-5. **Post-it** sopra le schermate dell'edge case per le condizioni che attivano quel path
-
-**Gap verticale tra righe:** 160px misurato tra il bordo inferiore dell'ultima schermata di una riga e il bordo superiore della prima della riga successiva.
-
-**Ordine consigliato delle righe:**
-1. Sunny case (happy path completo)
-2. Edge case principale / errore più frequente
-3. Edge case secondari in ordine di probabilità/importanza
-4. Edge case "non accade UI" (es. redirect automatici) per ultimi
-
-**4e. Cambio di ruolo (se presente)**
-Quando il flusso passa da un ruolo all'altro:
-- Aggiorna il frame `User` nel pannello sinistro per mostrare il nuovo ruolo (o crea una versione parallela)
-- Aggiungi un Post-it esplicativo al punto di transizione: "Cambio ruolo: da [RuoloA] a [RuoloB]"
-- Cambia il colore della Label per il segmento successivo del flusso
-
-**4f. Annotazioni (Post-it)**
-Aggiungi Post-it gialli (`#FFF7CD`) per:
-- Regole di business importanti ("SE E SOLO SE...")
-- Condizioni che determinano quale path prendere
-- Vincoli tecnici o di ruolo da comunicare allo sviluppatore
-
-Posiziona ogni Post-it **sopra** la schermata a cui si riferisce, con gap di ~20px dal bordo superiore dello schermo.
-
 ---
 
-## FASE 5 — Validazione
+## FASE 7 — Validazione finale
 
-Dopo aver costruito ogni Section:
-1. Screenshot del pannello `US + User` — verifica label colore, testo ruolo, avatar
-2. Screenshot panoramico della Section — verifica sequenza schermate, frecce, post-it
-3. Controlla che ogni schermata sia leggibile e racconta chiaramente quello step
-
-Al termine di tutte le Sections:
-1. Riporta all'utente:
-   - Elenco sections create (con node ID e URL diretto)
-   - Quali template di schermata hai usato e duplicato
-   - Eventuali step per cui non hai trovato un template corrispondente (con proposta di soluzione)
-   - Eventuali modifiche significative applicate ai template
+1. Screenshot panoramico del flusso completo
+2. Verifica:
+   - Tutte le schermate dell'inventario sono presenti
+   - Tutti i testi sono nella lingua corretta
+   - Nessun placeholder generico
+   - I dati mock sono coerenti tra le schermate (stessi nomi, stesse date)
+3. Riporta all'utente:
+   - Elenco schermate costruite (con node ID e URL diretto)
+   - Componenti custom creati (non da libreria)
+   - Rifiniture manuali ancora necessarie (lista precisa)
 
 ---
 
 ## Note operative
 
-- **Non usare i placeholder Screen 1–4 del template**: quei frame vanno sostituiti con le schermate reali duplicate dai template del file.
-- **Lingua**: tutti i testi (titoli US, descrizioni, label ruolo, nomi schermate, post-it) devono essere nella lingua scelta — non mescolare.
-- **Fedeltà al template**: quando duplichi e modifichi un template di schermata, mantieni la struttura e i componenti originali — modifica solo i contenuti necessari per la narrazione.
-- **Dati di esempio**: usa dati realistici e coerenti con il dominio OOH/DOOH di Gravity (nomi di spazi pubblicitari, campagne, locazioni, date, budget, ecc.).
-- **Non inventare componenti**: usa solo componenti e template già presenti nel file. Se manca qualcosa, segnalalo e usa il più vicino disponibile.
+- **Token sempre, valori hard-coded mai**: usa sempre i token Gravity (`#3E00FB`, `rgba(0,0,0,0.88)`, ecc.) — non colori arbitrari.
+- **Lingua coerente**: tutti i testi nella lingua scelta — non mescolare.
+- **Dati mock realistici**: OOH/DOOH siciliano, non Lorem ipsum.
+- **Ordine fisso**: completa una schermata per volta (mapping → draw → iterazioni → mock → translate) prima di passare alla successiva.
+- **Overlay dopo le schermate**: disegna modali e drawer solo dopo aver completato tutte le schermate principali.

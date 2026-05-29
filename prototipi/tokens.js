@@ -300,6 +300,9 @@ window.GRAVITY_CSS_VARS = {
   '--gravity-secondary':        '#FF4A1C',
   '--gravity-bg':               '#F5F5F5',
   '--gravity-bg-container':     '#ffffff',
+  '--gravity-bg-subtle':        '#FAFAFA',   // sfondo neutro tra white e bg-layout
+  '--gravity-primary-bg':       '#F0EAFF',   // sfondo per stati selected/active con tinta primary
+  '--gravity-primary-border':   '#C5B4FF',   // bordi per aree con tinta primary (hover, pending, toolbar)
   '--gravity-text':             'rgba(0,0,0,0.88)',
   '--gravity-text-secondary':   'rgba(0,0,0,0.65)',
   '--gravity-text-tertiary':    'rgba(0,0,0,0.45)',
@@ -312,11 +315,26 @@ window.GRAVITY_CSS_VARS = {
   '--gravity-radius':           '6px',
   '--gravity-radius-lg':        '8px',
   '--gravity-radius-sm':        '4px',
+  '--gravity-radius-xl':        '10px',   // card floating, map controls, overlay
+  // ── Colori semantici di dominio (OOH/DOOH) ──────────────────────────────────
+  // Non fanno parte della palette brand — sono stati UI specifici del prodotto
+  '--gravity-domain-lt':          '#7C3AED',   // Long Term — testo badge
+  '--gravity-domain-lt-bg':       '#EDE9FE',   // Long Term — sfondo badge
+  '--gravity-domain-lt-incomp':   '#B45309',   // Long Term incompatibile — testo
+  '--gravity-domain-lt-incomp-bg':'#FEF3C7',   // Long Term incompatibile — sfondo
+  '--gravity-domain-discount':    '#059669',   // prezzo con sconto / risparmio
+  '--gravity-domain-overbudget':  '#DC2626',   // importo over-budget
+  '--gravity-domain-partial':     '#FA8C16',   // selezione parziale, elemento illuminato
+
   '--gravity-font-brand':       "'Oswald', sans-serif",   // SOLO logo/brand — NON usare nell'interfaccia
   '--gravity-font-brand-alt':   "'Inter', sans-serif",    // Brand/comunicazione/sito vetrina — NON usare nell'interfaccia
   '--gravity-font-body':        "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",  // Font UI del design system
   '--gravity-font-code':        "'JetBrains Mono', 'Courier New', monospace",
+  '--gravity-fs-micro':         '10px',   // label uppercase, codici impianto, metadati mappa
+  '--gravity-fs-caption':       '11px',   // metadati, label impianti, footer calendari
   '--gravity-fs-xs':            '12px',
+  '--gravity-fs-body-sm':       '13px',   // testo di riga standard (il più usato nell'interfaccia)
+  '--gravity-fs-body-lg':       '15px',   // valore DataCard sidebar
   '--gravity-fs-sm':            '14px',
   '--gravity-fs-md':            '16px',
   '--gravity-fs-lg':            '20px',
